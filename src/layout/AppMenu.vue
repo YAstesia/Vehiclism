@@ -7,8 +7,15 @@ const model = ref([
     {
         label: 'Vehiclism',
         items: [
-            { label: '功能导航', icon: 'pi pi-fw pi-bars', to: '/uikit/menu', 
+            { label: '功能导航', icon: 'pi pi-fw pi-bars', 
             items: [
+                    {
+                        label: '首页',
+                        icon: 'pi pi-fw pi-home',
+                        items: [
+                            { label: '返回首页', icon: 'pi pi-fw pi-home' , to: '/'}
+                        ]
+                    },
                     {
                         label: '汽车数据查询',
                         icon: 'pi pi-fw pi-search',
@@ -42,7 +49,7 @@ const model = ref([
                         label: '我的',
                         icon: 'pi pi-fw pi-user',
                         items: [
-                            { label: '我的收藏', icon: 'pi pi-fw pi-star', to: '/uikit/media'}
+                            { label: '我的收藏', icon: 'pi pi-fw pi-star' , to: '/uikit/media'}
                         ]
                     },
                 ]
