@@ -1,10 +1,24 @@
 <script setup>
+import { login } from '@/api';
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { ref } from 'vue';
 
 const email = ref('');
 const password = ref('');
 const checked = ref(false);
+const error = ref('');
+const success = ref('');
+
+const handleLogin = async () => {
+  try {
+    const response = await login(email.value, password.value);
+    success.value = '登录成功！';
+    // 登录成功后的处理逻辑，比如跳转到主页
+    // this.$router.push('/');
+  } catch (err) {
+    error.value = '登录失败，请检查用户名和密码。';
+  }
+};
 </script>
 
 <template>
@@ -49,7 +63,9 @@ const checked = ref(false);
                             </div>
                             <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">忘记密码?</span>
                         </div>
-                        <Button label="登录" class="w-full" as="router-link" to="/"></Button>
+                        <Button label="登录" class="w-full" @click="handleLogin"></Button>
+                        <div v-if="error" class="text-red-500 mt-2">{{ error }}</div>
+                        <div v-if="success" class="text-green-500 mt-2">{{ success }}</div>
                     </div>
                 </div>
             </div>
