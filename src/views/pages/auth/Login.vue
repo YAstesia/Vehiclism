@@ -36,8 +36,8 @@ const checked = ref(false);
                     </div>
 
                     <div>
-                        <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">邮箱</label>
-                        <InputText id="email1" type="text" placeholder="在此处输入邮箱" class="w-full md:w-[30rem] mb-8" v-model="email" />
+                        <label for="id1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">用户名</label>
+                        <InputText id="id1" type="text" placeholder="在此处输入用户名" class="w-full md:w-[30rem] mb-8" v-model="email" />
 
                         <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">密码</label>
                         <Password id="password1" v-model="password" placeholder="在此处输入密码" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
