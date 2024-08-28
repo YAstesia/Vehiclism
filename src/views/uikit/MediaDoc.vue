@@ -65,7 +65,7 @@ function getSeverity(status) {
 
 <template>
     <div class="card">
-        <div class="font-semibold text-xl mb-4">Carousel</div>
+        <div class="font-semibold text-xl mb-4">我的收藏</div>
         <Carousel :value="products" :numVisible="3" :numScroll="3" :responsiveOptions="carouselResponsiveOptions">
             <template #item="slotProps">
                 <div class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
@@ -88,22 +88,5 @@ function getSeverity(status) {
                 </div>
             </template>
         </Carousel>
-    </div>
-
-    <div class="card">
-        <div class="font-semibold text-xl mb-4">Image</div>
-        <Image src="https://primefaces.org/cdn/primevue/images/galleria/galleria10.jpg" alt="Image" width="250" />
-    </div>
-
-    <div class="card">
-        <div class="font-semibold text-xl mb-4">Galleria</div>
-        <Galleria :value="images" :responsiveOptions="galleriaResponsiveOptions" :numVisible="5" containerStyle="max-width: 640px">
-            <template #item="slotProps">
-                <img :src="slotProps.item.itemImageSrc" :alt="slotProps.item.alt" style="width: 100%" />
-            </template>
-            <template #thumbnail="slotProps">
-                <img :src="slotProps.item.thumbnailImageSrc" :alt="slotProps.item.alt" />
-            </template>
-        </Galleria>
     </div>
 </template>
