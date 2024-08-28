@@ -12,9 +12,7 @@ const model = ref([
                     {
                         label: '首页',
                         icon: 'pi pi-fw pi-home',
-                        items: [
-                            { label: '返回首页', icon: 'pi pi-fw pi-home' , to: '/'}
-                        ]
+                        to: '/'
                     },
                     {
                         label: '汽车数据查询',
@@ -49,7 +47,7 @@ const model = ref([
                         label: '我的',
                         icon: 'pi pi-fw pi-user',
                         items: [
-                            { label: '我的收藏', icon: 'pi pi-fw pi-star' , to: '/uikit/media'}
+                            { label: '个人中心', icon: 'pi pi-fw pi-star' , to: '/uikit/media'}
                         ]
                     },
                 ]

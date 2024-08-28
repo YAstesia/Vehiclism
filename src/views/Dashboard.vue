@@ -78,6 +78,7 @@ function setChartOptions() {
             y: {
                 stacked: true,
                 ticks: {
+
                     color: textMutedColor
                 },
                 grid: {
@@ -201,6 +202,27 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                             <span class="text-teal-500 ml-4 font-medium">40%</span>
                         </div>
                     </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </ul>
             </div>
         </div>
