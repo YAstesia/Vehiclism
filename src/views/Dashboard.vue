@@ -127,10 +127,6 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
             <div class="card">
                 <div class="flex justify-between items-center mb-6">
                     <div class="font-semibold text-xl">汽车销量榜</div>
-                    <div>
-                        <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" @click="$refs.menu2.toggle($event)"></Button>
-                        <Menu ref="menu2" :popup="true" :model="items" class="!min-w-40"></Menu>
-                    </div>
                 </div>
                 <ul class="list-none p-0 m-0">
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
@@ -142,7 +138,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                             <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24" style="height: 8px">
                                 <div class="bg-orange-500 h-full" style="width: 50%"></div>
                             </div>
-                            <span class="text-orange-500 ml-4 font-medium">%50</span>
+                            <span class="text-orange-500 ml-4 font-medium">50%</span>
                         </div>
                     </li>
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
@@ -154,7 +150,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                             <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24" style="height: 8px">
                                 <div class="bg-cyan-500 h-full" style="width: 16%"></div>
                             </div>
-                            <span class="text-cyan-500 ml-4 font-medium">%16</span>
+                            <span class="text-cyan-500 ml-4 font-medium">16%</span>
                         </div>
                     </li>
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
@@ -166,7 +162,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                             <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24" style="height: 8px">
                                 <div class="bg-pink-500 h-full" style="width: 67%"></div>
                             </div>
-                            <span class="text-pink-500 ml-4 font-medium">%67</span>
+                            <span class="text-pink-500 ml-4 font-medium">67%</span>
                         </div>
                     </li>
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
@@ -178,7 +174,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                             <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24" style="height: 8px">
                                 <div class="bg-green-500 h-full" style="width: 35%"></div>
                             </div>
-                            <span class="text-primary ml-4 font-medium">%35</span>
+                            <span class="text-primary ml-4 font-medium">35%</span>
                         </div>
                     </li>
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
@@ -190,7 +186,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                             <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24" style="height: 8px">
                                 <div class="bg-purple-500 h-full" style="width: 75%"></div>
                             </div>
-                            <span class="text-purple-500 ml-4 font-medium">%75</span>
+                            <span class="text-purple-500 ml-4 font-medium">75%</span>
                         </div>
                     </li>
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
@@ -202,7 +198,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                             <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24" style="height: 8px">
                                 <div class="bg-teal-500 h-full" style="width: 40%"></div>
                             </div>
-                            <span class="text-teal-500 ml-4 font-medium">%40</span>
+                            <span class="text-teal-500 ml-4 font-medium">40%</span>
                         </div>
                     </li>
                 </ul>
@@ -216,10 +212,6 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
             <div class="card">
                 <div class="flex items-center justify-between mb-6">
                     <div class="font-semibold text-xl">最新通知</div>
-                    <div>
-                        <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" @click="$refs.menu1.toggle($event)"></Button>
-                        <Menu ref="menu1" :popup="true" :model="items" class="!min-w-40"></Menu>
-                    </div>
                 </div>
 
                 <span class="block text-muted-color font-medium mb-4">今天</span>
