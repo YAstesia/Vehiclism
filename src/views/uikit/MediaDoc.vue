@@ -1,4 +1,5 @@
 <script setup>
+import { editEmail, editName, editPassword, editPhone } from '@/api';
 import { PhotoService } from '@/service/PhotoService';
 import { ProductService } from '@/service/ProductService';
 import { onMounted, ref } from 'vue';
@@ -84,12 +85,14 @@ function useEditableFields() {
     { id: 'phone1', label: '电话', value: '默认电话', isEditable: false },
   ]);
 
+  const func = [editName, editPassword, editEmail, editPhone];
+
   async function toggleEditMode(index) {
     fields.value[index].isEditable = !fields.value[index].isEditable;
     if (!fields.value[index].isEditable) {
       // Send updated value to the backend
       try {
-        const response = await fields.value[index].apiCall(fields.value[index].value);
+        const response = await func[index](fields.value[index].value);
         if (response.data.success) {
           alert(response.data.msg); // 修改成功！
         } else {
