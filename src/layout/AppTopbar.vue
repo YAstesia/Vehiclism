@@ -1,8 +1,22 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useCookies } from 'vue3-cookies';
 import AppConfigurator from './AppConfigurator.vue';
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
+
+const { cookies, removeAll } = useCookies();
+const router = useRouter();
+const showTooltip = ref(false);
+
+const handleLogout = () => {
+  // 清除所有 cookie
+  removeAll();
+  // 跳转到登录页面或其他页面
+  router.push('/');
+};
 
 </script>
 
@@ -62,13 +76,39 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
                     <router-link to='/auth/login'>
-                    <button type="button" class="layout-topbar-action">
+                        <button type="button" 
+                                class="layout-topbar-action"
+                                @mouseover="showTooltip = true"
+                                @mouseleave="showTooltip = false"
+                                @click="handleLogout">
                         <i class="pi pi-user"></i>
-                        <span>Profile</span>
-                    </button>
+                        <span>EXIT</span>
+                        <div v-if="showTooltip" class="tooltip">退出登录</div>
+                        </button>
                 </router-link>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
+<style scoped>
+.layout-topbar-action {
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+  font-size: 12px;
+  z-index: 10;
+  pointer-events: none;
+}
+</style>
