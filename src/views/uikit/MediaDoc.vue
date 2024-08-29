@@ -84,10 +84,20 @@ function useEditableFields() {
     { id: 'phone1', label: '电话', value: '默认电话', isEditable: false },
   ]);
 
-  function toggleEditMode(index) {
+  async function toggleEditMode(index) {
     fields.value[index].isEditable = !fields.value[index].isEditable;
     if (!fields.value[index].isEditable) {
-      // Optional: Add code to save the modified value if needed
+      // Send updated value to the backend
+      try {
+        const response = await fields.value[index].apiCall(fields.value[index].value);
+        if (response.data.success) {
+          alert(response.data.msg); // 修改成功！
+        } else {
+          alert(response.data.msg); // 修改失败！
+        }
+      } catch (error) {
+        alert('修改失败，请稍后再试！');
+      }
     }
   }
 

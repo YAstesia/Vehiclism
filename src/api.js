@@ -24,3 +24,19 @@ export const registerUser = async (userData) => {
     return { success: false, msg: '注册失败！请重试' };
   }
 };
+
+export function editName(name) {
+  return api.post('/user/editName', { name });
+}
+
+export function editPassword(password) {
+  return api.post('/user/editPassword', { password });
+}
+
+export function editEmail(email) {
+  return api.post('/user/editEmail', { email });
+}
+
+export function editPhone(phone) {
+  return api.post('/user/editPhone', { phone });
+}
