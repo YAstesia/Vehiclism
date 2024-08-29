@@ -18,21 +18,20 @@ const model = ref([
                         label: '汽车数据查询',
                         icon: 'pi pi-fw pi-search',
                         items: [
-                            { label: '车型查询', icon: 'pi pi-fw pi-search-plus' },
-                            { label: '参数配置查询', icon: 'pi pi-fw pi-search-plus' },
-                            { label: '价格配置查询', icon: 'pi pi-fw pi-search-plus' },
-                            { label: '零售信息查询', icon: 'pi pi-fw pi-search-plus' }
+                            { label: '车型查询', icon: 'pi pi-fw pi-search-plus' , to: '/carsearch'},
+                            { label: '价格数据查询', icon: 'pi pi-fw pi-search-plus' , to: '/pricesearch'},
+                            { label: '零售信息查询', icon: 'pi pi-fw pi-search-plus' , to: '/salesearch'}
                         ]
                     },
                     {
                         label: '汽车大数据分析',
                         icon: 'pi pi-fw pi-globe',
                         items: [
-                            { label: '汽车销售趋势', icon: 'pi pi-fw pi-chart-bar' },
-                            { label: '汽车销量分析', icon: 'pi pi-fw pi-chart-bar' },
-                            { label: '销售热点分析', icon: 'pi pi-fw pi-chart-bar' },
-                            { label: '购车目的分析', icon: 'pi pi-fw pi-chart-bar' },
-                            { label: '价格对比分析', icon: 'pi pi-fw pi-chart-bar' },
+                            { label: '汽车销售趋势', icon: 'pi pi-fw pi-chart-bar' , to: '/salestrend'},
+                            { label: '汽车销量分析', icon: 'pi pi-fw pi-chart-bar' , to: '/salesanalysis'},
+                            { label: '销售热点分析', icon: 'pi pi-fw pi-chart-bar' , to: '/hotsales'},
+                            { label: '购车目的分析', icon: 'pi pi-fw pi-chart-bar' , to: '/purpose'},
+                            { label: '价格对比分析', icon: 'pi pi-fw pi-chart-bar' , to: '/pricecompare'},
                             { label: '大数据可视化大屏', icon: 'pi pi-fw pi-chart-bar' }
                         ]
                     },
@@ -40,7 +39,7 @@ const model = ref([
                         label: '工具',
                         icon: 'pi pi-fw pi-wrench',
                         items: [
-                            { label: '车型比较', icon: 'pi pi-fw pi-comments' }
+                            { label: '车型比较', icon: 'pi pi-fw pi-comments' , to: '/carcompare'}
                         ]
                     },
                     {

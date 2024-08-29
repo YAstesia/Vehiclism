@@ -126,7 +126,7 @@ const { fields, toggleEditMode, updateFieldValue } = useEditableFields();
                 <input type="file" id="file-input" style="display:none;" @change="onFileChange" />
                 <button class="p-button p-component p-button-primary" @click="triggerFileInput">修改头像</button>
             </SplitterPanel>
-            <SplitterPanel :size="70">
+            <SplitterPanel :size="50">
                 <Splitter layout="vertical">
                     <SplitterPanel :size="50">
                     <div class="card flex flex-col gap-4">
@@ -138,7 +138,7 @@ const { fields, toggleEditMode, updateFieldValue } = useEditableFields();
             type="text"
             :value="field.value"
             :disabled="!field.isEditable"
-            style="width: 500px; margin-right: 40px;"
+            style="width: 300px; margin-right: 20px;"
             @input="updateFieldValue(index, $event)"
           />
           <Button
@@ -152,6 +152,9 @@ const { fields, toggleEditMode, updateFieldValue } = useEditableFields();
                     </div>
                     </SplitterPanel>
                 </Splitter>
+            </SplitterPanel>
+            <SplitterPanel :size="40" :minSize="30" class="flex flex-col items-center justify-center">
+                //不知道放什么
             </SplitterPanel>
         </Splitter>
     </div>

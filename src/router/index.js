@@ -105,6 +105,51 @@ const router = createRouter({
                     component: () => import('@/views/pages/Documentation.vue')
                 },
                 {
+                    path: '/carsearch',
+                    name: 'carsearch',
+                    component: () => import('@/views/pages/CarSearch.vue')
+                },
+                {
+                    path: '/pricesearch',
+                    name: 'pricesearch',
+                    component: () => import('@/views/pages/PriceSearch.vue')
+                },
+                {
+                    path: '/salesearch',
+                    name: 'salesearch',
+                    component: () => import('@/views/pages/SaleSearch.vue')
+                },
+                {
+                    path: '/carcompare',
+                    name: 'carcompare',
+                    component: () => import('@/views/pages/CarCompare.vue')
+                },
+                {
+                    path: '/hotsales',
+                    name: 'hotsales',
+                    component: () => import('@/views/pages/HotSales.vue')
+                },
+                {
+                    path: '/pricecompare',
+                    name: 'pricecompare',
+                    component: () => import('@/views/pages/PriceCompare.vue')
+                },
+                {
+                    path: '/purpose',
+                    name: 'purpose',
+                    component: () => import('@/views/pages/Purpose.vue')
+                },
+                {
+                    path: '/salesanalysis',
+                    name: 'salesanalysis',
+                    component: () => import('@/views/pages/SalesAnalysis.vue')
+                },
+                {
+                    path: '/salestrend',
+                    name: 'salestrend',
+                    component: () => import('@/views/pages/SalesTrend.vue')
+                },
+                {
                     path: '/dashboard',
                     name: 'dashboard',
                     component: () => import('@/views/Dashboard.vue')
