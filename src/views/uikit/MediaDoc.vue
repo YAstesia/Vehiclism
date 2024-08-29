@@ -3,6 +3,7 @@ import { editEmail, editName, editPassword, editPhone } from '@/api';
 import { PhotoService } from '@/service/PhotoService';
 import { ProductService } from '@/service/ProductService';
 import { onMounted, ref } from 'vue';
+import { useCookies } from 'vue3-cookies';
 
 const products = ref([]);
 const images = ref([]);
@@ -78,11 +79,18 @@ function onFileChange(event) {
 }
 
 function useEditableFields() {
-  const fields = ref([
-    { id: 'name1', label: '用户名', value: '默认用户名', isEditable: false },
-    { id: 'password1', label: '密码', value: '默认密码', isEditable: false },
-    { id: 'email1', label: '邮箱', value: '默认邮箱', isEditable: false },
-    { id: 'phone1', label: '电话', value: '默认电话', isEditable: false },
+  const { cookies } = useCookies();
+  // 从 cookie 中读取数据
+  const userNameCookie = cookies.get('name') || '默认用户名';
+  const userPasswordCookie = cookies.get('pwd') || '默认密码';
+  const userEmailCookie = cookies.get('email') || '默认邮箱';
+  const userPhoneCookie = cookies.get('phone') || '默认电话';
+
+   const fields = ref([
+    { id: 'name1', label: '用户名', value: userNameCookie, isEditable: false },
+    { id: 'password1', label: '密码', value: userPasswordCookie, isEditable: false },
+    { id: 'email1', label: '邮箱', value: userEmailCookie, isEditable: false },
+    { id: 'phone1', label: '电话', value: userPhoneCookie, isEditable: false },
   ]);
 
   const func = [editName, editPassword, editEmail, editPhone];
@@ -129,9 +137,9 @@ const { fields, toggleEditMode, updateFieldValue } = useEditableFields();
                 <input type="file" id="file-input" style="display:none;" @change="onFileChange" />
                 <button class="p-button p-component p-button-primary" @click="triggerFileInput">修改头像</button>
             </SplitterPanel>
-            <SplitterPanel :size="50">
+            <SplitterPanel :size="45">
                 <Splitter layout="vertical">
-                    <SplitterPanel :size="50">
+                    <SplitterPanel :size="45">
                     <div class="card flex flex-col gap-4">
                         <div v-for="(field, index) in fields" :key="index" class="flex flex-col gap-2">
         <label :for="field.id" style="font-size: 14pt; margin-bottom: 5px;">{{ field.label }}</label>

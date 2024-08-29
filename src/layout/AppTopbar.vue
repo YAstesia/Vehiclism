@@ -1,5 +1,6 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
+import { useToast } from 'primevue/usetoast';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCookies } from 'vue3-cookies';
@@ -10,6 +11,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 const { cookies, removeAll } = useCookies();
 const router = useRouter();
 const showTooltip = ref(false);
+const toast = useToast();
 
 const handleLogout = () => {
   // 清除所有 cookie
@@ -17,6 +19,10 @@ const handleLogout = () => {
   // 跳转到登录页面或其他页面
   router.push('/');
 };
+
+function showSuccess() {
+    toast.add({ severity: 'success', summary: '欢迎来到Vehiclism平台！', detail: '我们希望这个平台能满足您的所有需求。\n 如果有任何问题请致电：17321612271', life: 5000 });
+}
 
 </script>
 
@@ -26,7 +32,7 @@ const handleLogout = () => {
             <button class="layout-menu-button layout-topbar-action" @click="onMenuToggle">
                 <i class="pi pi-bars"></i>
             </button>
-            <router-link to="/" class="layout-topbar-logo">
+            <div @click="showSuccess" class="layout-topbar-logo" role="button" tabindex="0">
                 <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         fill-rule="evenodd"
@@ -46,7 +52,7 @@ const handleLogout = () => {
                 </svg>
 
                 <span>Vehiclism</span>
-            </router-link>
+            </div>
         </div>
 
         <div class="layout-topbar-actions">
@@ -81,7 +87,7 @@ const handleLogout = () => {
                                 @mouseover="showTooltip = true"
                                 @mouseleave="showTooltip = false"
                                 @click="handleLogout">
-                        <i class="pi pi-user"></i>
+                        <i class="pi pi-sign-out"></i>
                         <span>EXIT</span>
                         <div v-if="showTooltip" class="tooltip">退出登录</div>
                         </button>
