@@ -12,7 +12,7 @@ const model = ref([
                     {
                         label: '首页',
                         icon: 'pi pi-fw pi-home',
-                        to: '/'
+                        to: '/dashboard'
                     },
                     {
                         label: '汽车数据查询',

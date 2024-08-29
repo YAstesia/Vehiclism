@@ -13,8 +13,7 @@ const handleLogin = async () => {
   try {
     const response = await login(email.value, password.value);
     success.value = '登录成功！';
-    // 登录成功后的处理逻辑，比如跳转到主页
-    // this.$router.push('/');
+    this.$router.push('/dashboard');
   } catch (err) {
     error.value = '登录失败，请检查用户名和密码。';
   }

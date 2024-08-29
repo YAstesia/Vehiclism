@@ -6,13 +6,13 @@ const router = createRouter({
     routes: [
         {
             path: '/',
+            name: 'landing',
+            component: () => import('@/views/pages/Landing.vue')
+        },
+        {
+            path: '/',
             component: AppLayout,
             children: [
-                {
-                    path: '/',
-                    name: 'dashboard',
-                    component: () => import('@/views/Dashboard.vue')
-                },
                 {
                     path: '/uikit/formlayout',
                     name: 'formlayout',
@@ -103,13 +103,13 @@ const router = createRouter({
                     path: '/documentation',
                     name: 'documentation',
                     component: () => import('@/views/pages/Documentation.vue')
-                }
+                },
+                {
+                    path: '/dashboard',
+                    name: 'dashboard',
+                    component: () => import('@/views/Dashboard.vue')
+                },
             ]
-        },
-        {
-            path: '/landing',
-            name: 'landing',
-            component: () => import('@/views/pages/Landing.vue')
         },
         {
             path: '/pages/notfound',

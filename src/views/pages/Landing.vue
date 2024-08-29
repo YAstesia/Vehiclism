@@ -73,7 +73,7 @@ function smoothScroll(id) {
                 <div class="mx-6 md:mx-20 mt-0 md:mt-6">
                     <h1 class="text-6xl font-bold text-gray-900 leading-tight"><span class="font-light block">为您提供</span>权威的汽车大数据分析</h1>
                     <p class="font-normal text-2xl leading-normal md:mt-4 text-gray-700">从数据查询到大数据分析，我们Vehiclism应有尽有</p>
-                    <Button label="进入网站" as="router-link" to="/" rounded class="!text-xl mt-8 !px-4"></Button>
+                    <Button label="进入网站" as="router-link" to="/dashboard" rounded class="!text-xl mt-8 !px-4"></Button>
                 </div>
                 <div class="flex justify-center md:justify-end">
                     <img src="/demo/images/landing/screen-2.png" alt="Hero Image" class="w-9/12 md:w-auto transform transition-transform duration-1000 ease-in-out opacity-0 translate-y-10 animate-fade-in" />
