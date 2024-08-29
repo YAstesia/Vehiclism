@@ -9,15 +9,20 @@ const password = ref('');
 const checked = ref(false);
 const error = ref('');
 const success = ref('');
-const router = useRouter(); // 获取 router 实例
+const router = useRouter();
 
 const handleLogin = async () => {
-  try {
+    try {
     const response = await login(email.value, password.value);
-    success.value = '登录成功！';
-    router.push('/dashboard');
+    const { data, success: isSuccess, msg } = response.data;
+    if (isSuccess) {
+      success.value = msg;
+      router.push('/dashboard');
+    } else {
+      error.value = msg;
+    }
   } catch (err) {
-    error.value = '登录失败，请检查用户名和密码。';
+    error.value = '登录失败。';
   }
 };
 
