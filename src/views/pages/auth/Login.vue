@@ -2,22 +2,29 @@
 import { login } from '@/api';
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router'; // 导入 useRouter
 
 const email = ref('');
 const password = ref('');
 const checked = ref(false);
 const error = ref('');
 const success = ref('');
+const router = useRouter(); // 获取 router 实例
 
 const handleLogin = async () => {
   try {
     const response = await login(email.value, password.value);
     success.value = '登录成功！';
-    this.$router.push('/dashboard');
+    router.push('/dashboard');
   } catch (err) {
     error.value = '登录失败，请检查用户名和密码。';
   }
 };
+
+const goBack = () => {
+  router.push('/'); // 使用 router 进行导航
+};
+
 </script>
 
 <template>
@@ -49,8 +56,8 @@ const handleLogin = async () => {
                     </div>
 
                     <div>
-                        <label for="id1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">用户名</label>
-                        <InputText id="id1" type="text" placeholder="在此处输入用户名" class="w-full md:w-[30rem] mb-8" v-model="email" />
+                        <label for="id1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">邮箱或手机号</label>
+                        <InputText id="id1" type="text" placeholder="在此处输入邮箱或手机号" class="w-full md:w-[30rem] mb-8" v-model="email" />
 
                         <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">密码</label>
                         <Password id="password1" v-model="password" placeholder="在此处输入密码" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
@@ -63,6 +70,7 @@ const handleLogin = async () => {
                             <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">忘记密码?</span>
                         </div>
                         <Button label="登录" class="w-full" @click="handleLogin"></Button>
+                        <button @click="goBack" class="w-full mt-4 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600" style="height:35px">返回</button>
                         <div v-if="error" class="text-red-500 mt-2">{{ error }}</div>
                         <div v-if="success" class="text-green-500 mt-2">{{ success }}</div>
                     </div>

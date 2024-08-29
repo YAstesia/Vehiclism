@@ -3,6 +3,7 @@ import { useLayout } from '@/layout/composables/layout';
 import AppConfigurator from './AppConfigurator.vue';
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
+
 </script>
 
 <template>
@@ -11,7 +12,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
             <button class="layout-menu-button layout-topbar-action" @click="onMenuToggle">
                 <i class="pi pi-bars"></i>
             </button>
-            <router-link to="/landing" class="layout-topbar-logo">
+            <router-link to="/" class="layout-topbar-logo">
                 <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         fill-rule="evenodd"

@@ -5,6 +5,10 @@ import { ref } from 'vue';
 const email = ref('');
 const password = ref('');
 const checked = ref(false);
+
+const goBack = () => {
+  router.push('/'); // 使用 router 进行导航
+};
 </script>
 
 <template>
@@ -39,12 +43,16 @@ const checked = ref(false);
                         <label for="id1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">用户名</label>
                         <InputText id="id1" type="text" placeholder="在此处输入用户名" class="w-full md:w-[30rem] mb-8" v-model="email" />
 
+                        <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">邮箱</label>
+                        <InputText id="email1" type="text" placeholder="在此处输入邮箱" class="w-full md:w-[30rem] mb-8" v-model="email" />
+
                         <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">密码</label>
                         <Password id="password1" v-model="password" placeholder="在此处输入密码" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
 
                         <label for="password2" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">确认密码</label>
                         <Password id="password2" v-model="password" placeholder="在此处再次输入密码" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
                         <Button label="注册" class="w-full" as="router-link" to="/"></Button>
+                        <button @click="goBack" class="w-full mt-4 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600" style="height:35px">返回</button>
                     </div>
                 </div>
             </div>
