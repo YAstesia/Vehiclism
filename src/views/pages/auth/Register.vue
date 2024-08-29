@@ -1,13 +1,45 @@
 <script setup>
+import { registerUser } from '@/api';
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router'; // 导入 useRouter
 
-const email = ref('');
+const username = ref('');
 const password = ref('');
-const checked = ref(false);
+const confirmPassword = ref('');
+const email = ref('');
+const phone = ref('');
+const message = ref(''); // 用于显示提示信息
+const router = useRouter();
 
 const goBack = () => {
   router.push('/'); // 使用 router 进行导航
+};
+
+const handleRegister = async () => {
+  if (password.value !== confirmPassword.value) {
+    message.value = '两次输入的密码不一致';
+    password.value = '';
+    confirmPassword.value = '';
+    return;
+  }
+
+  const userData = {
+    name: username.value,
+    pwd: password.value,
+    email: email.value,
+    phone: phone.value,
+  };
+
+  const { success, msg } = await registerUser(userData);
+
+  if (success) {
+    message.value = "注册成功，请等待页面跳转……";
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    router.push('/auth/login');
+  } else {
+    message.value = msg;
+  }
 };
 </script>
 
@@ -41,7 +73,10 @@ const goBack = () => {
 
                     <div>
                         <label for="id1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">用户名</label>
-                        <InputText id="id1" type="text" placeholder="在此处输入用户名" class="w-full md:w-[30rem] mb-8" v-model="email" />
+                        <InputText id="id1" type="text" placeholder="在此处输入用户名" class="w-full md:w-[30rem] mb-8" v-model="username" />
+
+                        <label for="phone1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">手机号</label>
+                        <InputText id="phone1" type="text" placeholder="在此处输入手机号" class="w-full md:w-[30rem] mb-8" v-model="phone" />
 
                         <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">邮箱</label>
                         <InputText id="email1" type="text" placeholder="在此处输入邮箱" class="w-full md:w-[30rem] mb-8" v-model="email" />
@@ -50,9 +85,10 @@ const goBack = () => {
                         <Password id="password1" v-model="password" placeholder="在此处输入密码" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
 
                         <label for="password2" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">确认密码</label>
-                        <Password id="password2" v-model="password" placeholder="在此处再次输入密码" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
-                        <Button label="注册" class="w-full" as="router-link" to="/"></Button>
+                        <Password id="password2" v-model="confirmPassword" placeholder="在此处再次输入密码" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
+                        <Button @click="handleRegister" label="注册" class="w-full"></Button>
                         <button @click="goBack" class="w-full mt-4 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600" style="height:35px">返回</button>
+                        <p v-if="message" class="text-red-500 mt-4">{{ message }}</p>
                     </div>
                 </div>
             </div>
