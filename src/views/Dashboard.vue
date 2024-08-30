@@ -24,27 +24,27 @@ function setChartData() {
     const documentStyle = getComputedStyle(document.documentElement);
 
     return {
-        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+        labels: ['2024/8/27', '2024/8/28', '2024/8/29', '2024/8/30'],
         datasets: [
             {
                 type: 'bar',
-                label: 'Subscriptions',
+                label: '燃料电池汽车',
                 backgroundColor: documentStyle.getPropertyValue('--p-primary-400'),
-                data: [4000, 10000, 15000, 4000],
+                data: [8000, 10000, 15000, 8000],
                 barThickness: 32
             },
             {
                 type: 'bar',
-                label: 'Advertising',
+                label: '混合动力汽车',
                 backgroundColor: documentStyle.getPropertyValue('--p-primary-300'),
-                data: [2100, 8400, 2400, 7500],
+                data: [2100, 4400, 2400, 3500],
                 barThickness: 32
             },
             {
                 type: 'bar',
-                label: 'Affiliate',
+                label: '纯电动汽车',
                 backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
-                data: [4100, 5200, 3400, 7400],
+                data: [4100, 5200, 6400, 7400],
                 borderRadius: {
                     topLeft: 8,
                     topRight: 8
@@ -127,7 +127,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
             </div>
             <div class="card">
                 <div class="flex justify-between items-center mb-6">
-                    <div class="font-semibold text-xl">汽车销量榜</div>
+                    <div class="font-semibold text-xl">销量热点趋势</div>
                 </div>
                 <ul class="list-none p-0 m-0">
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">

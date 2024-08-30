@@ -22,10 +22,10 @@ const handleLogin = async () => {
       success.value = msg;
 
       // 创建 cookie，包含用户信息
-      cookies.set('user_id', data.id, 'session'); // session cookie
-      cookies.set('user_name', data.name, 'session');
-      cookies.set('user_phone', data.phone, 'session');
-      cookies.set('user_email', data.email, 'session');
+      cookies.set('user_id', data.id, 'session' , { path: '/' }); // session cookie
+      cookies.set('user_name', data.name, 'session' , { path: '/' });
+      cookies.set('user_phone', data.phone, 'session' , { path: '/' });
+      cookies.set('user_email', data.email, 'session' , { path: '/' });
 
       router.push('/dashboard');
     } else {

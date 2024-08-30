@@ -8,6 +8,8 @@ import { useCookies } from 'vue3-cookies';
 const products = ref([]);
 const images = ref([]);
 const avatarSrc = ref('https://primefaces.org/cdn/primevue/images/galleria/galleria10.jpg');
+const pieData = ref(null);
+const pieOptions = ref(null);
 const galleriaResponsiveOptions = ref([
     {
         breakpoint: '1024px',
@@ -47,7 +49,35 @@ const carouselResponsiveOptions = ref([
 onMounted(() => {
     ProductService.getProductsSmall().then((data) => (products.value = data));
     PhotoService.getImages().then((data) => (images.value = data));
+    setColorOptions();
 });
+
+function setColorOptions() {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+
+    pieData.value = {
+        labels: ['纯电动汽车', '燃料电池汽车', '混合动力汽车'],
+        datasets: [
+            {
+                data: [17, 24, 5],
+                backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500')],
+                hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400')]
+            }
+        ]
+    };
+
+    pieOptions.value = {
+        plugins: {
+            legend: {
+                labels: {
+                    usePointStyle: true,
+                    color: textColor
+                }
+            }
+        }
+    };
+}
 
 function getSeverity(status) {
     switch (status) {
@@ -81,14 +111,14 @@ function onFileChange(event) {
 function useEditableFields() {
   const { cookies } = useCookies();
   // 从 cookie 中读取数据
-  const userNameCookie = cookies.get('name') || '默认用户名';
-  const userPasswordCookie = cookies.get('pwd') || '默认密码';
-  const userEmailCookie = cookies.get('email') || '默认邮箱';
-  const userPhoneCookie = cookies.get('phone') || '默认电话';
+  const userNameCookie = cookies.get('user_name') || '默认用户名';
+  // const userPasswordCookie = cookies.get('pwd') || '请在此输入新密码';
+  const userEmailCookie = cookies.get('user_email') || '默认邮箱';
+  const userPhoneCookie = cookies.get('user_phone') || '默认电话';
 
    const fields = ref([
     { id: 'name1', label: '用户名', value: userNameCookie, isEditable: false },
-    { id: 'password1', label: '密码', value: userPasswordCookie, isEditable: false },
+    // { id: 'password1', label: '密码', value: userPasswordCookie, isEditable: false },
     { id: 'email1', label: '邮箱', value: userEmailCookie, isEditable: false },
     { id: 'phone1', label: '电话', value: userPhoneCookie, isEditable: false },
   ]);
@@ -126,46 +156,48 @@ const { fields, toggleEditMode, updateFieldValue } = useEditableFields();
 <template>
     <div class="card">
         <div class="font-semibold text-xl mb-4">我的信息</div>
-        <Splitter style="height: 400px" class="mb-8">
-            <SplitterPanel :size="30" :minSize="10" class="flex flex-col items-center justify-center">
-                <div class="font-semibold" style="font-size: 20pt; margin-bottom: 5px;">我的头像</div>
+        <Splitter style="height: 300px" class="mb-8">
+            <SplitterPanel :size="30" :minSize="30" class="flex flex-col items-center justify-center">
                 <img 
                     :src="avatarSrc" 
                     alt="Image" 
-                    style="width: 250px; height: 250px; border-radius: 50%; margin-top: 10px; object-fit: cover; margin-bottom: 20px;" 
+                    style="width: 200px; height: 200px; border-radius: 50%; margin-top: 10px; object-fit: cover; margin-bottom: 25px;" 
                     class="mx-auto avatar-image" />
                 <input type="file" id="file-input" style="display:none;" @change="onFileChange" />
                 <button class="p-button p-component p-button-primary" @click="triggerFileInput">修改头像</button>
             </SplitterPanel>
-            <SplitterPanel :size="45">
+            <SplitterPanel :size="40" :minSize="40">
                 <Splitter layout="vertical">
-                    <SplitterPanel :size="45">
-                    <div class="card flex flex-col gap-4">
-                        <div v-for="(field, index) in fields" :key="index" class="flex flex-col gap-2">
-        <label :for="field.id" style="font-size: 14pt; margin-bottom: 5px;">{{ field.label }}</label>
-        <div class="flex flex-wrap items-start gap-4">
-          <InputText
-            :id="field.id"
-            type="text"
-            :value="field.value"
-            :disabled="!field.isEditable"
-            style="width: 300px; margin-right: 20px;"
-            @input="updateFieldValue(index, $event)"
-          />
-          <Button
-            :label="field.isEditable ? '完成' : '修改'"
-            :class="field.isEditable ? 'p-button-danger' : ''"
-            @click="toggleEditMode(index)"
-            :fluid="false"
-          ></Button>
-        </div>
-      </div>
+                    <SplitterPanel :size="40" :minSize="40">
+                   <div class="card flex flex-col gap-4">
+                       <div v-for="(field, index) in fields" :key="index" class="flex flex-col gap-2">
+                         <label :for="field.id" style="font-size: 10pt; margin-top: 3px;">{{ field.label }}</label>
+                         <div class="flex flex-wrap items-start gap-4">
+                        <InputText
+                          :id="field.id"
+                          type="text"
+                          :value="field.value"
+                          :disabled="!field.isEditable"
+                          style="width: 300px; margin-right: 20px;"
+                          @input="updateFieldValue(index, $event)"/>
+                        <Button
+                          :label="field.isEditable ? '完成' : '修改'"
+                          :class="field.isEditable ? 'p-button-danger' : ''"
+                          @click="toggleEditMode(index)"
+                          :fluid="false" ></Button>
+                          </div>
+                       </div>
                     </div>
                     </SplitterPanel>
                 </Splitter>
             </SplitterPanel>
-            <SplitterPanel :size="40" :minSize="30" class="flex flex-col items-center justify-center">
-                //不知道放什么
+            <SplitterPanel :size="30" :minSize="30" class="flex flex-col items-center justify-center">
+               <div class="col-span-12 xl:col-span-6">
+                  <div class="card flex flex-col items-center">
+                  <div class="font-semibold text-xl mb-4" style="margin-top: 20px; margin-bottom: 10px;">我的收藏统计</div>
+                  <Chart type="pie" :data="pieData" :options="pieOptions" style="height: 240px; width: 240px;"></Chart>
+                  </div>
+               </div>
             </SplitterPanel>
         </Splitter>
     </div>

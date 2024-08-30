@@ -1,5 +1,6 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
+import Cookies from 'js-cookie';
 import { useToast } from 'primevue/usetoast';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -8,17 +9,30 @@ import AppConfigurator from './AppConfigurator.vue';
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
-const { cookies, removeAll } = useCookies();
+const { remove } = useCookies();
 const router = useRouter();
 const showTooltip = ref(false);
 const toast = useToast();
 
 const handleLogout = () => {
-  // 清除所有 cookie
-  removeAll();
-  // 跳转到登录页面或其他页面
   router.push('/');
+  remove('user_email', { path: '/' });
+  remove('user_id', { path: '/' });
+  remove('user_name', { path: '/' });
+  remove('user_phone', { path: '/' });
+  Cookies.remove('user_email', { path: '/' });
+  Cookies.remove('user_id', { path: '/' });
+  Cookies.remove('user_name', { path: '/' });
+  Cookies.remove('user_phone', { path: '/' });
+  deleteCookie('user_id');
+  deleteCookie('user_name');
+  deleteCookie('user_phone');
+  deleteCookie('user_email');
 };
+
+function deleteCookie(name, path = '/') {
+  document.cookie = `${name}=; path=${path}; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+}
 
 function showSuccess() {
     toast.add({ severity: 'success', summary: '欢迎来到Vehiclism平台！', detail: '我们希望这个平台能满足您的所有需求。\n 如果有任何问题请致电：17321612271', life: 5000 });
@@ -88,7 +102,7 @@ function showSuccess() {
                                 @mouseleave="showTooltip = false"
                                 @click="handleLogout">
                         <i class="pi pi-sign-out"></i>
-                        <span>EXIT</span>
+                        <span>退出登录</span>
                         <div v-if="showTooltip" class="tooltip">退出登录</div>
                         </button>
                 </router-link>
