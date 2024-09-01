@@ -1,5 +1,6 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
+import { CountryService } from '@/service/CountryService';
 import { onMounted, ref, watch } from 'vue';
 
 const { getPrimary, getSurface, isDarkTheme } = useLayout();
@@ -13,10 +14,26 @@ const pieOptions = ref(null);
 const polarOptions = ref(null);
 const barOptions = ref(null);
 const radarOptions = ref(null);
+const selectedAutoValue = ref(null);
+const autoFilteredValue = ref([]);
+const autoValue = ref(null);
 
 onMounted(() => {
     setColorOptions();
+    CountryService.getCountries().then((data) => (autoValue.value = data));
 });
+
+function searchCountry(event) {
+    setTimeout(() => {
+        if (!event.query.trim().length) {
+            autoFilteredValue.value = [...autoValue.value];
+        } else {
+            autoFilteredValue.value = autoValue.value.filter((country) => {
+                return country.name.toLowerCase().startsWith(event.query.toLowerCase());
+            });
+        }
+    }, 250);
+}
 
 function setColorOptions() {
     const documentStyle = getComputedStyle(document.documentElement);
@@ -228,6 +245,19 @@ watch(
 </script>
 
 <template>
+    <div class="card">
+        <div class="font-semibold text-xl" style="margin-bottom: 30px;">车型比较</div>
+        <div class="flex flex-wrap gap-4">
+            <div class="flex flex-col grow basis-0 gap-2">
+                <label for="name2">车型A</label>
+                <AutoComplete v-model="selectedAutoValue" :suggestions="autoFilteredValue" optionLabel="name" placeholder="Search" dropdown multiple display="chip" @complete="searchCountry($event)" />
+            </div>
+            <div class="flex flex-col grow basis-0 gap-2">
+                <label for="email2">车型B</label>
+                <AutoComplete v-model="selectedAutoValue" :suggestions="autoFilteredValue" optionLabel="name" placeholder="Search" dropdown multiple display="chip" @complete="searchCountry($event)" />
+            </div>
+        </div>
+    </div>
     <Fluid class="grid grid-cols-12 gap-8">
         <div class="col-span-12 xl:col-span-6">
             <div class="card">

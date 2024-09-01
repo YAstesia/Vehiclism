@@ -14,24 +14,6 @@ const userName = ref('');
 const userPhone = ref('');
 const userEmail = ref('');
 
-const galleriaResponsiveOptions = ref([
-    {
-        breakpoint: '1024px',
-        numVisible: 5
-    },
-    {
-        breakpoint: '960px',
-        numVisible: 4
-    },
-    {
-        breakpoint: '768px',
-        numVisible: 3
-    },
-    {
-        breakpoint: '560px',
-        numVisible: 1
-    }
-]);
 const carouselResponsiveOptions = ref([
     {
         breakpoint: '1024px',
@@ -228,8 +210,7 @@ function toggleEditMode(index) {
                     <div class="flex justify-between items-center">
                         <div class="mt-0 font-semibold text-xl">${{ slotProps.data.price }}</div>
                         <span>
-                            <Button icon="pi pi-heart" severity="secondary" outlined />
-                            <Button icon="pi pi-shopping-cart" class="ml-2" />
+                            <Button icon="pi pi-search" class="ml-2" />
                         </span>
                     </div>
                 </div>
