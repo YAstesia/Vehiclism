@@ -25,18 +25,15 @@ export const registerUser = async (userData) => {
   }
 };
 
-export function editName(name) {
-  return api.post('/user/editName', { name });
+// api.js 中的函数实现示例
+export function editEmail(userId, userEmail) {
+  return axios.post('/api/updateEmail', { userId, userEmail });
 }
 
-export function editPassword(password) {
-  return api.post('/user/editPassword', { password });
+export function editName(userId, userName) {
+  return axios.post('/api/updateName', { userId, userName });
 }
 
-export function editEmail(email) {
-  return api.post('/user/editEmail', { email });
-}
-
-export function editPhone(phone) {
-  return api.post('/user/editPhone', { phone });
+export function editPhone(userId, userPhone) {
+  return axios.post('/api/updatePhone', { userId, userPhone });
 }

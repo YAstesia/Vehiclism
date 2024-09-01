@@ -1,15 +1,19 @@
 <script setup>
-import { editEmail, editName, editPassword, editPhone } from '@/api';
+import { editEmail, editName, editPhone } from '@/api';
 import { PhotoService } from '@/service/PhotoService';
 import { ProductService } from '@/service/ProductService';
 import { onMounted, ref } from 'vue';
-import { useCookies } from 'vue3-cookies';
 
 const products = ref([]);
 const images = ref([]);
 const avatarSrc = ref('https://primefaces.org/cdn/primevue/images/galleria/galleria10.jpg');
 const pieData = ref(null);
 const pieOptions = ref(null);
+const userId = ref('');
+const userName = ref('');
+const userPhone = ref('');
+const userEmail = ref('');
+
 const galleriaResponsiveOptions = ref([
     {
         breakpoint: '1024px',
@@ -50,6 +54,11 @@ onMounted(() => {
     ProductService.getProductsSmall().then((data) => (products.value = data));
     PhotoService.getImages().then((data) => (images.value = data));
     setColorOptions();
+      // 从 localStorage 读取用户信息
+  userId.value = localStorage.getItem('user_id') || '';
+  userName.value = localStorage.getItem('user_name') || '';
+  userPhone.value = localStorage.getItem('user_phone') || '';
+  userEmail.value = localStorage.getItem('user_email') || '';
 });
 
 function setColorOptions() {
@@ -108,49 +117,47 @@ function onFileChange(event) {
     }
 }
 
-function useEditableFields() {
-  const { cookies } = useCookies();
-  // 从 cookie 中读取数据
-  const userNameCookie = cookies.get('user_name') || '默认用户名';
-  // const userPasswordCookie = cookies.get('pwd') || '请在此输入新密码';
-  const userEmailCookie = cookies.get('user_email') || '默认邮箱';
-  const userPhoneCookie = cookies.get('user_phone') || '默认电话';
+const fields = ref([
+  {
+    id: 'username',
+    label: '用户名',
+    value: localStorage.getItem('user_name') || '',
+    isEditable: false,
+  },
+  {
+    id: 'email',
+    label: '电子邮箱',
+    value: localStorage.getItem('user_email') || '',
+    isEditable: false,
+  },
+  {
+    id: 'phone',
+    label: '电话号码',
+    value: localStorage.getItem('user_phone') || '',
+    isEditable: false,
+  },
+]);
 
-   const fields = ref([
-    { id: 'name1', label: '用户名', value: userNameCookie, isEditable: false },
-    // { id: 'password1', label: '密码', value: userPasswordCookie, isEditable: false },
-    { id: 'email1', label: '邮箱', value: userEmailCookie, isEditable: false },
-    { id: 'phone1', label: '电话', value: userPhoneCookie, isEditable: false },
-  ]);
-
-  const func = [editName, editPassword, editEmail, editPhone];
-
-  async function toggleEditMode(index) {
-    fields.value[index].isEditable = !fields.value[index].isEditable;
-    if (!fields.value[index].isEditable) {
-      // Send updated value to the backend
-      try {
-        const response = await func[index](fields.value[index].value);
-        if (response.data.success) {
-          alert(response.data.msg); // 修改成功！
-        } else {
-          alert(response.data.msg); // 修改失败！
-        }
-      } catch (error) {
-        alert('修改失败，请稍后再试！');
-      }
-    }
-  }
-
-  function updateFieldValue(index, event) {
-    fields.value[index].value = event.target.value;
-  }
-
-  return { fields, toggleEditMode, updateFieldValue };
+function updateFieldValue(index, event) {
+  fields.value[index].value = event.target.value;
 }
 
-// 在 setup 中调用 useEditableFields 并解构其返回值
-const { fields, toggleEditMode, updateFieldValue } = useEditableFields();
+function toggleEditMode(index) {
+  const field = fields.value[index];
+  if (field.isEditable) {
+    localStorage.setItem(field.id, field.value);
+    if (field.id === 'username') {
+      editName(userId.value, field.value);
+    } else if (field.id === 'email') {
+      editEmail(userId.value, field.value);
+    } else if (field.id === 'phone') {
+      editPhone(userId.value, field.value);
+    }
+  }
+  
+  field.isEditable = !field.isEditable;
+}
+
 </script>
 
 <template>
@@ -167,30 +174,32 @@ const { fields, toggleEditMode, updateFieldValue } = useEditableFields();
                 <button class="p-button p-component p-button-primary" @click="triggerFileInput">修改头像</button>
             </SplitterPanel>
             <SplitterPanel :size="40" :minSize="40">
-                <Splitter layout="vertical">
-                    <SplitterPanel :size="40" :minSize="40">
-                   <div class="card flex flex-col gap-4">
-                       <div v-for="(field, index) in fields" :key="index" class="flex flex-col gap-2">
-                         <label :for="field.id" style="font-size: 10pt; margin-top: 3px;">{{ field.label }}</label>
-                         <div class="flex flex-wrap items-start gap-4">
-                        <InputText
-                          :id="field.id"
-                          type="text"
-                          :value="field.value"
-                          :disabled="!field.isEditable"
-                          style="width: 300px; margin-right: 20px;"
-                          @input="updateFieldValue(index, $event)"/>
-                        <Button
-                          :label="field.isEditable ? '完成' : '修改'"
-                          :class="field.isEditable ? 'p-button-danger' : ''"
-                          @click="toggleEditMode(index)"
-                          :fluid="false" ></Button>
-                          </div>
-                       </div>
-                    </div>
-                    </SplitterPanel>
-                </Splitter>
-            </SplitterPanel>
+    <Splitter layout="vertical">
+      <SplitterPanel :size="40" :minSize="40">
+        <div class="card flex flex-col gap-4">
+          <div v-for="(field, index) in fields" :key="index" class="flex flex-col gap-2">
+            <label :for="field.id" style="font-size: 10pt; margin-top: 3px;">{{ field.label }}</label>
+            <div class="flex flex-wrap items-start gap-4">
+              <InputText
+                :id="field.id"
+                type="text"
+                :value="field.value"
+                :disabled="!field.isEditable"
+                style="width: 300px; margin-right: 20px;"
+                @input="updateFieldValue(index, $event)"
+              />
+              <Button
+                :label="field.isEditable ? '完成' : '修改'"
+                :class="field.isEditable ? 'p-button-danger' : ''"
+                @click="toggleEditMode(index)"
+                :fluid="false"
+              ></Button>
+            </div>
+          </div>
+        </div>
+      </SplitterPanel>
+    </Splitter>
+  </SplitterPanel>
             <SplitterPanel :size="30" :minSize="30" class="flex flex-col items-center justify-center">
                <div class="col-span-12 xl:col-span-6">
                   <div class="card flex flex-col items-center">

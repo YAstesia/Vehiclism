@@ -3,7 +3,6 @@ import { login } from '@/api';
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router'; // 导入 useRouter
-import { useCookies } from 'vue3-cookies';
 
 const email = ref('');
 const password = ref('');
@@ -11,7 +10,6 @@ const checked = ref(false);
 const error = ref('');
 const success = ref('');
 const router = useRouter();
-const { cookies } = useCookies();
 
 
 const handleLogin = async () => {
@@ -21,11 +19,10 @@ const handleLogin = async () => {
     if (isSuccess) {
       success.value = msg;
 
-      // 创建 cookie，包含用户信息
-      cookies.set('user_id', data.id, 'session' , { path: '/' }); // session cookie
-      cookies.set('user_name', data.name, 'session' , { path: '/' });
-      cookies.set('user_phone', data.phone, 'session' , { path: '/' });
-      cookies.set('user_email', data.email, 'session' , { path: '/' });
+      localStorage.setItem('user_id', data.id);
+      localStorage.setItem('user_name', data.name);
+      localStorage.setItem('user_phone', data.phone);
+      localStorage.setItem('user_email', data.email);
 
       router.push('/dashboard');
     } else {
