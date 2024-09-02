@@ -2,8 +2,10 @@
 import { editEmail, editName, editPhone } from '@/api';
 import { PhotoService } from '@/service/PhotoService';
 import { ProductService } from '@/service/ProductService';
+import { useToast } from 'primevue/usetoast';
 import { onMounted, ref } from 'vue';
 
+const toast = useToast();
 const products = ref([]);
 const images = ref([]);
 const avatarSrc = ref('https://primefaces.org/cdn/primevue/images/galleria/galleria10.jpg');
@@ -124,22 +126,43 @@ function updateFieldValue(index, event) {
   fields.value[index].value = event.target.value;
 }
 
-function toggleEditMode(index) {
+async function toggleEditMode(index) {
   const field = fields.value[index];
-  if (field.isEditable) {
+  let response  = {};
+  if (!field.isEditable) {
+    // 当 field.isEditable 为 false 时，直接允许切换为 true，不检查后端响应
+    field.isEditable = true;
+    return;
+  } else {
+    // 当 field.isEditable 为 true 时，进行保存并检查后端响应
     localStorage.setItem(field.id, field.value);
+
+    
     if (field.id === 'username') {
-      editName(userId.value, field.value);
+      response = await editName(userId.value, field.value);
     } else if (field.id === 'email') {
-      editEmail(userId.value, field.value);
+      response = await editEmail(userId.value, field.value);
     } else if (field.id === 'phone') {
-      editPhone(userId.value, field.value);
+      response = await editPhone(userId.value, field.value);
     }
-  }
-  
-  field.isEditable = !field.isEditable;
+    }
+
+    if (response.data.success) {
+      showSuccess(response.data.msg);
+      field.isEditable = false; // 仅在成功时切换为不可编辑
+    } else {
+      showError(response.data.msg);
+      // 保持为可编辑状态，不执行切换
+    }
 }
 
+function showSuccess(message) {
+    toast.add({ severity: 'success', summary: '修改成功', detail: message, life: 5000 });
+}
+
+function showError(message) {
+    toast.add({ severity: 'error', summary: '修改失败', detail: message, life: 5000 });
+}
 </script>
 
 <template>
