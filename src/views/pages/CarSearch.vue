@@ -47,14 +47,6 @@ function formatCurrency(value) {
     return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 }
 
-function formatDate(value) {
-    return value.toLocaleDateString('en-US', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-    });
-}
-
 </script>
 
 <template>
@@ -95,38 +87,38 @@ function formatDate(value) {
             <template #loading> 正在筛选，请等待…… </template>
             <Column field="name" header="品牌" style="min-width: 12rem">
                 <template #body="{ data }">
-                    {{ data.name }}
+                    {{ data.brand }}
                 </template>
             </Column>
             <Column header="车系" filterField="country.name" style="min-width: 12rem">
                 <template #body="{ data }">
                     <div class="flex items-center gap-2">
-                        <img alt="flag" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`flag flag-${data.country.code}`" style="width: 24px" />
-                        <span>{{ data.country.name }}</span>
+                        <span>{{ data.series }}</span>
                     </div>
                 </template>
             </Column>
             <Column header="车型" filterField="representative" :showFilterMatchModes="false" :filterMenuStyle="{ width: '14rem' }" style="min-width: 14rem">
                 <template #body="{ data }">
                     <div class="flex items-center gap-2">
-                        <img :alt="data.representative.name" :src="`https://primefaces.org/cdn/primevue/images/avatar/${data.representative.image}`" style="width: 32px" />
-                        <span>{{ data.representative.name }}</span>
+                        <span>{{ data.tirm }}</span>
                     </div>
                 </template>
             </Column>
             <Column header="汽车类型" filterField="date" dataType="date" style="min-width: 10rem">
                 <template #body="{ data }">
-                    {{ formatDate(data.date) }}
+                    <div class="flex items-center gap-2">
+                        <span>{{ data.type }}</span>
+                    </div>
                 </template>
             </Column>
             <Column header="能源类型" filterField="balance" dataType="numeric" style="min-width: 10rem">
                 <template #body="{ data }">
-                    <Tag :value="data.status" :severity="getSeverity(data.status)" />
+                    <Tag :value="data.energyType" :severity="getSeverity(data.status)" />
                 </template>
             </Column>
             <Column header="价格" field="status" :filterMenuStyle="{ width: '14rem' }" style="min-width: 12rem">
                 <template #body="{ data }">
-                    {{ formatCurrency(data.balance) }}
+                    {{ formatCurrency(data.price) }}
                 </template>
             </Column>
         </DataTable>

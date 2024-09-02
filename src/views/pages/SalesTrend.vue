@@ -8,11 +8,16 @@ const barData = ref(null);
 const lineOptions = ref(null);
 const barOptions = ref(null);
 const dropdownValues = ref([
-    { name: 'New York', code: 'NY' },
-    { name: 'Rome', code: 'RM' },
-    { name: 'London', code: 'LDN' },
-    { name: 'Istanbul', code: 'IST' },
-    { name: 'Paris', code: 'PRS' }
+    { name: '2015', code: '2015' },
+    { name: '2016', code: '2016' },
+    { name: '2017', code: '2017' },
+    { name: '2018', code: '2018' },
+    { name: '2019', code: '2019' },
+    { name: '2020', code: '2020' },
+    { name: '2021', code: '2021' },
+    { name: '2022', code: '2022' },
+    { name: '2023', code: '2023' },
+    { name: '2024', code: '2024' },
 ]);
 const dropdownValue = ref(null);
 
@@ -128,25 +133,26 @@ watch(
     <Fluid class="grid grid-cols-12 gap-8">
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
-                <div class="font-semibold text-xl mb-4">Linear</div>
+                <div class="font-semibold text-xl mb-4">汽车年销量统计（折线图）</div>
                 <Chart type="line" :data="lineData" :options="lineOptions"></Chart>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
-                <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="Select" />
+                <div class="font-semibold text-xl mb-4">汽车月销量统计</div>
+                <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="选择年份" />
                 <Chart type="line" :data="lineData" :options="lineOptions"></Chart>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
-                <div class="font-semibold text-xl mb-4">Bar</div>
+                <div class="font-semibold text-xl mb-4">汽车年销量统计（柱状图）</div>
                 <Chart type="bar" :data="barData" :options="barOptions"></Chart>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
-                <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="Select" />
+                <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="选择年份" />
                 <Chart type="bar" :data="barData" :options="barOptions"></Chart>
             </div>
         </div>

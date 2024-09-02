@@ -52,3 +52,31 @@ export function getProducts(id) {
 export function getProductImage(id){
   return api.post('/cartirm/img', {id})
 }
+
+export const getCustomerData = async () => {
+  try {
+    const response = await api.get('/cartirm/tirms');
+    if (response.data.success) {
+      return response.data.data;
+    } else {
+      throw new Error(response.data.msg);
+    }
+  } catch (error) {
+    console.error('Error fetching customer data:', error);
+    return [];
+  }
+};
+
+export const getSalesData = async () => {
+  try {
+    const response = await api.get('/search/AllSales');
+    if (response.data.success) {
+      return response.data.data;
+    } else {
+      throw new Error(response.data.msg);
+    }
+  } catch (error) {
+    console.error('Error fetching customer data:', error);
+    return [];
+  }
+};

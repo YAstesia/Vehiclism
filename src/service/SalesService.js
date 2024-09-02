@@ -1,36 +1,36 @@
-import { getCustomerData } from '@/api'; // 导入 api.js 中定义的函数
+import { getSalesData } from '@/api'; // 导入 api.js 中定义的函数
 
-export const CustomerService = {
+export const SaleService = {
     async getData() {
-        return getCustomerData();
+        return getSalesData();
     },
 
-    async getCustomersSmall() {
+    async getSalesSmall() {
         const data = await this.getData();
         return data.slice(0, 10);
     },
 
-    async getCustomersMedium() {
+    async getSalesMedium() {
         const data = await this.getData();
         return data.slice(0, 50);
     },
 
-    async getCustomersLarge() {
+    async getSalesLarge() {
         const data = await this.getData();
         return data.slice(0, 200);
     },
 
-    async getCustomersXLarge() {
+    async getSalesXLarge() {
         return this.getData();
     },
 
-    getCustomers(params) {
+    getSales(params) {
         const queryParams = params
             ? Object.keys(params)
                   .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
                   .join('&')
             : '';
 
-        return fetch('https://www.primefaces.org/data/customers?' + queryParams).then((res) => res.json());
+        return fetch('https://www.primefaces.org/data/Sales?' + queryParams).then((res) => res.json());
     }
 };
