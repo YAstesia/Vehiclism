@@ -80,3 +80,45 @@ export const getSalesData = async () => {
     return [];
   }
 };
+
+export async function fetchSalesData() {
+  try {
+    const response = await api.get('/AllCarSale/Year');
+    const data = response.data;
+
+    if (data.success) {
+      // 响应成功，处理数据
+      return data.data.map(item => ({
+        year: item.year,
+        sales: item.totalSale
+      }));
+    } else {
+      // 响应失败，抛出错误
+      throw new Error(data.msg);
+    }
+  } catch (error) {
+    console.error('Error fetching sales data:', error.message);
+    return []; // 返回空数组以防止后续代码出错
+  }
+}
+
+export async function fetchMonthData(year) {
+  try {
+    const response = await api.post('/AllCarSale/Month', {year});
+    const data = response.data;
+
+    if (data.success) {
+      // 响应成功，处理数据
+      return data.data.map(item => ({
+        month: item.month,
+        sales: item.totalSale
+      }));
+    } else {
+      // 响应失败，抛出错误
+      throw new Error(data.msg);
+    }
+  } catch (error) {
+    console.error('Error fetching sales data:', error.message);
+    return []; // 返回空数组以防止后续代码出错
+  }
+}
