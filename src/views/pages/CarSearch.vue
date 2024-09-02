@@ -1,7 +1,9 @@
 <script setup>
 import { CustomerService } from '@/service/CustomerService';
 import { ProductService } from '@/service/ProductService';
+import Paginator from 'primevue/paginator';
 import { onBeforeMount, reactive, ref } from 'vue';
+
 
 const customers1 = ref(null);
 const customers2 = ref(null);
@@ -80,6 +82,15 @@ function formatDate(value) {
                     <Button type="button" icon="pi pi-filter-slash" label="清空" outlined @click="clearFilter()" />
                 </div>
             </template>
+
+            <template #paginator="{ state }">
+        <Paginator :rows=10 :first=1 :totalRecords=200>
+          <template #start>
+            Page: {{ state.page }}
+          </template>
+        </Paginator>
+      </template>
+
             <template #empty> 找不到符合条件的数据。 </template>
             <template #loading> 正在筛选，请等待…… </template>
             <Column field="name" header="品牌" style="min-width: 12rem">
