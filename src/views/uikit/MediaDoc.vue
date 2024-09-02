@@ -1,7 +1,7 @@
 <script setup>
 import { editEmail, editName, editPhone } from '@/api';
-import { PhotoService } from '@/service/PhotoService';
-import { ProductService } from '@/service/ProductService';
+//import { ProductService } from '@/service/ProductService';
+import { getProductImage, getProducts } from '@/api'; // 引入 api.js 中定义的函数
 import { useToast } from 'primevue/usetoast';
 import { onMounted, ref } from 'vue';
 
@@ -35,15 +35,28 @@ const carouselResponsiveOptions = ref([
 ]);
 
 onMounted(() => {
-    ProductService.getProductsSmall().then((data) => (products.value = data));
-    PhotoService.getImages().then((data) => (images.value = data));
-    setColorOptions();
-      // 从 localStorage 读取用户信息
+    //ProductService.getProductsSmall().then((data) => (products.value = data));
   userId.value = localStorage.getItem('user_id') || '';
   userName.value = localStorage.getItem('user_name') || '';
   userPhone.value = localStorage.getItem('user_phone') || '';
   userEmail.value = localStorage.getItem('user_email') || '';
+    getProducts( userId.value)
+        .then(data => {
+          products.value = data;
+        })
+        .catch(error => {
+          console.error('请求失败:', error.message);
+        });
+    //PhotoService.getImages().then((data) => (images.value = data));
+    setColorOptions();
+      // 从 localStorage 读取用户信息
+
 });
+
+
+//const getProductImage = (product) => {
+      //return `https://your-image-source/${product.id}.jpg`; // 假设图片 URL 由产品 id 生成
+    //};
 
 function setColorOptions() {
     const documentStyle = getComputedStyle(document.documentElement);
@@ -70,19 +83,6 @@ function setColorOptions() {
             }
         }
     };
-}
-
-function getSeverity(status) {
-    switch (status) {
-        case 'INSTOCK':
-            return 'success';
-        case 'LOWSTOCK':
-            return 'warning';
-        case 'OUTOFSTOCK':
-            return 'danger';
-        default:
-            return null;
-    }
 }
 
 // 用于处理头像图片的更换功能
@@ -163,6 +163,7 @@ function showSuccess(message) {
 function showError(message) {
     toast.add({ severity: 'error', summary: '修改失败', detail: message, life: 5000 });
 }
+
 </script>
 
 <template>
@@ -219,25 +220,25 @@ function showError(message) {
     <div class="card">
         <div class="font-semibold text-xl mb-4">我的收藏</div>
         <Carousel :value="products" :numVisible="3" :numScroll="3" :responsiveOptions="carouselResponsiveOptions">
-            <template #item="slotProps">
-                <div class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
-                    <div class="mb-4">
-                        <div class="relative mx-auto">
-                            <img :src="'https://primefaces.org/cdn/primevue/images/product/' + slotProps.data.image" :alt="slotProps.data.name" class="w-full rounded" />
-                            <div class="dark:bg-surface-900 absolute rounded-border" style="left: 5px; top: 5px">
-                                <Tag :value="slotProps.data.inventoryStatus" :severity="getSeverity(slotProps.data.inventoryStatus)" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-4 font-medium">{{ slotProps.data.name }}</div>
-                    <div class="flex justify-between items-center">
-                        <div class="mt-0 font-semibold text-xl">${{ slotProps.data.price }}</div>
-                        <span>
-                            <Button icon="pi pi-search" class="ml-2" />
-                        </span>
-                    </div>
-                </div>
-            </template>
+          <template #item="slotProps">
+        <div class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
+          <div class="mb-4">
+            <div class="relative mx-auto">
+              <img :src="getProductImage(slotProps.data.id)" :alt="slotProps.data.tirm" class="w-full rounded" />
+              <div class="dark:bg-surface-900 absolute rounded-border" style="left: 5px; top: 5px">
+                <Tag :value="slotProps.data.type" />
+              </div>
+            </div>
+          </div>
+          <div class="mb-4 font-medium">{{ slotProps.data.brand }} {{ slotProps.data.series }} {{ slotProps.data.tirm }}</div>
+          <div class="flex justify-between items-center">
+            <div class="mt-0 font-semibold text-xl">${{ slotProps.data.price }}</div>
+            <span>
+              <Button icon="pi pi-search" class="ml-2" />
+            </span>
+          </div>
+        </div>
+      </template>
         </Carousel>
     </div>
 </template>
