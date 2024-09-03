@@ -9,6 +9,7 @@ const router = createRouter({
             name: 'landing',
             component: () => import('@/views/pages/Landing.vue')
         },
+        
         {
             path: '/',
             component: AppLayout,
@@ -17,6 +18,16 @@ const router = createRouter({
                     path: '/uikit/formlayout',
                     name: 'formlayout',
                     component: () => import('@/views/uikit/FormLayout.vue')
+                },
+                {
+                    path: '/cardetail',
+                    name: 'cardetail',
+                    component: () => import('@/views/pages/CarDetail.vue')
+                },
+                {
+                    path: '/typedetail',
+                    name: 'typedetail',
+                    component: () => import('@/views/pages/TypeDetail.vue')
                 },
                 {
                     path: '/uikit/input',

@@ -123,35 +123,35 @@ export async function fetchMonthData(year) {
   }
 }
 
-// 获取前10省份数据
-export async function getTopProvincesY(year) {
-  const response = await api.get(`/sales/provinces?year=${year}`);
-  return response.data;
-}
+// // 获取前10省份数据
+// export async function getTopProvincesY(year) {
+//   const response = await api.get(`/sales/provinces?year=${year}`);
+//   return response.data;
+// }
 
-// 获取地区销量数据
-export async function getRegionSalesY(year) {
-  const response = await api.get(`/sales/regions?year=${year}`);
-  return response.data;
-}
+// // 获取地区销量数据
+// export async function getRegionSalesY(year) {
+//   const response = await api.get(`/sales/regions?year=${year}`);
+//   return response.data;
+// }
 
-// 获取前10城市数据
-export async function getTopCitiesY(year) {
-  const response = await api.get(`/sales/cities?year=${year}`);
-  return response.data;
-}
+// // 获取前10城市数据
+// export async function getTopCitiesY(year) {
+//   const response = await api.get(`/sales/cities?year=${year}`);
+//   return response.data;
+// }
 
-// 获取全国品牌销量数据
-export async function getTopBrandsY(year) {
-  const response = await api.get(`/sales/brands?year=${year}`);
-  return response.data;
-}
+// // 获取全国品牌销量数据
+// export async function getTopBrandsY(year) {
+//   const response = await api.get(`/sales/brands?year=${year}`);
+//   return response.data;
+// }
 
-// 获取车型销量数据
-export async function getVehicleSalesY(year) {
-  const response = await api.get(`/sales/vehicles?year=${year}`);
-  return response.data;
-}
+// // 获取车型销量数据
+// export async function getVehicleSalesY(year) {
+//   const response = await api.get(`/sales/vehicles?year=${year}`);
+//   return response.data;
+// }
 
 // 获取销量前10的省份数据
 export function getTopProvinces() {

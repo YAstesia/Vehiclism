@@ -494,7 +494,7 @@ function onContextRightClick(event) {
         </div>
     </div>
 
-    <div class="flex flex-col md:flex-row gap-8 mt-8">
+    <div class="flex flex-col md:flex-row gap-8 mt-4">
         <div class="md:w-1/2">
             <div class="card">
                 <div class="font-semibold text-xl mb-4">MegaMenu | Horizontal</div>
