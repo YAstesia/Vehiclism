@@ -229,7 +229,7 @@ function showError(message) {
     <div class="card">
         <div class="font-semibold text-xl mb-4">我的收藏</div>
         <div v-if="products.length === 0" class="text-center text-gray-500">暂未收藏汽车</div>
-        <Carousel v-else :value="products" :numVisible="3" :numScroll="3" :responsiveOptions="carouselResponsiveOptions">
+        <Carousel v-else :value="products" :numVisible="4" :numScroll="4" :responsiveOptions="carouselResponsiveOptions">
           <template #item="slotProps">
         <div class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
           <div class="mb-4">
