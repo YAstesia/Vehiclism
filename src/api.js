@@ -122,3 +122,58 @@ export async function fetchMonthData(year) {
     return []; // 返回空数组以防止后续代码出错
   }
 }
+
+// 获取前10省份数据
+export async function getTopProvincesY(year) {
+  const response = await api.get(`/sales/provinces?year=${year}`);
+  return response.data;
+}
+
+// 获取地区销量数据
+export async function getRegionSalesY(year) {
+  const response = await api.get(`/sales/regions?year=${year}`);
+  return response.data;
+}
+
+// 获取前10城市数据
+export async function getTopCitiesY(year) {
+  const response = await api.get(`/sales/cities?year=${year}`);
+  return response.data;
+}
+
+// 获取全国品牌销量数据
+export async function getTopBrandsY(year) {
+  const response = await api.get(`/sales/brands?year=${year}`);
+  return response.data;
+}
+
+// 获取车型销量数据
+export async function getVehicleSalesY(year) {
+  const response = await api.get(`/sales/vehicles?year=${year}`);
+  return response.data;
+}
+
+// 获取销量前10的省份数据
+export function getTopProvinces() {
+  return api.get('/sales/top10-provinces');
+}
+
+// 获取6个地区的销量占比数据
+export function getRegionSales() {
+  return api.get('/sales/region-sales');
+}
+
+// 获取省份城市销量数据
+export function getProvinceCities(provinceName) {
+  return api.get(`/sales/province-cities/${provinceName}`);
+}
+
+// 获取全国品牌销量前10数据
+export function getTopBrands() {
+  return api.get('/sales/top10-brands');
+}
+
+// 获取全国车型销量占比数据
+export function getVehicleSales() {
+  return api.get('/sales/vehicle-sales');
+}

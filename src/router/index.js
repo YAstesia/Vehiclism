@@ -55,9 +55,9 @@ const router = createRouter({
                     component: () => import('@/views/uikit/OverlayDoc.vue')
                 },
                 {
-                    path: '/uikit/media',
-                    name: 'media',
-                    component: () => import('@/views/uikit/MediaDoc.vue')
+                    path: '/pages/profile',
+                    name: 'profile',
+                    component: () => import('@/views/pages/Profile.vue')
                 },
                 {
                     path: '/uikit/message',

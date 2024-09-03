@@ -1,4 +1,5 @@
 <script setup>
+import { getProvinceCities, getRegionSales, getRegionSalesY, getTopBrands, getTopBrandsY, getTopCitiesY, getTopProvinces, getTopProvincesY, getVehicleSales, getVehicleSalesY } from '@/api'; // 导入接口
 import { useLayout } from '@/layout/composables/layout';
 import * as echarts from 'echarts';
 import { onMounted, ref, watch } from 'vue';
@@ -7,6 +8,9 @@ import { onMounted, ref, watch } from 'vue';
 const { getPrimary, getSurface, isDarkTheme } = useLayout();
 const pieData = ref(null);
 const barData = ref(null);
+const barData2 = ref(null);
+const pieData2 = ref(null);
+const barData3 = ref(null);
 const pieOptions = ref(null);
 const barOptions = ref(null);
 const chartRef = ref(null);
@@ -25,11 +29,66 @@ const dropdownValues = ref([
 const dropdownValue = ref(null);
 let chartInstance = null;
 
-onMounted(() => {
+onMounted(async () => {
     setColorOptions();
     chartInstance = echarts.init(chartRef.value);
-    loadMapData();
+    await loadMapData();
+    await loadInitialData();
+    updateCharts();
 });
+
+async function loadInitialData() {
+    try {
+        // 获取前10省份数据
+        const provinceResponse = await getTopProvinces();
+        barData.value = formatBarData(provinceResponse.data);
+
+        // 获取地区销量数据
+        const regionResponse = await getRegionSales();
+        pieData.value = formatPieData(regionResponse.data);
+
+        // 获取全国品牌销量数据
+        const brandResponse = await getTopBrands();
+        barData3.value = formatBarData(brandResponse.data);
+
+        // 获取车型销量数据
+        const vehicleResponse = await getVehicleSales();
+        pieData2.value = formatPieData(vehicleResponse.data);
+        updateChart(); // 更新图表显示
+
+    } catch (error) {
+        console.error("Error loading initial data: ", error);
+    }
+}
+
+async function updateChartData(year) {
+    try {
+        // 获取省份销量数据
+        const provinceResponse = await getTopProvincesY(year);
+        barData.value = formatBarData(provinceResponse.data);
+
+        // 获取地区销量数据
+        const regionResponse = await getRegionSalesY(year);
+        pieData.value = formatPieData(regionResponse.data);
+
+        // 获取城市销量数据
+        const cityResponse = await getTopCitiesY(year);
+        barData2.value = formatBarData(cityResponse.data);
+
+        // 获取品牌销量数据
+        const brandResponse = await getTopBrandsY(year);
+        barData3.value = formatBarData(brandResponse.data);
+
+        // 获取车型销量数据
+        const vehicleResponse = await getVehicleSalesY(year);
+        pieData2.value = formatPieData(vehicleResponse.data);
+
+        // 更新图表显示
+        updateChart(); 
+    } catch (error) {
+        console.error("Error updating chart data: ", error);
+    }
+}
 
 function setColorOptions() {
     const documentStyle = getComputedStyle(document.documentElement);
@@ -37,23 +96,17 @@ function setColorOptions() {
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-    barData.value = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'My First dataset',
-                backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
-                borderColor: documentStyle.getPropertyValue('--p-primary-500'),
-                data: [65, 59, 80, 81, 56, 55, 40]
-            },
-            {
-                label: 'My Second dataset',
-                backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
-                borderColor: documentStyle.getPropertyValue('--p-primary-200'),
-                data: [28, 48, 40, 19, 86, 27, 90]
-            }
-        ]
-    };
+    // barData.value = {
+    //     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    //     datasets: [
+    //         {
+    //             label: 'My First dataset',
+    //             backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
+    //             borderColor: documentStyle.getPropertyValue('--p-primary-500'),
+    //             data: [65, 59, 80, 81, 56, 55, 40]
+    //         },
+    //     ]
+    // };
     barOptions.value = {
         plugins: {
             legend: {
@@ -87,16 +140,16 @@ function setColorOptions() {
         }
     };
 
-    pieData.value = {
-        labels: ['华北地区', '华南地区', '华中地区', '东北地区', '西北地区', '西南地区'],
-        datasets: [
-            {
-                data: [540, 325, 702, 221, 145, 244],
-                backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-yellow-500'), documentStyle.getPropertyValue('--p-red-500'), documentStyle.getPropertyValue('--p-pink-500')],
-                hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400'),, documentStyle.getPropertyValue('--p-yellow-400'), documentStyle.getPropertyValue('--p-red-400'), documentStyle.getPropertyValue('--p-pink-400')]
-            }
-        ]
-    };
+    // pieData.value = {
+    //     labels: ['华北地区', '华南地区', '华中地区', '东北地区', '西北地区', '西南地区'],
+    //     datasets: [
+    //         {
+    //             data: [540, 325, 702, 221, 145, 244],
+    //             backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-yellow-500'), documentStyle.getPropertyValue('--p-red-500'), documentStyle.getPropertyValue('--p-pink-500')],
+    //             hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400'),, documentStyle.getPropertyValue('--p-yellow-400'), documentStyle.getPropertyValue('--p-red-400'), documentStyle.getPropertyValue('--p-pink-400')]
+    //         }
+    //     ]
+    // };
     pieOptions.value = {
         plugins: {
             legend: {
@@ -107,6 +160,45 @@ function setColorOptions() {
             }
         }
     };
+}
+
+function formatBarData(data) {
+    return {
+        labels: data.map(item => item.name),
+        datasets: [
+            {
+                label: '销量',
+                backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--p-primary-500'),
+                borderColor: getComputedStyle(document.documentElement).getPropertyValue('--p-primary-500'),
+                data: data.map(item => item.value)
+            }
+        ]
+    };
+}
+
+function formatPieData(data) {
+    return {
+        labels: ['华北地区', '华南地区', '华中地区', '东北地区', '西北地区', '西南地区'],
+        datasets: [
+            {
+                data: data,
+                backgroundColor: ['#...', '#...'], // 定义颜色数组
+                hoverBackgroundColor: ['#...', '#...'], // 定义悬停颜色数组
+            }
+        ]
+    };
+}
+
+function updateChart() {
+    chartInstance.setOption({
+        series: [
+            { data: barData.value.datasets[0].data }, // 更新柱状图1
+            { data: pieData.value.datasets[0].data }, // 更新饼图1
+            { data: barData2.value.datasets[0].data }, // 更新柱状图2
+            { data: barData3.value.datasets[0].data }, // 更新柱状图3
+            { data: pieData2.value.datasets[0].data }, // 更新饼图2
+        ]
+    });
 }
 
 // 生成随机颜色
@@ -207,8 +299,13 @@ async function loadMapData() {
   });
 }
 
-function handleProvinceClick(provinceName) {
-  // 在这里处理点击事件，控制其他页面元素
+async function handleProvinceClick(provinceName) {
+    try {
+        const cityResponse = await getProvinceCities(provinceName);
+        barData2.value = formatBarData(cityResponse.data);
+    } catch (error) {
+        console.error("Error loading province cities data: ", error);
+    }
   alert(`您点击了：${provinceName}`);
 }
 
@@ -219,6 +316,13 @@ watch(
     },
     { immediate: true }
 );
+
+watch(dropdownValue, (newValue) => {
+    if (newValue) {
+        updateChartData(newValue.code); // 使用选中的年份更新图表数据
+    }
+}, { immediate: true });
+
 </script>
 
 <template>

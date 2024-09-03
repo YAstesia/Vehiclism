@@ -46,7 +46,7 @@ const model = ref([
                         label: '我的',
                         icon: 'pi pi-fw pi-user',
                         items: [
-                            { label: '个人中心', icon: 'pi pi-fw pi-star' , to: '/uikit/media'}
+                            { label: '个人中心', icon: 'pi pi-fw pi-star' , to: '/pages/profile'}
                         ]
                     },
                 ]
