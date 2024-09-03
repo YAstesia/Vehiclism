@@ -1,5 +1,5 @@
 <script setup>
-import { getProvinceCities, getRegionSales, getRegionSalesY, getTopBrands, getTopBrandsY, getTopCitiesY, getTopProvinces, getTopProvincesY, getVehicleSales, getVehicleSalesY } from '@/api'; // 导入接口
+import { getProvinceCities, getRegionSales, getTopBrands, getTopProvinces, getVehicleSales } from '@/api'; // 导入接口
 import { useLayout } from '@/layout/composables/layout';
 import * as echarts from 'echarts';
 import { onMounted, ref, watch } from 'vue';
@@ -58,35 +58,6 @@ async function loadInitialData() {
 
     } catch (error) {
         console.error("Error loading initial data: ", error);
-    }
-}
-
-async function updateChartData(year) {
-    try {
-        // 获取省份销量数据
-        const provinceResponse = await getTopProvincesY(year);
-        barData.value = formatBarData(provinceResponse.data);
-
-        // 获取地区销量数据
-        const regionResponse = await getRegionSalesY(year);
-        pieData.value = formatPieData(regionResponse.data);
-
-        // 获取城市销量数据
-        const cityResponse = await getTopCitiesY(year);
-        barData2.value = formatBarData(cityResponse.data);
-
-        // 获取品牌销量数据
-        const brandResponse = await getTopBrandsY(year);
-        barData3.value = formatBarData(brandResponse.data);
-
-        // 获取车型销量数据
-        const vehicleResponse = await getVehicleSalesY(year);
-        pieData2.value = formatPieData(vehicleResponse.data);
-
-        // 更新图表显示
-        updateChart(); 
-    } catch (error) {
-        console.error("Error updating chart data: ", error);
     }
 }
 
@@ -317,11 +288,11 @@ watch(
     { immediate: true }
 );
 
-watch(dropdownValue, (newValue) => {
-    if (newValue) {
-        updateChartData(newValue.code); // 使用选中的年份更新图表数据
-    }
-}, { immediate: true });
+// watch(dropdownValue, (newValue) => {
+//     if (newValue) {
+//         updateChartData(newValue.code); // 使用选中的年份更新图表数据
+//     }
+// }, { immediate: true });
 
 </script>
 
@@ -330,14 +301,14 @@ watch(dropdownValue, (newValue) => {
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
                 <div class="font-semibold text-xl mb-4">中国地图，点击可以切换省份</div>
-                <div ref="chartRef" style="width: 100%; height: 520px;"></div>
+                <div ref="chartRef" style="width: 85%; height: 400px;"></div>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
-            <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="选择年份" style="margin-bottom: 40px;"/>
+            <!-- <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="选择年份" style="margin-bottom: 40px;"/> -->
             <div class="card">
                 <div class="font-semibold text-xl mb-4">top10省份</div>
-                <Chart type="bar" :data="barData" :options="barOptions"></Chart>
+                <Chart type="bar" :data="barData" :options="barOptions" style="width: 100%; height: 400px;"></Chart>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
