@@ -188,8 +188,8 @@ watch(
         </div>
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
-                <div class="font-semibold text-xl mb-4">汽车月销量统计</div>
-                <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="选择年份" />
+                <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="选择年份" style="margin-bottom: 20px;"/>
+                <div class="font-semibold text-xl mb-4">汽车月销量统计（折线图）</div>
                 <Chart type="line" :data="lineData2" :options="lineOptions"></Chart>
             </div>
         </div>
@@ -201,7 +201,7 @@ watch(
         </div>
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
-                <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="选择年份" />
+                <div class="font-semibold text-xl mb-4">汽车月销量统计（柱状图）</div>
                 <Chart type="bar" :data="barData2" :options="barOptions"></Chart>
             </div>
         </div>

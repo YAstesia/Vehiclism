@@ -43,6 +43,15 @@ onMounted(() => {
     getProducts( userId.value)
         .then(data => {
           products.value = data;
+          data.forEach(product => {
+            getProductImage(product.id)
+              .then(url => {
+                images.value[product.id] = url;
+              })
+              .catch(error => {
+                images.value[product.id] = defaultImageUrl; // 设置默认图片 URL
+              });
+          });
         })
         .catch(error => {
           console.error('请求失败:', error.message);
@@ -219,12 +228,13 @@ function showError(message) {
 
     <div class="card">
         <div class="font-semibold text-xl mb-4">我的收藏</div>
-        <Carousel :value="products" :numVisible="3" :numScroll="3" :responsiveOptions="carouselResponsiveOptions">
+        <div v-if="products.length === 0" class="text-center text-gray-500">暂未收藏汽车</div>
+        <Carousel v-else :value="products" :numVisible="3" :numScroll="3" :responsiveOptions="carouselResponsiveOptions">
           <template #item="slotProps">
         <div class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
           <div class="mb-4">
             <div class="relative mx-auto">
-              <img :src="getProductImage(slotProps.data.id)" :alt="slotProps.data.tirm" class="w-full rounded" />
+              <img :src="images[slotProps.data.id] || defaultImageUrl" :alt="slotProps.data.tirm" class="w-full rounded" />
               <div class="dark:bg-surface-900 absolute rounded-border" style="left: 5px; top: 5px">
                 <Tag :value="slotProps.data.type" />
               </div>

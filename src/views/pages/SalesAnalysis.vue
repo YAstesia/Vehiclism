@@ -5,17 +5,24 @@ import { onMounted, ref, watch } from 'vue';
 
 
 const { getPrimary, getSurface, isDarkTheme } = useLayout();
-const lineData = ref(null);
 const pieData = ref(null);
-const polarData = ref(null);
 const barData = ref(null);
-const radarData = ref(null);
-const lineOptions = ref(null);
 const pieOptions = ref(null);
-const polarOptions = ref(null);
 const barOptions = ref(null);
-const radarOptions = ref(null);
 const chartRef = ref(null);
+const dropdownValues = ref([
+    { name: '2015', code: 2015 },
+    { name: '2016', code: 2016 },
+    { name: '2017', code: 2017 },
+    { name: '2018', code: 2018 },
+    { name: '2019', code: 2019 },
+    { name: '2020', code: 2020 },
+    { name: '2021', code: 2021 },
+    { name: '2022', code: 2022 },
+    { name: '2023', code: 2023 },
+    { name: '2024', code: 2024 },
+]);
+const dropdownValue = ref(null);
 let chartInstance = null;
 
 onMounted(() => {
@@ -81,143 +88,21 @@ function setColorOptions() {
     };
 
     pieData.value = {
-        labels: ['A', 'B', 'C'],
+        labels: ['华北地区', '华南地区', '华中地区', '东北地区', '西北地区', '西南地区'],
         datasets: [
             {
-                data: [540, 325, 702],
-                backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500')],
-                hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400')]
+                data: [540, 325, 702, 221, 145, 244],
+                backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-yellow-500'), documentStyle.getPropertyValue('--p-red-500'), documentStyle.getPropertyValue('--p-pink-500')],
+                hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400'),, documentStyle.getPropertyValue('--p-yellow-400'), documentStyle.getPropertyValue('--p-red-400'), documentStyle.getPropertyValue('--p-pink-400')]
             }
         ]
     };
-
     pieOptions.value = {
         plugins: {
             legend: {
                 labels: {
                     usePointStyle: true,
                     color: textColor
-                }
-            }
-        }
-    };
-
-    lineData.value = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                fill: false,
-                backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
-                borderColor: documentStyle.getPropertyValue('--p-primary-500'),
-                tension: 0.4
-            },
-            {
-                label: 'Second Dataset',
-                data: [28, 48, 40, 19, 86, 27, 90],
-                fill: false,
-                backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
-                borderColor: documentStyle.getPropertyValue('--p-primary-200'),
-                tension: 0.4
-            }
-        ]
-    };
-
-    lineOptions.value = {
-        plugins: {
-            legend: {
-                labels: {
-                    fontColor: textColor
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder,
-                    drawBorder: false
-                }
-            },
-            y: {
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder,
-                    drawBorder: false
-                }
-            }
-        }
-    };
-
-    polarData.value = {
-        datasets: [
-            {
-                data: [11, 16, 7, 3],
-                backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-orange-500')],
-                label: 'My dataset'
-            }
-        ],
-        labels: ['Indigo', 'Purple', 'Teal', 'Orange']
-    };
-
-    polarOptions.value = {
-        plugins: {
-            legend: {
-                labels: {
-                    color: textColor
-                }
-            }
-        },
-        scales: {
-            r: {
-                grid: {
-                    color: surfaceBorder
-                }
-            }
-        }
-    };
-
-    radarData.value = {
-        labels: ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'],
-        datasets: [
-            {
-                label: 'My First dataset',
-                borderColor: documentStyle.getPropertyValue('--p-indigo-400'),
-                pointBackgroundColor: documentStyle.getPropertyValue('--p-indigo-400'),
-                pointBorderColor: documentStyle.getPropertyValue('--p-indigo-400'),
-                pointHoverBackgroundColor: textColor,
-                pointHoverBorderColor: documentStyle.getPropertyValue('--p-indigo-400'),
-                data: [65, 59, 90, 81, 56, 55, 40]
-            },
-            {
-                label: 'My Second dataset',
-                borderColor: documentStyle.getPropertyValue('--p-purple-400'),
-                pointBackgroundColor: documentStyle.getPropertyValue('--p-purple-400'),
-                pointBorderColor: documentStyle.getPropertyValue('--p-purple-400'),
-                pointHoverBackgroundColor: textColor,
-                pointHoverBorderColor: documentStyle.getPropertyValue('--p-purple-400'),
-                data: [28, 48, 40, 19, 96, 27, 100]
-            }
-        ]
-    };
-
-    radarOptions.value = {
-        plugins: {
-            legend: {
-                labels: {
-                    fontColor: textColor
-                }
-            }
-        },
-        scales: {
-            r: {
-                grid: {
-                    color: textColorSecondary
                 }
             }
         }
@@ -345,6 +230,7 @@ watch(
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
+            <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="选择年份" style="margin-bottom: 40px;"/>
             <div class="card">
                 <div class="font-semibold text-xl mb-4">top10省份</div>
                 <Chart type="bar" :data="barData" :options="barOptions"></Chart>
@@ -359,19 +245,19 @@ watch(
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
                 <div class="font-semibold text-xl mb-4">默认为空（全国城市销量top?），根据地图选择的省份，显示该省份城市销量top?</div>
-                <Chart type="bar" :data="barData" :options="barOptions"></Chart>
+                <Chart type="bar" :data="barData2" :options="barOptions"></Chart>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
                 <div class="font-semibold text-xl mb-4">默认为全国品牌销量top?，同样根据省份切换</div>
-                <Chart type="bar" :data="barData" :options="barOptions"></Chart>
+                <Chart type="bar" :data="barData3" :options="barOptions"></Chart>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
             <div class="card flex flex-col items-center">
                 <div class="font-semibold text-xl mb-4">默认为全国车型销量占比，同样根据省份切换</div>
-                <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
+                <Chart type="pie" :data="pieData2" :options="pieOptions"></Chart>
             </div>
         </div>
     </Fluid>

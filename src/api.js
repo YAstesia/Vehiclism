@@ -3,7 +3,6 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'http://10.208.112.75:8081', //校园网10.208.112.75，oasis192.168.43.129
-
   headers: {
     'Content-Type': 'application/json',
   },
