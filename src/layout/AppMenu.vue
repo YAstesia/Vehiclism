@@ -20,7 +20,6 @@ const model = ref([
                         icon: 'pi pi-fw pi-search',
                         items: [
                             { label: '车型查询', icon: 'pi pi-fw pi-search-plus', to: '/carsearch' },
-                            { label: '价格数据查询', icon: 'pi pi-fw pi-search-plus', to: '/pricesearch' },
                             { label: '销量信息查询', icon: 'pi pi-fw pi-search-plus', to: '/salesearch' }
                         ]
                     },
@@ -31,8 +30,7 @@ const model = ref([
                             { label: '汽车销售趋势', icon: 'pi pi-fw pi-chart-bar', to: '/salestrend' },
                             { label: '汽车销量分析', icon: 'pi pi-fw pi-chart-bar', to: '/salesanalysis' },
                             { label: '销售热点分析', icon: 'pi pi-fw pi-chart-bar', to: '/hotsales' },
-                            { label: '购车目的分析', icon: 'pi pi-fw pi-chart-bar', to: '/typedetail' },
-                            { label: '价格对比分析', icon: 'pi pi-fw pi-chart-bar', to: '/pricecompare' },
+                            { label: '购车目的分析', icon: 'pi pi-fw pi-chart-bar', to: '/purpose' },
                             { label: '大数据可视化大屏', icon: 'pi pi-fw pi-chart-bar', to: '/cardetail' }
                         ]
                     },
