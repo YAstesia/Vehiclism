@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8081', //校园网10.208.112.75，oasis192.168.43.129
+  baseURL: 'http://192.168.43.129:8081', //校园网10.208.112.75，oasis192.168.43.129
   headers: {
     'Content-Type': 'application/json',
   },
@@ -155,25 +155,37 @@ export async function fetchMonthData(year) {
 
 // 获取销量前10的省份数据
 export function getTopProvinces() {
-  return api.get('/sales/top10-provinces');
+  return api.post('/CarRegionalSale/TopTenProvinces');
 }
-
+export function getProvinces() {
+  return api.post('/CarRegionalSale/Provinces');
+}
 // 获取6个地区的销量占比数据
 export function getRegionSales() {
-  return api.get('/sales/region-sales');
+  return api.post('/CarRegionalSale/Regions');
 }
-
+//获取销量前10的城市数据
+export function getTopCities() {
+  return api.post('/CarRegionalSale/TopTenCities');
+}
 // 获取省份城市销量数据
 export function getProvinceCities(provinceName) {
-  return api.get(`/sales/province-cities/${provinceName}`);
+  return api.post(`/CarRegionalSale/ProvinceCities`,{provinceName});
 }
-
-// 获取全国品牌销量前10数据
-export function getTopBrands() {
-  return api.get('/sales/top10-brands');
+//获得全国品牌销量前10数据
+export function getTopSeries() {
+  return api.post('/CarRegionalSale/AllTopTenSeries');
+}
+// 获取省份品牌销量前10数据
+export function getProvinceTopSeries(provinceName) {
+  return api.post('/CarRegionalSale/ProvinceTopTenSeries',{provinceName});
+}
+// 获取城市品牌销量前10数据
+export function getCityTopSeries(cityName) {
+  return api.post('/CarRegionalSale/CityTopTenSeries',{cityName});
 }
 
 // 获取全国车型销量占比数据
 export function getVehicleSales() {
-  return api.get('/sales/vehicle-sales');
+  return api.post('/sales/vehicle-sales');
 }
