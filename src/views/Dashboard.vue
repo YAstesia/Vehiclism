@@ -110,30 +110,20 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
     <div class="grid grid-cols-12 gap-8">
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
-                <div class="font-semibold text-xl mb-4">近期汽车销量</div>
+                <div class="font-semibold text-xl mb-4">当月热销车型</div>
                 <DataTable :value="products" :rows="5" :paginator="true" responsiveLayout="scroll">
-                    <Column style="width: 15%" header="图片">
-                        <template #body="slotProps">
-                            <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
-                                :alt="slotProps.data.image" width="50" class="shadow" />
-                        </template>
-                    </Column>
-                    <Column field="name" header="车型" :sortable="true" style="width: 35%"></Column>
-                    <Column field="price" header="价格" :sortable="true" style="width: 35%">
+                    <Column field="name" header="车系" :sortable="false" style="width: 30%"></Column>
+                    <Column field="name" header="车型" :sortable="false" style="width: 30%"></Column>
+                    <Column field="price" header="价格" :sortable="true" style="width: 40%">
                         <template #body="slotProps">
                             {{ formatCurrency(slotProps.data.price) }}
-                        </template>
-                    </Column>
-                    <Column style="width: 15%" header="查看详情">
-                        <template #body>
-                            <Button icon="pi pi-search" type="button" class="p-button-text" @click="goDetail"></Button>
                         </template>
                     </Column>
                 </DataTable>
             </div>
             <div class="card">
                 <div class="flex justify-between items-center mb-6">
-                    <div class="font-semibold text-xl">当月热销品牌 Top3</div>
+                    <div class="font-semibold text-xl">当月热销车系</div>
                 </div>
                 <ul class="list-none p-0 m-0">
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
@@ -143,11 +133,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                             <div class="mt-1 text-muted-color">Clothing</div>
                         </div>
                         <div class="mt-2 md:mt-0 flex items-center">
-                            <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24"
-                                style="height: 8px">
-                                <div class="bg-orange-500 h-full" style="width: 35%"></div>
-                            </div>
-                            <span class="text-orange-500 ml-4 font-medium">35%</span>
+                            <span class="text-orange-500 ml-4 font-medium">114514辆</span>
                         </div>
                     </li>
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
@@ -157,11 +143,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                             <div class="mt-1 text-muted-color">Accessories</div>
                         </div>
                         <div class="mt-2 md:mt-0 ml-0 md:ml-20 flex items-center">
-                            <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24"
-                                style="height: 8px">
-                                <div class="bg-cyan-500 h-full" style="width: 22%"></div>
-                            </div>
-                            <span class="text-cyan-500 ml-4 font-medium">22%</span>
+                            <span class="text-cyan-500 ml-4 font-medium">19198辆</span>
                         </div>
                     </li>
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
@@ -171,11 +153,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                             <div class="mt-1 text-muted-color">Accessories</div>
                         </div>
                         <div class="mt-2 md:mt-0 ml-0 md:ml-20 flex items-center">
-                            <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24"
-                                style="height: 8px">
-                                <div class="bg-pink-500 h-full" style="width: 14%"></div>
-                            </div>
-                            <span class="text-pink-500 ml-4 font-medium">14%</span>
+                            <span class="text-pink-500 ml-4 font-medium">810辆</span>
                         </div>
                     </li>
                 </ul>

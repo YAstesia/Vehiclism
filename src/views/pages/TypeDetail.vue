@@ -19,6 +19,16 @@ onMounted(() => {
 
 
 const data = ref([[111, 444], [222, 555], [333, 666]]);
+const detail = ref([4.13, 4.14, 2.49, 2.4, 4, 3.36, 5.00, 1.19]);
+const value1 = computed(() => detail.value[0]);
+const value2 = computed(() => detail.value[1]);
+const value3 = computed(() => detail.value[2]);
+const value4 = computed(() => detail.value[3]);
+const value5 = computed(() => detail.value[4]);
+const value6 = computed(() => detail.value[5]);
+const value7 = computed(() => detail.value[6]);
+const value8 = computed(() => detail.value[7]);
+
 
 const rows = computed(() => {
     const flatData = data.value.flat(); // 将二维数组展平为一维数组
@@ -147,82 +157,84 @@ function goBack() {
                 <div class="w-px bg-gray-300 mx-2"></div>
 
                 <div class="flex flex-wrap md:w-2/3">
-                    <div class="md:w-1/3 p-2">
+                    <div class="md:w-1/4 p-2">
                         <div class="card flex flex-row items-center">
                             <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -50px;">
+                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
                                     参数1</div>
-                                <div class="font-bold text-gray-600"
-                                    style="font-size: 20pt; margin-left: -50px; margin-right: 10px;">
-                                    11.45</div>
                             </div>
-                            <Chart type="doughnut" :data="pieData" :options="pieOptions"
-                                style="width: 150px; height: 150px;"></Chart>
+                            <Knob v-model="value1" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
+                                rangeColor="SlateGray" readonly />
                         </div>
                     </div>
-                    <div class="md:w-1/3 p-2">
+                    <div class="md:w-1/4 p-2">
                         <div class="card flex flex-row items-center">
                             <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -50px;">
+                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
                                     参数2</div>
-                                <div class="font-bold text-gray-600"
-                                    style="font-size: 20pt; margin-left: -50px; margin-right: 10px;">
-                                    11.45</div>
                             </div>
-                            <Chart type="doughnut" :data="pieData" :options="pieOptions"
-                                style="width: 150px; height: 150px;"></Chart>
+                            <Knob v-model="value2" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
+                                rangeColor="SlateGray" readonly />
                         </div>
                     </div>
-                    <div class="md:w-1/3 p-2">
+                    <div class="md:w-1/4 p-2">
                         <div class="card flex flex-row items-center">
                             <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -50px;">
+                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
                                     参数3</div>
-                                <div class="font-bold text-gray-600"
-                                    style="font-size: 20pt; margin-left: -50px; margin-right: 10px;">
-                                    11.45</div>
                             </div>
-                            <Chart type="doughnut" :data="pieData" :options="pieOptions"
-                                style="width: 150px; height: 150px;"></Chart>
+                            <Knob v-model="value3" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
+                                rangeColor="SlateGray" readonly />
                         </div>
                     </div>
-                    <div class="md:w-1/3 p-2">
+                    <div class="md:w-1/4 p-2">
                         <div class="card flex flex-row items-center">
                             <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -50px;">
+                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
                                     参数4</div>
-                                <div class="font-bold text-gray-600"
-                                    style="font-size: 20pt; margin-left: -50px; margin-right: 10px;">
-                                    11.45</div>
                             </div>
-                            <Chart type="doughnut" :data="pieData" :options="pieOptions"
-                                style="width: 150px; height: 150px;"></Chart>
+                            <Knob v-model="value4" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
+                                rangeColor="SlateGray" readonly />
                         </div>
                     </div>
-                    <div class="md:w-1/3 p-2">
+                    <div class="md:w-1/4 p-2">
                         <div class="card flex flex-row items-center">
                             <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -50px;">
+                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
                                     参数5</div>
-                                <div class="font-bold text-gray-600"
-                                    style="font-size: 20pt; margin-left: -50px; margin-right: 10px;">
-                                    11.45</div>
                             </div>
-                            <Chart type="doughnut" :data="pieData" :options="pieOptions"
-                                style="width: 150px; height: 150px;"></Chart>
+                            <Knob v-model="value5" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
+                                rangeColor="SlateGray" readonly />
                         </div>
                     </div>
-                    <div class="md:w-1/3 p-2">
+                    <div class="md:w-1/4 p-2">
                         <div class="card flex flex-row items-center">
                             <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -50px;">
+                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
                                     参数6</div>
-                                <div class="font-bold text-gray-600"
-                                    style="font-size: 20pt; margin-left: -50px; margin-right: 10px;">
-                                    11.45</div>
                             </div>
-                            <Chart type="doughnut" :data="pieData" :options="pieOptions"
-                                style="width: 150px; height: 150px;"></Chart>
+                            <Knob v-model="value6" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
+                                rangeColor="SlateGray" readonly />
+                        </div>
+                    </div>
+                    <div class="md:w-1/4 p-2">
+                        <div class="card flex flex-row items-center">
+                            <div class="flex flex-col items-center mb-4">
+                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
+                                    参数7</div>
+                            </div>
+                            <Knob v-model="value7" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
+                                rangeColor="SlateGray" readonly />
+                        </div>
+                    </div>
+                    <div class="md:w-1/4 p-2">
+                        <div class="card flex flex-row items-center">
+                            <div class="flex flex-col items-center mb-4">
+                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
+                                    参数8</div>
+                            </div>
+                            <Knob v-model="value8" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
+                                rangeColor="SlateGray" readonly />
                         </div>
                     </div>
 

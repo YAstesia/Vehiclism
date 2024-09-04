@@ -35,7 +35,9 @@ function setColorOptions() {
             legend: {
                 labels: {
                     usePointStyle: true,
-                    color: textColor
+                    color: textColor,
+                    padding: 30,
+                    position: 'top',
                 }
             },
             datalabels: {
@@ -47,7 +49,13 @@ function setColorOptions() {
                 anchor: 'end',
                 clamp: true
             }
-        }
+        },
+        layout: {
+            padding: {
+                top: 0,    // 增加图表顶部间距
+                bottom: 20  // 增大图例和图表之间的间隔
+            }
+        },
     };
 
     barData.value = {
@@ -71,7 +79,8 @@ function setColorOptions() {
         plugins: {
             legend: {
                 labels: {
-                    fontColor: textColor
+                    fontColor: textColor,
+                    padding: 20
                 }
             }
         },
@@ -97,7 +106,14 @@ function setColorOptions() {
                     drawBorder: false
                 }
             }
-        }
+        },
+        layout: {
+            padding: {
+                top: 20,    // 增加图表顶部间距
+                bottom: 20  // 增大图例和图表之间的间隔
+            }
+        },
+        responsive: true             // 启用响应式
     };
 }
 
@@ -118,25 +134,26 @@ watch(
 </script>
 
 <template>
-    <div class="col-span-12 xl:col-span-6">
-        <IconField iconPosition="left">
-            <InputText type="text" placeholder="输入车系" />
-            <Button type="button" class="mr-2 mb-2" label="查询" icon="pi pi-search" iconPos="right" :loading="loading[1]"
-                @click="load(1)" style="margin-left: 20px;" />
-        </IconField>
-        <div class="grid grid-cols-12 gap-8">
+    <div class="page-container">
+        <div class="search-container">
+            <IconField iconPosition="left">
+                <InputText type="text" placeholder="输入车系" />
+                <Button type="button" class="mr-2 mb-2" label="查询" icon="pi pi-search" iconPos="right"
+                    :loading="loading[1]" @click="load(1)" />
+            </IconField>
+        </div>
+        <div class="grid grid-cols-12 gap-8 mt-8">
             <div class="col-span-12 xl:col-span-6">
                 <div class="card">
-                    <div class="font-semibold text-xl mb-4" style="text-align: center;">购车目的饼状图</div>
-                    <Chart type="pie" :data="pieData" :options="pieOptions" style="width: 300px; height: 300px; ">
-                    </Chart>
+                    <div class="font-semibold text-2xl mb-6 text-center">购车目的饼状图</div>
+                    <Chart type="pie" :data="pieData" :options="pieOptions" style="width: 80%; height: 500px;"></Chart>
                 </div>
             </div>
             <div class="col-span-12 xl:col-span-6">
-                <div class="card">
-                    <div class="font-semibold text-xl mb-4">购车目的条形图</div>
-                    <Chart type="bar" :data="barData" :options="barOptions" style="width: 100%; height: 100%;">
-                    </Chart>
+                <div class="card flex flex-col">
+                    <div class="font-semibold text-2xl mb-6">购车目的条形图</div>
+                    <Chart type="bar" :data="barData" :options="barOptions"
+                        style="width: 100%; height: 500px; margin-bottom: 0;"></Chart>
                 </div>
             </div>
         </div>
@@ -144,17 +161,43 @@ watch(
 </template>
 
 <style scoped>
-.card-container {
+.search-container {
+    margin-bottom: 20px;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
-    /* 或其他适合的高度 */
+    width: 100%;
 }
 
 .card {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 20px;
+    /* 增加卡片内边距 */
+}
+
+.font-semibold {
+    font-size: 1.25rem;
+    /* 增大标题字体 */
+}
+
+.grid {
+    gap: 16px;
+    /* 增大图表之间的间隔 */
+}
+
+.card+.card {
+    margin-top: 16px;
+    /* 增大卡片之间的间隔 */
+}
+
+.chart {
+    margin: 20px 0;
+    /* 增大图表上下的间隔 */
+}
+
+.chart .legend {
+    margin-bottom: 910px;
+    /* 增大图例和图表之间的间隔 */
 }
 </style>
