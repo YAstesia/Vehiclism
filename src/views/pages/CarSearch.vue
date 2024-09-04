@@ -73,23 +73,90 @@
     </table>
     <div v-if="!hasData" class="mt-4">找不到符合条件的数据。</div>
     <div v-if="isLoading" class="mt-4">正在筛选，请等待……</div>
-    <Paginator v-model:page="currentPage" :first=1 :rows="pageSize" :totalRecords="totalRecords"
-      @page-change="console.log('Page change triggered'); fetchSearchResults"></Paginator>
+    <v-pagination v-model="currentPage" :length="Math.ceil(totalRecords / pageSize)" @input="handlePageChange" />
+
   </div>
 </template>
-
 <script setup>
+import { SearchCarTirm } from "@/api";
+import { onMounted, ref } from 'vue';
+import { VPagination } from 'vuetify/components';
+
+// 定义变量
+const searchQuery = ref('');
+const currentPage = ref(2);
+const pageSize = ref(10);
+const totalRecords = ref(0);
+const displayedData = ref([]);
+const isLoading = ref(false);
+const hasData = ref(true);
+// 状态严重性映射
+const statuses = ['unqualified', 'qualified', 'new', 'negotiation', 'renewal', 'proposal'];
+
+// 获取严重性
+function getSeverity(status) {
+  switch (status) {
+    case 'unqualified':
+      return 'danger';
+    case 'qualified':
+      return 'success';
+    case 'new':
+      return 'info';
+    case 'negotiation':
+      return 'warn';
+    case 'renewal':
+      return null;
+  }
+}
+
+// 格式化货币
+function formatCurrency(value) {
+  if (value === null) {
+    return '暂无数据';
+  }
+  const formattedValue = (value).toLocaleString();
+  return formattedValue + '万元';
+}
+
+// 搜索函数
+const search = async () => {
+  try {
+    isLoading.value = true;
+    const response = await SearchCarTirm(currentPage.value, pageSize.value, searchQuery.value);
+    displayedData.value = response.data.data.records || [];
+    totalRecords.value = response.data.data.total || 0;
+    hasData.value = displayedData.value.length > 0;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// 分页改变时触发搜索
+const handlePageChange = (newPage) => {
+  currentPage.value = newPage;
+  search();
+};
+
+// 初始化加载数据
+onMounted(() => {
+  search();
+});
+</script>
+
+<!-- <script setup>
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
 // 数据引用
 const displayedData = ref([]);
 const searchQuery = ref('');
-const currentPage = ref(1);
-const pageSize = ref(10);
+let currentPage = 1;
+let pageSize = 10;
 const totalRecords = ref(0);
 const api = axios.create({
-  baseURL: 'http://192.168.43.129:8081', // 校园网10.208.112.75，oasis192.168.43.129
+  baseURL: 'http://localhost:8081', // 校园网10.208.112.75，oasis192.168.43.129
   headers: {
     'Content-Type': 'application/json',
   },
@@ -157,69 +224,4 @@ async function fetchCarsWithFilter(filters) {
   try {
     const response = await api.post('/search/filter', {
       pageNum: currentPage.value,
-      pageSize: pageSize.value,
-      ...filters,
-    });
-    displayedData.value = response.data.data.records;
-    totalRecords.value = response.data.data.total;
-    isLoading.value = false;
-    hasData.value = displayedData.value.length > 0;
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    isLoading.value = false;
-    hasData.value = false;
-  }
-}
-
-// 获取搜索结果
-async function fetchSearchResults() {
-  isLoading.value = true;
-  try {
-    const response = await api.post('/search/keyword', {
-      pageNum: currentPage.value,
-      pageSize: pageSize.value,
-      keyword: searchQuery.value,
-    });
-    displayedData.value = response.data.data.records;
-    totalRecords.value = response.data.data.total;
-    isLoading.value = false;
-    hasData.value = displayedData.value.length > 0;
-  } catch (error) {
-    console.error('Error fetching search results:', error);
-    isLoading.value = false;
-    hasData.value = false;
-  }
-}
-
-// 初始化加载
-onMounted(() => {
-  fetchCarsWithFilter(currentFilter);
-});
-
-</script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
-
-<style scoped lang="scss">
-:deep(.p-datatable-frozen-tbody) {
-  font-weight: bold;
-}
-
-:deep(.p-datatable-scrollable .p-frozen-column) {
-  font-weight: bold;
-}
-
-:deep(.p-paginator) {
-  margin-top: 1rem;
-}
-</style>
+      pageSize: pageSize.value, -->

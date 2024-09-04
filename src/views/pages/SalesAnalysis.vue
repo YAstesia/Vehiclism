@@ -411,9 +411,9 @@ onMounted(async () => {
 <template>
     <Fluid class="grid grid-cols-12 gap-8">
         <div class="col-span-12 xl:col-span-6">
-            <div class="card">
-                <div class="font-semibold text-xl mb-4">中国地图，点击可以切换省份</div>
-                <div ref="chartRef" style="width: 85%; height: 400px;"></div>
+            <div class="card flex flex-col items-center">
+                <div class="font-semibold text-xl mb-4">六个地区销量占比</div>
+                <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
@@ -424,9 +424,9 @@ onMounted(async () => {
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
-            <div class="card flex flex-col items-center">
-                <div class="font-semibold text-xl mb-4">六个地区销量占比</div>
-                <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
+            <div class="card">
+                <div class="font-semibold text-xl mb-4">中国地图，点击可以切换省份</div>
+                <div ref="chartRef" style="width: 85%; height: 400px;"></div>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
