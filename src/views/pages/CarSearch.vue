@@ -51,45 +51,15 @@
     </table>
     <div v-if="!hasData" class="mt-4">找不到符合条件的数据。</div>
     <div v-if="isLoading" class="mt-4">正在筛选，请等待……</div>
-    <<<<<<< HEAD <el-pagination v-model:current-page="currentPage1" :page-size="100" :size="size" :disabled="disabled"
-      :background="background" layout="total, prev, pager, next" :total="1000" @size-change="handleSizeChange"
-      @current-change="handleCurrentChange" />
-
-    =======
-    <el-pagination v-model:current-page="currentPage1" :page-size="pageSize.value" :size="size.value"
-      :disabled="disabled.value" :background="background.value" layout="total, prev, pager, next"
-      :total="totalRecords.value" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-    >>>>>>> ad1fb95686863df7f51a363ab92828ee0dc69030
+    <custom-pagination :currentPage="currentPage1" :totalPages="pages" @page-change="handlePageChange" />
   </div>
 </template>
 
 <script setup>
 import { SearchCarTirm } from "@/api";
-// import { ElPagination } from 'element-plus';
-// import 'element-plus/theme-chalk/src/pagination.scss'; // 引入分页组件的样式
-// import { ELMessage } from 'element-plus';
+import CustomPagination from '@/views/uikit/CustomePaginator.vue';
 import { onMounted, ref } from 'vue';
-// export default {
-//   components: {
-//     ElPagination, // 注册 ElPagination 组件
-//   },
-//   data() {
-//     return {
-//       currentPage1: 1,
-//       // 其他数据...
-//     };
-//   },
-//   methods: {
-//     handleSizeChange(val) {
-//       console.log(`每页 ${val} 条`);
-//       // 这里可以处理分页大小变化时的逻辑
-//     },
-//     handleCurrentChange(val) {
-//       console.log(`当前页: ${val}`);
-//       // 这里可以处理当前页码变化时的逻辑
-//     }
-//   }
-// };
+
 // 定义变量
 const searchQuery = ref('');
 const currentPage1 = ref(1);
@@ -99,9 +69,6 @@ const totalRecords = ref(0);
 const displayedData = ref([]);
 const isLoading = ref(false);
 const hasData = ref(true);
-const size = ref('default');
-const disabled = ref(false);
-const background = ref(false);
 
 // 状态严重性映射
 const statuses = ['unqualified', 'qualified', 'new', 'negotiation', 'renewal', 'proposal'];
@@ -138,7 +105,7 @@ const search = async () => {
     const response = await SearchCarTirm(currentPage1.value, pageSize.value, searchQuery.value);
     displayedData.value = response.data.data.records || [];
     totalRecords.value = response.data.data.total || 0;
-    pages.value = response.data.data.pages || 0;
+    pages.value = Math.ceil(totalRecords.value / pageSize.value);
     hasData.value = displayedData.value.length > 0;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -148,103 +115,89 @@ const search = async () => {
 };
 
 // 分页改变时触发搜索
-// const handlePageChange = (newPage) => {
-//   console.log(OK);
-//   currentPage.value = newPage;
-//   search();
-// };
+const handlePageChange = (newPage) => {
+  currentPage1.value = newPage;
+  search();
+};
 
 // 初始化加载数据
 onMounted(() => {
-  // ELMessage.success("aaa");
   search();
 });
-
-// 处理分页大小变化
-const handleSizeChange = (val) => {
-  console.log(`每页 ${val} 条`);
-  pageSize.value = val;
-  search();
-};
 </script>
 
-<!-- <script setup>
-import axios from 'axios';
-import { onMounted, ref } from 'vue';
+<!-- <template>
+    <div class="card">
+        <div class="font-semibold text-xl mb-4">销量信息查询</div>
+        <DataTable
+            :value="Sales1"
+            :paginator="true"
+            :rows="10"
+            dataKey="id"
+            :rowHover="true"
+            filterDisplay="menu"
+            :loading="loading1"
+            :globalFilterFields="['name', 'country.name', 'representative.name', 'balance', 'status']"
+            showGridlines
+        >
+            <template #header>
+                <div class="flex justify-between">
+                    <IconField>
+                        <InputIcon>
+                            <i class="pi pi-search" />
+                        </InputIcon>
+                        <InputText placeholder="搜索" />
+                    </IconField>
+                    <Button type="button" icon="pi pi-filter-slash" label="清空" outlined @click="clearFilter()" />
+                </div>
+            </template>
 
-// 数据引用
-const displayedData = ref([]);
-const searchQuery = ref('');
-let currentPage = 1;
-let pageSize = 10;
-const totalRecords = ref(0);
-const api = axios.create({
-  baseURL: 'http://localhost:8081', // 校园网10.208.112.75，oasis192.168.43.129
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-// 状态
-const hasData = ref(true);
-const isLoading = ref(false);
-const selectedBrands = ref([]);
-const selectedSeries = ref([]);
-const selectedTirms = ref([]);
-const selectedTypes = ref([]);
-const selectedEnergyTypes = ref([]);
-const priceRange = ref({ min: null, max: null });
-const currentFilter = ref({});
-// 状态严重性映射
-const statuses = ['unqualified', 'qualified', 'new', 'negotiation', 'renewal', 'proposal'];
+            <template #paginator="{ state }">
+        <Paginator :rows=10 :first=1 :totalRecords=200>
+          <template #start>
+            Page: {{ state.page }}
+          </template>
+        </Paginator>
+      </template>
 
-// 获取严重性
-function getSeverity(status) {
-  switch (status) {
-    case 'unqualified':
-      return 'danger';
-    case 'qualified':
-      return 'success';
-    case 'new':
-      return 'info';
-    case 'negotiation':
-      return 'warn';
-    case 'renewal':
-      return null;
-  }
-}
-
-// 格式化货币
-function formatCurrency(value) {
-  if (value === null) {
-    return '暂无数据';
-  }
-  const formattedValue = (value).toLocaleString();
-  return formattedValue + '万元';
-}
-
-// 清除过滤器
-function clearFilter() {
-  searchQuery.value = '';
-  currentPage.value = 1;
-  selectedBrands.value = [];
-  selectedSeries.value = [];
-  selectedTirms.value = [];
-  selectedTypes.value = [];
-  selectedEnergyTypes.value = [];
-  priceRange.value.min = null;
-  priceRange.value.max = null;
-  fetchCarsWithFilter(currentFilter);
-}
-
-// 搜索
-async function search() {
-  currentPage.value = 1;
-  fetchSearchResults();
-}
-// 筛选获取车型数据
-async function fetchCarsWithFilter(filters) {
-  isLoading.value = true;
-  try {
-    const response = await api.post('/search/filter', {
-      pageNum: currentPage.value,
-      pageSize: pageSize.value, -->
+            <template #empty> 找不到符合条件的数据。 </template>
+            <template #loading> 正在筛选，请等待…… </template>
+            <Column field="name" header="品牌" style="min-width: 12rem">
+                <template #body="{ data }">
+                    {{ data.brand }}
+                </template>
+            </Column>
+            <Column header="车系" filterField="country.name" style="min-width: 12rem">
+                <template #body="{ data }">
+                    <div class="flex items-center gap-2">
+                        <span>{{ data.series }}</span>
+                    </div>
+                </template>
+            </Column>
+            <Column header="汽车类型" filterField="representative" :showFilterMatchModes="false" :filterMenuStyle="{ width: '14rem' }" style="min-width: 14rem">
+                <template #body="{ data }">
+                    <div class="flex items-center gap-2">
+                        <span>{{ data.type }}</span>
+                    </div>
+                </template>
+            </Column>
+            <Column header="销售时间" filterField="date" dataType="date" style="min-width: 10rem">
+                <template #body="{ data }">
+                    <div class="flex items-center gap-2">
+                        <span>{{ data.year }}.{{ data.month }}</span>
+                    </div>
+                </template>
+            </Column>
+            <Column header="销量" filterField="balance" dataType="numeric" style="min-width: 10rem">
+                <template #body="{ data }">
+                    <Tag :value="data.totalSale" :severity="getSeverity(data.status)" />
+                </template>
+            </Column>
+            <Column header="价格" field="status" :filterMenuStyle="{ width: '14rem' }" style="min-width: 12rem">
+                <template #body="{ data }">
+                    {{ formatCurrency(data.price) }}
+                </template>
+            </Column>
+        </DataTable>
+    </div>
+</template> -->
