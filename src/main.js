@@ -10,6 +10,12 @@ import ToastService from 'primevue/toastservice';
 import '@/assets/styles.scss';
 import '@/assets/tailwind.css';
 
+<<<<<<< HEAD
+=======
+// import ElementPlus from 'element-plus';
+// import 'element-plus/dist/index.css';
+
+>>>>>>> ad1fb95686863df7f51a363ab92828ee0dc69030
 // import { createVuetify } from 'vuetify';
 // import 'vuetify/styles';
 
@@ -27,5 +33,9 @@ app.use(PrimeVue, {
 });
 app.use(ToastService);
 app.use(ConfirmationService);
+<<<<<<< HEAD
+=======
+// app.use(ElementPlus);
+>>>>>>> ad1fb95686863df7f51a363ab92828ee0dc69030
 // app.use(vuetify);
 app.mount('#app');

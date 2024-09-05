@@ -16,6 +16,7 @@ const userName = ref('');
 const userPhone = ref('');
 const userEmail = ref('');
 
+
 const carouselResponsiveOptions = ref([
   {
     breakpoint: '1024px',
@@ -46,7 +47,11 @@ onMounted(() => {
       data.forEach(product => {
         getProductImage(product.id)
           .then(url => {
-            images.value[product.id] = url;
+            if (url.data.data === "") {
+              images.value[product.id] = defaultImageUrl;
+            } else {
+              images.value[product.id] = url.data.data;
+            }
           })
           .catch(error => {
             images.value[product.id] = defaultImageUrl; // 设置默认图片 URL
@@ -218,8 +223,11 @@ function showError(message) {
         <div class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
           <div class="mb-4">
             <div class="relative mx-auto">
-              <img :src="images[slotProps.data.id] || defaultImageUrl" :alt="slotProps.data.tirm"
-                class="w-full rounded" />
+              <!-- E:\vscode_my_code\Vehiclism\src\assets\R-C.jpg -->
+              <meta name="referrer" content="no-referrer">
+              <img
+                :src="images[slotProps.data.id] || 'https://www.sucaijishi.com/uploadfile/2017/0510/20170510104938756.gif'"
+                :alt="slotProps.data.tirm" class="w-full rounded" />
               <div class="dark:bg-surface-900 absolute rounded-border" style="left: 5px; top: 5px">
                 <Tag :value="slotProps.data.type" />
               </div>

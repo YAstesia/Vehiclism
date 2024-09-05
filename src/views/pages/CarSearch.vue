@@ -17,44 +17,22 @@
         <tr>
           <th scope="col" class="px-6 py-3">
             <div class="font-semibold text-xl">品牌</div>
-            <!-- <MultiSelect v-model="selectedBrands" :options="brands" optionLabel="name" placeholder="选择品牌"
-              class="inline-block ml-2" /> -->
-            <!-- <Button label="确定" @click="applyFilter('brands')" /> -->
           </th>
           <th scope="col" class="px-6 py-3">
             <div class="font-semibold text-xl">车系</div>
-            <!-- <MultiSelect v-model="selectedSeries" :options="series" optionLabel="name" placeholder="选择车系"
-              class="inline-block ml-2" /> -->
-            <!-- <Button label="确定" @click="applyFilter('brands')" /> -->
           </th>
           <th scope="col" class="px-6 py-3">
             <div class="font-semibold text-xl">车型</div>
-            <!-- <MultiSelect v-model="selectedTirms" :options="tirms" optionLabel="name" placeholder="选择车型"
-              class="inline-block ml-2" /> -->
-            <!-- <Button label="确定" @click="applyFilter('brands')" /> -->
           </th>
           <th scope="col" class="px-6 py-3">
             <div class="font-semibold text-xl">汽车类型</div>
-            <!-- <MultiSelect v-model="selectedTypes" :options="carTypes" optionLabel="name" placeholder="选择汽车类型"
-              class="inline-block ml-2" /> -->
-            <!-- <Button label="确定" @click="applyFilter('brands')" /> -->
           </th>
           <th scope="col" class="px-6 py-3">
             <div class="font-semibold text-xl">能源类型</div>
-            <!-- <MultiSelect v-model="selectedEnergyTypes" :options="energyTypes" optionLabel="name" placeholder="选择能源类型" -->
-            <!-- class="inline-block ml-2" /> -->
-            <!-- <Button label="确定" @click="applyFilter('brands')" /> -->
           </th>
           <th scope="col" class="px-6 py-3">
             <div class="font-semibold text-xl">价格</div>
-            <!-- <InputText v-model="priceRange.min" type="number" placeholder="底价" class="inline-block mr-2" />
-            <InputText v-model="priceRange.max" type="number" placeholder="顶价" class="inline-block ml-2" /> -->
-            <!-- <Button label="确定" @click="applyFilter('brands')" /> -->
           </th>
-          <!-- <th scope="col" class="px-6 py-3">
-            <Button label="确定" @click="applyFilter('brands')" />
-          </th> -->
-
         </tr>
       </thead>
       <tbody>
@@ -73,20 +51,37 @@
     </table>
     <div v-if="!hasData" class="mt-4">找不到符合条件的数据。</div>
     <div v-if="isLoading" class="mt-4">正在筛选，请等待……</div>
+<<<<<<< HEAD
     <el-pagination v-model:current-page="currentPage1" :page-size="100" :size="size" :disabled="disabled"
       :background="background" layout="total, prev, pager, next" :total="1000" @size-change="handleSizeChange"
       @current-change="handleCurrentChange" />
 
+=======
+    <el-pagination v-model:current-page="currentPage1" :page-size="pageSize.value" :size="size.value"
+      :disabled="disabled.value" :background="background.value" layout="total, prev, pager, next"
+      :total="totalRecords.value" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+>>>>>>> ad1fb95686863df7f51a363ab92828ee0dc69030
   </div>
 </template>
+
 <script setup>
 import { SearchCarTirm } from "@/api";
+<<<<<<< HEAD
 // import { ElPagination } from 'element-plus'; // 注意这里使用的包名是 element-plus
 // import 'element-plus/dist/index.css'; // 引入样式
 import { onMounted, ref } from 'vue';
 // export default {
 //   components: {
 //     ElPagination,
+=======
+// import { ElPagination } from 'element-plus';
+// import 'element-plus/theme-chalk/src/pagination.scss'; // 引入分页组件的样式
+// import { ELMessage } from 'element-plus';
+import { onMounted, ref } from 'vue';
+// export default {
+//   components: {
+//     ElPagination, // 注册 ElPagination 组件
+>>>>>>> ad1fb95686863df7f51a363ab92828ee0dc69030
 //   },
 //   data() {
 //     return {
@@ -107,12 +102,17 @@ import { onMounted, ref } from 'vue';
 // };
 // 定义变量
 const searchQuery = ref('');
-const currentPage = ref(2);
+const currentPage1 = ref(1);
 const pageSize = ref(10);
+const pages = ref(0);
 const totalRecords = ref(0);
 const displayedData = ref([]);
 const isLoading = ref(false);
 const hasData = ref(true);
+const size = ref('default');
+const disabled = ref(false);
+const background = ref(false);
+
 // 状态严重性映射
 const statuses = ['unqualified', 'qualified', 'new', 'negotiation', 'renewal', 'proposal'];
 
@@ -145,9 +145,10 @@ function formatCurrency(value) {
 const search = async () => {
   try {
     isLoading.value = true;
-    const response = await SearchCarTirm(currentPage.value, pageSize.value, searchQuery.value);
+    const response = await SearchCarTirm(currentPage1.value, pageSize.value, searchQuery.value);
     displayedData.value = response.data.data.records || [];
     totalRecords.value = response.data.data.total || 0;
+    pages.value = response.data.data.pages || 0;
     hasData.value = displayedData.value.length > 0;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -157,16 +158,29 @@ const search = async () => {
 };
 
 // 分页改变时触发搜索
+<<<<<<< HEAD
 const handlePageChange = (newPage) => {
   console.log(OK);
   currentPage.value = newPage;
+=======
+const handleCurrentChange = (newPage) => {
+  currentPage1.value = newPage;
+>>>>>>> ad1fb95686863df7f51a363ab92828ee0dc69030
   search();
 };
 
 // 初始化加载数据
 onMounted(() => {
+  // ELMessage.success("aaa");
   search();
 });
+
+// 处理分页大小变化
+const handleSizeChange = (val) => {
+  console.log(`每页 ${val} 条`);
+  pageSize.value = val;
+  search();
+};
 </script>
 
 <!-- <script setup>

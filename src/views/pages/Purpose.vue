@@ -157,6 +157,7 @@ function formatPieData(data) {
         }]
     }
 }
+
 function formatBarData(data) {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');

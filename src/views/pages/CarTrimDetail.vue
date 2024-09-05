@@ -164,8 +164,8 @@ function goBack() {
                                 <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数1</div>
                             </div>
-                            <Knob v-model="value1" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
-                                rangeColor="SlateGray" readonly />
+                            <Knob v-model="value1" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
+                                readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
@@ -174,8 +174,8 @@ function goBack() {
                                 <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数2</div>
                             </div>
-                            <Knob v-model="value2" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
-                                rangeColor="SlateGray" readonly />
+                            <Knob v-model="value2" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
+                                readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
@@ -184,8 +184,8 @@ function goBack() {
                                 <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数3</div>
                             </div>
-                            <Knob v-model="value3" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
-                                rangeColor="SlateGray" readonly />
+                            <Knob v-model="value3" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
+                                readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
@@ -194,8 +194,8 @@ function goBack() {
                                 <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数4</div>
                             </div>
-                            <Knob v-model="value4" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
-                                rangeColor="SlateGray" readonly />
+                            <Knob v-model="value4" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
+                                readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
@@ -204,8 +204,8 @@ function goBack() {
                                 <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数5</div>
                             </div>
-                            <Knob v-model="value5" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
-                                rangeColor="SlateGray" readonly />
+                            <Knob v-model="value5" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
+                                readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
@@ -214,8 +214,8 @@ function goBack() {
                                 <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数6</div>
                             </div>
-                            <Knob v-model="value6" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
-                                rangeColor="SlateGray" readonly />
+                            <Knob v-model="value6" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
+                                readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
@@ -224,8 +224,8 @@ function goBack() {
                                 <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数7</div>
                             </div>
-                            <Knob v-model="value7" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
-                                rangeColor="SlateGray" readonly />
+                            <Knob v-model="value7" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
+                                readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
@@ -234,8 +234,8 @@ function goBack() {
                                 <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数8</div>
                             </div>
-                            <Knob v-model="value8" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
-                                rangeColor="SlateGray" readonly />
+                            <Knob v-model="value8" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
+                                readonly />
                         </div>
                     </div>
 

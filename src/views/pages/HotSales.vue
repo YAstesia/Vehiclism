@@ -188,7 +188,7 @@ watch(
 <template>
     <div class="card">
         <IconField iconPosition="left">
-            <div class="font-semibold text-xl mb-4">销售热点分析</div>
+            <div class="font-semibold text-xl mb-4">汽车销售排行榜</div>
             <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="选择年份"
                 style="margin-bottom: 20px; margin-right: 20px;" />
             <Select v-model="dropdownValue2" :options="dropdownValues2" optionLabel="name" placeholder="选择月份"
