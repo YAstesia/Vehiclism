@@ -1,5 +1,5 @@
 <script setup>
-import { getCarEvl, getCarSeries, getCarSeriesImg, getSeriesPurpose } from '@/api';
+import { getCarEvl, getCarSales, getCarSeries, getCarSeriesImg, getCarTirmBySeriesId, getSeriesPurpose } from '@/api';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -10,7 +10,33 @@ const lineData = ref(null);
 const lineOptions = ref(null);
 const radarData = ref(null);
 const radarOptions = ref(null);
+const displayedData = ref([]);
+// 状态严重性映射
+const statuses = ['unqualified', 'qualified', 'new', 'negotiation', 'renewal', 'proposal'];
 
+// 获取严重性
+function getSeverity(status) {
+    switch (status) {
+        case 'unqualified':
+            return 'danger';
+        case 'qualified':
+            return 'success';
+        case 'new':
+            return 'info';
+        case 'negotiation':
+            return 'warn';
+        case 'renewal':
+            return null;
+    }
+}
+// 格式化货币
+function formatCurrency(value) {
+    if (value === null) {
+        return '暂无数据';
+    }
+    const formattedValue = (value).toLocaleString();
+    return formattedValue + '万元';
+}
 onMounted(() => {
     setColorOptions();
     fetchCarSeriesDetail('Model Y');
@@ -31,6 +57,8 @@ const value6 = computed(() => detail.value[5]);
 const value7 = computed(() => detail.value[6]);
 const value8 = computed(() => detail.value[7]);
 let id = null;
+// let year=null;
+let YearlySale = null;
 let imgsrc = ref(null);
 const fetchCarSeriesDetail = async (series) => {
     try {
@@ -40,6 +68,8 @@ const fetchCarSeriesDetail = async (series) => {
             id = response.data.data.id;
             fetchCarEvaluation(id);
             fetchCarSeriesImage(id);
+            fetchCarSales(id, 2024);
+            fetchCarTirms(id);
         } else {
             console.error('查询失败:', response.data.msg)
         }
@@ -47,7 +77,18 @@ const fetchCarSeriesDetail = async (series) => {
         console.error('获取数据失败:', error)
     }
 }
-
+const fetchCarTirms = async (id) => {
+    try {
+        const response = await getCarTirmBySeriesId(id)
+        if (response.data.success) {
+            displayedData.value = response.data.data;
+        } else {
+            console.error('查询失败:', response.data.msg)
+        }
+    } catch (error) {
+        console.error('获取数据失败:', error)
+    }
+}
 const fetchCarSeriesImage = async (id) => {
     try {
         const response = await getCarSeriesImg(id)
@@ -60,7 +101,22 @@ const fetchCarSeriesImage = async (id) => {
         console.error('获取数据失败:', error)
     }
 }
-
+const fetchCarSales = async (id, year) => {
+    try {
+        const response = await getCarSales(id, year)
+        let sales = [];
+        if (response.data.success) {
+            sales = response.data.data;
+            updataLineData(sales);
+            updataYearlySale(sales);
+        }
+        else {
+            console.error('查询失败:', response.data.msg)
+        }
+    } catch (error) {
+        console.error('获取数据失败:', error)
+    }
+}
 const fetchCarEvaluation = async (id) => {
     try {
         const response = await getCarEvl(id)
@@ -102,13 +158,20 @@ const fetchCarSeriesPurpose = async (series) => {
         console.error('获取数据失败:', error)
     }
 }
-
+function updataYearlySale(sales) {
+    sales.forEach(sale => {
+        YearlySale += sale.totalSale;
+    });
+}
 function updataChartData(purpose) {
     pieData.value = formatPieData(purpose);
 }
 
 function updataRadarData(detail) {
     radarData.value = formatRadarData(detail);
+}
+function updataLineData(sales) {
+    lineData.value = formatLineData(sales);
 }
 
 function formatPieData(data) {
@@ -144,7 +207,22 @@ function formatRadarData(detail) {
         }]
     }
 }
-
+function formatLineData(data) {
+    const documentStyle = getComputedStyle(document.documentElement);
+    return {
+        labels: data.map(item => item.month),
+        datasets: [
+            {
+                label: data[0].year + '月销量',
+                data: data.map(item => item.totalSale),
+                fill: false,
+                backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
+                borderColor: documentStyle.getPropertyValue('--p-primary-500'),
+                tension: 0.4
+            },
+        ]
+    }
+}
 
 const rows = computed(() => {
     const numberOfColumns = 4;
@@ -170,19 +248,6 @@ function setColorOptions() {
                 }
             }
         }
-    };
-    lineData.value = {
-        labels: ['一月', '二月', '三月', '四月', '五月', '六月', '七月'],
-        datasets: [
-            {
-                label: '月销量',
-                data: [7145, 6922, 8055, 8184, 7622, 7117, 7840],
-                fill: false,
-                backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
-                borderColor: documentStyle.getPropertyValue('--p-primary-500'),
-                tension: 0.4
-            },
-        ]
     };
 
     lineOptions.value = {
@@ -357,7 +422,8 @@ function goBack() {
                     <div class="card flex flex-row w-full">
                         <div class="md:w-1/2 p-2 text-center">
                             <div class="font-bold" style="font-size: 20pt; margin-top: -20px">2024年销量</div>
-                            <div class="font-bold" style="font-size: 32pt; color: red; margin-bottom: -40px">114,514
+                            <div class="font-bold" style="font-size: 32pt; color: red; margin-bottom: -40px">
+                                {{ YearlySale }}
                             </div>
                         </div>
                         <div class="md:w-1/2 p-2 text-center">
@@ -386,11 +452,39 @@ function goBack() {
             <div class="font-bold" style="font-size: 20pt; margin-bottom: 20px; margin-top: 40px;">车系所包含车型</div>
             <div class="w-full overflow-x-auto">
                 <table class="min-w-full border-2 border-gray-300 divide-y divide-gray-300">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                <div class="font-semibold text-xl">品牌</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                <div class="font-semibold text-xl">车系</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                <div class="font-semibold text-xl">车型</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                <div class="font-semibold text-xl">汽车类型</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                <div class="font-semibold text-xl">能源类型</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                <div class="font-semibold text-xl">价格</div>
+                            </th>
+                        </tr>
+                    </thead>
                     <tbody class="bg-white divide-y divide-gray-300">
-                        <tr v-for="(row, index) in rows" :key="index">
-                            <td v-for="(item, i) in row" :key="i" class="px-4 py-2 text-center">
-                                {{ item || '' }}
+                        <tr v-for="item in displayedData" :key="item.id"
+                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <td class="px-6 py-4">{{ item.brand }}</td>
+                            <td class="px-6 py-4">{{ item.series }}</td>
+                            <td class="px-6 py-4">{{ item.tirm }}</td>
+                            <td class="px-6 py-4">{{ item.type }}</td>
+                            <td class="px-6 py-4">
+                                <Tag :value="item.energyType" :severity="getSeverity(item.status)"></Tag>
                             </td>
+                            <td class="px-6 py-4">{{ formatCurrency(item.price) }}</td>
                         </tr>
                     </tbody>
                 </table>

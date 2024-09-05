@@ -163,11 +163,6 @@ export function getAllCities(){
   return api.post('/CarRegionalSale/getCities');
 }
 
-// // 获取全国车型销量占比数据
-// export function getVehicleSales() {
-//   return api.post('/sales/vehicle-sales');
-// }
-
 //搜索车型
 export function SearchCarTirm(pageNum,pageSize,keyword){
   return api.post('/search/keyword',{pageNum,pageSize,keyword});
@@ -199,4 +194,13 @@ export function getCarSeriesImg(id){
 }
 export function getCarEvl(id){
   return api.post('/carseries/evl',{id});
+}
+export function SearchCarSeriesSale(pageNum,pageSize,keyword){
+  return api.post('/search/SaleKeyword',{pageNum,pageSize,keyword});
+}
+export function getCarSales(id,year){
+  return api.post('/CarSales',{id,year});
+}
+export function getCarTirmBySeriesId(id){
+  return api.post('/cartirm/getCarTirmBySeriesId',{id});
 }
