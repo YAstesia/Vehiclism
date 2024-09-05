@@ -216,7 +216,7 @@ function formatBarData(data) {
         datasets: [
             {
                 label: '销量',
-                backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--p-primary-500'),
+                backgroundColor: ["#e95938", "#ff6519", "#f28104", "#ebaf26", "#d4b640", "#b6b34f", "#94a949", "#729a19", "#628f00", "#339a33"],
                 borderColor: getComputedStyle(document.documentElement).getPropertyValue('--p-primary-500'),
                 data: data.map(item => item.totalSale),
                 ranking: data.map(item => item.ranking)
@@ -230,7 +230,7 @@ function formatBarData2(data) {
         datasets: [
             {
                 label: '销量',
-                backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--p-primary-500'),
+                backgroundColor: ["#e95938", "#ff6519", "#f28104", "#ebaf26", "#d4b640", "#b6b34f", "#94a949", "#729a19", "#628f00", "#339a33"],
                 borderColor: getComputedStyle(document.documentElement).getPropertyValue('--p-primary-500'),
                 data: data.map(item => item.totalSale),
                 ranking: data.map(item => item.ranking)
@@ -245,7 +245,7 @@ function formatBarData3(data) {
         datasets: [
             {
                 label: '销量',
-                backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--p-primary-500'),
+                backgroundColor: ["#e95938", "#ff6519", "#f28104", "#ebaf26", "#d4b640", "#b6b34f", "#94a949", "#729a19", "#628f00", "#339a33"],
                 borderColor: getComputedStyle(document.documentElement).getPropertyValue('--p-primary-500'),
                 data: data.map(item => item.totalSale)
             }

@@ -10,6 +10,8 @@ const lineData2 = ref(null);
 const barData2 = ref(null);
 const lineOptions = ref(null);
 const barOptions = ref(null);
+const combinedData = ref(null);
+const combinedOptions = ref(null);
 // const years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
 
 let dropdownValues = ref([
@@ -31,6 +33,28 @@ let dropdownValue = ref(null);
 
 onMounted(async () => {
     const salesData = await fetchSalesData();
+
+    combinedData.value = {
+        labels: salesData.map(item => item.year), // 从数据中提取年份
+        datasets: [
+            {
+                type: 'line', // 折线图类型
+                label: '折线图',
+                data: salesData.map(item => item.sales), // 从数据中提取销量
+                fill: false,
+                backgroundColor: '#42A5F5',
+                borderColor: '#42A5F5',
+                tension: 0.4
+            },
+            {
+                type: 'bar', // 条形图类型
+                label: '条形图',
+                backgroundColor: '#83dbea',
+                borderColor: '#83dbea',
+                data: salesData.map(item => item.sales) // 从数据中提取销量
+            }
+        ]
+    };
 
     lineData.value = {
         labels: salesData.map(item => item.year), // 从数据中提取年份
@@ -72,7 +96,7 @@ async function showAllChartData(years) {
         }
 
         // 更新折线图数据
-        const uniqueLabels = Array.from(new Set(allSalesData.flat().map(item => item.month)));
+        const uniqueLabels = Array.from(new Set(allSalesData.flat().map(item => item.month))).map(month => `${month}月`);
 
         lineData2.value = {
             labels: uniqueLabels,
@@ -87,7 +111,8 @@ async function showAllChartData(years) {
             // 构建数据集
             const dataset = {
                 label: `${year}年销售额`,
-                data: uniqueLabels.map(month => {
+                data: uniqueLabels.map(label => {
+                    const month = parseInt(label.replace('月', ''), 10);
                     const saleItem = salesDataForYear.find(item => item.month === month);
                     return saleItem ? saleItem.sales : null;
                 }),
@@ -117,7 +142,8 @@ async function showAllChartData(years) {
                 label: `${year}年销售额`,
                 backgroundColor: color,
                 borderColor: color,
-                data: uniqueLabels.map(month => {
+                data: uniqueLabels.map(label => {
+                    const month = parseInt(label.replace('月', ''), 10);
                     const saleItem = salesDataForYear.find(item => item.month === month);
                     return saleItem ? saleItem.sales : null;
                 })
@@ -270,6 +296,38 @@ function setColorOptions() {
             }
         }
     };
+    combinedOptions.value = {
+        plugins: {
+            legend: {
+                labels: {
+                    fontColor: textColor
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: textColorSecondary,
+                    font: {
+                        weight: 500
+                    }
+                },
+                grid: {
+                    display: false,
+                    drawBorder: false
+                }
+            },
+            y: {
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder,
+                    drawBorder: false
+                }
+            }
+        }
+    };
 }
 
 watch(dropdownValue, (newValue) => {
@@ -295,7 +353,7 @@ watch(
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
                 <div class="font-semibold text-xl mb-4">近十年汽车年销量统计</div>
-                <Chart type="line" :data="lineData" :options="lineOptions"></Chart>
+                <Chart type="line" :data="combinedData" :options="combinedOptions"></Chart>
             </div>
         </div>
 

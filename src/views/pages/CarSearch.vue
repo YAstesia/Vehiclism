@@ -51,15 +51,9 @@
     </table>
     <div v-if="!hasData" class="mt-4">找不到符合条件的数据。</div>
     <div v-if="isLoading" class="mt-4">正在筛选，请等待……</div>
-    <<<<<<< HEAD <el-pagination v-model:current-page="currentPage1" :page-size="100" :size="size" :disabled="disabled"
-      :background="background" layout="total, prev, pager, next" :total="1000" @size-change="handleSizeChange"
-      @current-change="handleCurrentChange" />
-
-    =======
     <el-pagination v-model:current-page="currentPage1" :page-size="pageSize.value" :size="size.value"
       :disabled="disabled.value" :background="background.value" layout="total, prev, pager, next"
       :total="totalRecords.value" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-    >>>>>>> ad1fb95686863df7f51a363ab92828ee0dc69030
   </div>
 </template>
 
