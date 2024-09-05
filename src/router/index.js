@@ -22,12 +22,12 @@ const router = createRouter({
                 {
                     path: '/cardetail',
                     name: 'cardetail',
-                    component: () => import('@/views/pages/CarDetail.vue')
+                    component: () => import('@/views/pages/CarSeriesDetail.vue')
                 },
                 {
                     path: '/typedetail',
                     name: 'typedetail',
-                    component: () => import('@/views/pages/TypeDetail.vue')
+                    component: () => import('@/views/pages/CarTrimDetail.vue')
                 },
                 {
                     path: '/uikit/input',
