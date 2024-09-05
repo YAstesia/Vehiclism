@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8081', //校园网10.208.112.75，oasis192.168.43.129
+  baseURL: 'http://192.168.43.129:8081', //校园网10.208.112.75，oasis192.168.43.129
   headers: {
     'Content-Type': 'application/json',
   },
@@ -197,13 +197,6 @@ export function getCarSeries(series){
 export function getCarSeriesImg(id){
   return api.post('/carseries/img',{id});
 }
-<<<<<<< HEAD
-
 export function getCarEvl(id){
   return api.post('/carseries/evl',{id});
 }
-=======
-export function getCarEvl(id){
-  return api.post('/carseries/evl',{id});
-}
->>>>>>> ad1fb95686863df7f51a363ab92828ee0dc69030

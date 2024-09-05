@@ -51,29 +51,20 @@
     </table>
     <div v-if="!hasData" class="mt-4">找不到符合条件的数据。</div>
     <div v-if="isLoading" class="mt-4">正在筛选，请等待……</div>
-<<<<<<< HEAD
-    <el-pagination v-model:current-page="currentPage1" :page-size="100" :size="size" :disabled="disabled"
+    <<<<<<< HEAD <el-pagination v-model:current-page="currentPage1" :page-size="100" :size="size" :disabled="disabled"
       :background="background" layout="total, prev, pager, next" :total="1000" @size-change="handleSizeChange"
       @current-change="handleCurrentChange" />
 
-=======
+    =======
     <el-pagination v-model:current-page="currentPage1" :page-size="pageSize.value" :size="size.value"
       :disabled="disabled.value" :background="background.value" layout="total, prev, pager, next"
       :total="totalRecords.value" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
->>>>>>> ad1fb95686863df7f51a363ab92828ee0dc69030
+    >>>>>>> ad1fb95686863df7f51a363ab92828ee0dc69030
   </div>
 </template>
 
 <script setup>
 import { SearchCarTirm } from "@/api";
-<<<<<<< HEAD
-// import { ElPagination } from 'element-plus'; // 注意这里使用的包名是 element-plus
-// import 'element-plus/dist/index.css'; // 引入样式
-import { onMounted, ref } from 'vue';
-// export default {
-//   components: {
-//     ElPagination,
-=======
 // import { ElPagination } from 'element-plus';
 // import 'element-plus/theme-chalk/src/pagination.scss'; // 引入分页组件的样式
 // import { ELMessage } from 'element-plus';
@@ -81,7 +72,6 @@ import { onMounted, ref } from 'vue';
 // export default {
 //   components: {
 //     ElPagination, // 注册 ElPagination 组件
->>>>>>> ad1fb95686863df7f51a363ab92828ee0dc69030
 //   },
 //   data() {
 //     return {
@@ -158,16 +148,11 @@ const search = async () => {
 };
 
 // 分页改变时触发搜索
-<<<<<<< HEAD
-const handlePageChange = (newPage) => {
-  console.log(OK);
-  currentPage.value = newPage;
-=======
-const handleCurrentChange = (newPage) => {
-  currentPage1.value = newPage;
->>>>>>> ad1fb95686863df7f51a363ab92828ee0dc69030
-  search();
-};
+// const handlePageChange = (newPage) => {
+//   console.log(OK);
+//   currentPage.value = newPage;
+//   search();
+// };
 
 // 初始化加载数据
 onMounted(() => {
