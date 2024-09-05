@@ -1,13 +1,14 @@
 <script setup>
+import { getSeriesPurpose } from '@/api';
 import { useLayout } from '@/layout/composables/layout';
 import { onMounted, ref, watch } from 'vue';
-
 const { getPrimary, getSurface, isDarkTheme } = useLayout();
 
 const pieData = ref(null);
 const pieOptions = ref(null);
 const barData = ref(null);
 const barOptions = ref(null);
+let searchQuery;
 
 onMounted(() => {
     setColorOptions();
@@ -19,16 +20,16 @@ function setColorOptions() {
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-    pieData.value = {
-        labels: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
-        datasets: [
-            {
-                data: [540, 325, 702, 114, 514, 1919, 810],
-                backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-red-500'), documentStyle.getPropertyValue('--p-blue-500'), documentStyle.getPropertyValue('--p-yellow-500'), documentStyle.getPropertyValue('--p-orange-500')],
-                hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400'), documentStyle.getPropertyValue('--p-red-400'), documentStyle.getPropertyValue('--p-blue-400'), documentStyle.getPropertyValue('--p-yellow-400'), documentStyle.getPropertyValue('--p-orange-400')],
-            }
-        ]
-    };
+    // pieData.value = {
+    //     labels: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+    //     datasets: [
+    //         {
+    //             data: [540, 325, 702, 114, 514, 1919, 810],
+    //             backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-red-500'), documentStyle.getPropertyValue('--p-blue-500'), documentStyle.getPropertyValue('--p-yellow-500'), documentStyle.getPropertyValue('--p-orange-500')],
+    //             hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400'), documentStyle.getPropertyValue('--p-red-400'), documentStyle.getPropertyValue('--p-blue-400'), documentStyle.getPropertyValue('--p-yellow-400'), documentStyle.getPropertyValue('--p-orange-400')],
+    //         }
+    //     ]
+    // };
 
     pieOptions.value = {
         plugins: {
@@ -58,23 +59,23 @@ function setColorOptions() {
         },
     };
 
-    barData.value = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'My First dataset',
-                backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
-                borderColor: documentStyle.getPropertyValue('--p-primary-500'),
-                data: [65, 59, 80, 81, 56, 55, 40]
-            },
-            {
-                label: 'My Second dataset',
-                backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
-                borderColor: documentStyle.getPropertyValue('--p-primary-200'),
-                data: [28, 48, 40, 19, 86, 27, 90]
-            }
-        ]
-    };
+    // barData.value = {
+    //     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    //     datasets: [
+    //         {
+    //             label: 'My First dataset',
+    //             backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
+    //             borderColor: documentStyle.getPropertyValue('--p-primary-500'),
+    //             data: [65, 59, 80, 81, 56, 55, 40]
+    //         },
+    //         {
+    //             label: 'My Second dataset',
+    //             backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
+    //             borderColor: documentStyle.getPropertyValue('--p-primary-200'),
+    //             data: [28, 48, 40, 19, 86, 27, 90]
+    //         }
+    //     ]
+    // };
     barOptions.value = {
         plugins: {
             legend: {
@@ -123,7 +124,56 @@ function load(index) {
     loading.value[index] = true;
     setTimeout(() => (loading.value[index] = false), 1000);
 }
-
+async function handleClick() {
+    loading.value[1] = true;
+    try {
+        let purpose = [];
+        if (searchQuery) {
+            purpose = await getSeriesPurpose(searchQuery);
+            purpose = purpose.data.data;
+        }
+        updataChartData(purpose);
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+    } finally {
+        loading.value[1] = false;
+    }
+}
+function updataChartData(purpose) {
+    pieData.value = formatPieData(purpose);
+    barData.value = formatBarData(purpose);
+}
+function formatPieData(data) {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    return {
+        labels: data.map(item => item.purpose),
+        datasets: [{
+            data: data.map(item => item.percentage),
+            backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-red-500'), documentStyle.getPropertyValue('--p-blue-500'), documentStyle.getPropertyValue('--p-yellow-500'), documentStyle.getPropertyValue('--p-orange-500')],
+            hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400'), documentStyle.getPropertyValue('--p-red-400'), documentStyle.getPropertyValue('--p-blue-400'), documentStyle.getPropertyValue('--p-yellow-400'), documentStyle.getPropertyValue('--p-orange-400')],
+        }]
+    }
+}
+function formatBarData(data) {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    return {
+        labels: data.map(item => item.purpose),
+        datasets: [
+            {
+                label: '购车目的',
+                backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--p-primary-500'),
+                borderColor: getComputedStyle(document.documentElement).getPropertyValue('--p-primary-500'),
+                data: data.map(item => item.cnt)
+            }
+        ]
+    };
+}
 watch(
     [getPrimary, getSurface, isDarkTheme],
     () => {
@@ -137,9 +187,9 @@ watch(
     <div class="page-container">
         <div class="search-container">
             <IconField iconPosition="left">
-                <InputText type="text" placeholder="输入车系" />
+                <InputText v-model="searchQuery" placeholder="输入车系" />
                 <Button type="button" class="mr-2 mb-2" label="查询" icon="pi pi-search" iconPos="right"
-                    :loading="loading[1]" @click="load(1)" />
+                    :loading="loading[1]" @click="handleClick" />
             </IconField>
         </div>
         <div class="grid grid-cols-12 gap-8 mt-8">

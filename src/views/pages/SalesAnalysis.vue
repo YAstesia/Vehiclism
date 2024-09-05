@@ -1,5 +1,5 @@
 <script setup>
-import { getProvinceCities, getProvinces, getProvinceTopSeries, getRegionSales, getTopCities, getTopProvinces, getVehicleSales } from '@/api'; // 导入接口
+import { getAllCities, getCityTopSeries, getProvinceCities, getProvinces, getProvinceTopSeries, getRegionSales, getTopCities, getTopProvinces, getTopSeries } from '@/api'; // 导入接口
 import { useLayout } from '@/layout/composables/layout';
 import * as echarts from 'echarts';
 import { onMounted, ref, watch } from 'vue';
@@ -9,30 +9,26 @@ const { getPrimary, getSurface, isDarkTheme } = useLayout();
 const pieData = ref(null);
 const barData = ref(null);
 const barData2 = ref(null);
-const pieData2 = ref(null);
+const barData4 = ref(null);
 const barData3 = ref(null);
 const pieOptions = ref(null);
 const barOptions = ref(null);
 const barOptions10 = ref(null);
 const chartRef = ref(null);
+let titleofBar3 = "全国销量前十车系";
+let titleofBar2 = "全国销量前十城市";
+let titleofBar4 = "请选择城市："
 let ProvinceSale = [];
-const dropdownValues = ref([
-    { name: '2015', code: 2015 },
-    { name: '2016', code: 2016 },
-    { name: '2017', code: 2017 },
-    { name: '2018', code: 2018 },
-    { name: '2019', code: 2019 },
-    { name: '2020', code: 2020 },
-    { name: '2021', code: 2021 },
-    { name: '2022', code: 2022 },
-    { name: '2023', code: 2023 },
-    { name: '2024', code: 2024 },
-]);
-const dropdownValue = ref(null);
+let dropdownValues = ref([]);
+let dropdownValue = ref(null);
+let dropdownValuePros = ref([]);
+let dropdownValuePro = ref(null);
 let chartInstance = null;
 
 async function loadInitialData() {
     try {
+        titleofBar3 = "近半年全国销量前十车系";
+        titleofBar2 = "近半年全国销量前十城市";
         const ProvinceSaleResponse = await getProvinces();
         ProvinceSale = ProvinceSaleResponse.data.data;
         // 获取前10省份数据
@@ -49,13 +45,28 @@ async function loadInitialData() {
 
         // 获取全国品牌销量数据、、change了  
         const seriesResponse = await getTopSeries();
-        barData3.value = formatBarData(seriesResponse.data.data);
+        barData3.value = formatBarData3(seriesResponse.data.data);
 
-        // 获取车型销量数据
-        const vehicleResponse = await getVehicleSales();
-        pieData2.value = formatPieData(vehicleResponse.data.data);
-        updateChart(); // 更新图表显示
+        // // 获取车型销量数据
+        // const vehicleResponse = await getVehicleSales();
+        // barData4.value = formatPieData(vehicleResponse.data.data);
 
+        // 获取所有城市数据
+        const citiesResponse = await getAllCities();
+        const allCities = citiesResponse.data.data;
+
+        // 更新 dropdownValues
+        dropdownValues.value = allCities.map(city => ({ name: city, code: city }));
+        // 获取所有省份数据
+        const provinces = ProvinceSale.map(province => ({
+            name: province.province,
+            code: province.province
+        }));
+        // 添加 '全国' 选项到省份列表的前面
+        dropdownValuePros.value = [
+            { name: '全国', code: '全国' },
+            ...provinces
+        ];
     } catch (error) {
         console.error("Error loading initial data: ", error);
     }
@@ -256,18 +267,6 @@ function formatPieData(data) {
     };
 }
 
-function updateCharts() {
-    chartInstance.setOption({
-        series: [
-            { data: barData.value.datasets[0].data }, // 更新柱状图1
-            { data: pieData.value.datasets[0].data }, // 更新饼图1
-            { data: barData2.value.datasets[0].data }, // 更新柱状图2
-            { data: barData3.value.datasets[0].data }, // 更新柱状图3
-            { data: pieData2.value.datasets[0].data }, // 更新饼图2
-        ]
-    });
-}
-
 async function loadMapData() {
     const response = await fetch('https://geo.datav.aliyun.com/areas/bound/100000_full.json');
     const chinaGeoJson = await response.json();
@@ -382,10 +381,24 @@ async function loadMapData() {
 
 async function handleProvinceClick(provinceName) {
     try {
+        titleofBar3 = provinceName + "销量前十车系";
+        titleofBar2 = provinceName + "城市销量";
         const cityResponse = await getProvinceCities(provinceName);
+        // 更新 dropdownValues
+        dropdownValues.value = cityResponse.data.data.map(city => ({ name: city.region, code: city.region }));
         barData2.value = formatBarData2(cityResponse.data.data);
         const seriesResponse = await getProvinceTopSeries(provinceName);
         barData3.value = formatBarData3(seriesResponse.data.data);
+    } catch (error) {
+        console.error("Error loading province cities data: ", error);
+    }
+}
+
+async function handleCityClick(cityName) {
+    try {
+        titleofBar4 = cityName + "市销量前十车系"
+        const seriesResponse = await getCityTopSeries(cityName);
+        barData4.value = formatBarData3(seriesResponse.data.data);
     } catch (error) {
         console.error("Error loading province cities data: ", error);
     }
@@ -398,13 +411,27 @@ watch(
     },
     { immediate: true }
 );
+watch(dropdownValue, (newValue) => {
+    if (newValue) {
+        handleCityClick(newValue.code);
+
+    }
+}, { immediate: true });
+watch(dropdownValuePro, (newValue) => {
+    if (newValue) {
+        if (newValue.name === '全国') {
+            loadInitialData();
+        } else {
+            handleProvinceClick(newValue.code);
+        }
+    }
+}, { immediate: true });
 
 onMounted(async () => {
     setColorOptions();
-    chartInstance = echarts.init(chartRef.value);
+    chartInstance = echarts.init(chartRef.value, { width: '65%', height: '100%' });
     await loadInitialData();
     await loadMapData();
-    updateCharts();
 });
 </script>
 
@@ -412,39 +439,52 @@ onMounted(async () => {
     <Fluid class="grid grid-cols-12 gap-8">
         <div class="col-span-12 xl:col-span-6">
             <div class="card flex flex-col items-center">
-                <div class="font-semibold text-xl mb-4">六个地区销量占比</div>
-                <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
+                <div class="font-semibold text-xl mb-4">近半年中国地区总体销量占比</div>
+                <Chart type="pie" :data="pieData" :options="pieOptions" style="width: 55%; height: 400px;"></Chart>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
             <!-- <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="选择年份" style="margin-bottom: 40px;"/> -->
             <div class="card">
-                <div class="font-semibold text-xl mb-4">top10省份</div>
+                <div class="font-semibold text-xl mb-4">近半年中国汽车销售量前十省份</div>
                 <Chart type="bar" :data="barData" :options="barOptions10" style="width: 100%; height: 400px;"></Chart>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
-                <div class="font-semibold text-xl mb-4">中国地图，点击可以切换省份</div>
-                <div ref="chartRef" style="width: 85%; height: 400px;"></div>
+                <!-- <div class="font-semibold text-xl mb-4">中国地图，点击可以切换省份</div> -->
+                <div ref="chartRef" style="width: 100%; height: 440px;"></div>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
-                <div class="font-semibold text-xl mb-4">默认为空（全国城市销量top?），根据地图选择的省份，显示该省份城市销量top?</div>
-                <Chart type="bar" :data="barData2" :options="barOptions"></Chart>
-            </div>
-        </div>
-        <div class="col-span-12 xl:col-span-6">
-            <div class="card">
-                <div class="font-semibold text-xl mb-4">默认为全国品牌销量top?，同样根据省份切换</div>
-                <Chart type="bar" :data="barData3" :options="barOptions"></Chart>
+                <div class="font-semibold text-xl mb-4">{{ titleofBar2 }}</div>
+                <Chart type="bar" :data="barData2" :options="barOptions" style="width: 100%; height: 400px;"></Chart>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
             <div class="card flex flex-col items-center">
-                <div class="font-semibold text-xl mb-4">默认为全国车型销量占比，同样根据省份切换</div>
-                <Chart type="pie" :data="pieData2" :options="pieOptions"></Chart>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="font-semibold text-xl mb-4">{{ titleofBar3 }}</div>
+                    <div>
+                        <Select v-model="dropdownValuePro" :options="dropdownValuePros" optionLabel="name"
+                            placeholder="选择省份" style="margin-bottom: 0; margin-left: 10px;" />
+                    </div>
+                </div>
+                <Chart type="bar" :data="barData3" :options="barOptions" style="width: 100%; height: 400px;"></Chart>
+            </div>
+        </div>
+        <div class="col-span-12 xl:col-span-6">
+            <div class="card flex flex-col items-center">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="font-semibold text-xl mb-4">{{ titleofBar4 }}</div>
+                    <div>
+                        <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="选择城市"
+                            style="margin-bottom: 0; margin-left: 10px;" />
+                    </div>
+                </div>
+                <Chart type="bar" :data="barData4" :options="barOptions" style="width: 100%; height: 400px;"></Chart>
+                <!-- <Chart type="pie" :data="barData4" :options="pieOptions" style="width: 100%; height: 400px;"></Chart> -->
             </div>
         </div>
     </Fluid>

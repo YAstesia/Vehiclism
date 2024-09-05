@@ -10,11 +10,11 @@ import ToastService from 'primevue/toastservice';
 import '@/assets/styles.scss';
 import '@/assets/tailwind.css';
 
-import { createVuetify } from 'vuetify';
-import 'vuetify/styles';
+// import { createVuetify } from 'vuetify';
+// import 'vuetify/styles';
 
 const app = createApp(App);
-const vuetify = createVuetify();
+// const vuetify = createVuetify();
 
 app.use(router);
 app.use(PrimeVue, {
@@ -27,5 +27,5 @@ app.use(PrimeVue, {
 });
 app.use(ToastService);
 app.use(ConfirmationService);
-app.use(vuetify);
+// app.use(vuetify);
 app.mount('#app');

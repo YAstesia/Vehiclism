@@ -1,4 +1,5 @@
 <script setup>
+import { getCarEvl, getCarSeries } from '@/api';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -15,11 +16,15 @@ const lineOptions = ref(null);
 
 onMounted(() => {
     setColorOptions();
+    fetchCarSeriesDetail('Model Y');
+    fetchCarEvaluation(1062)
 });
 
 
-const data = ref([[111, 444], [222, 555], [333, 666]]);
-const detail = ref([4.13, 4.14, 2.49, 2.4, 4, 3.36, 5.00, 1.19]);
+const data = ref([213, 414, 4241, 24124, 42531, 12312, 154251, 1312, 333, 312]);
+const seriesDetail = ref({ brand: '', series: '', priceMin: 0, priceMax: 0, type: '' })
+
+const detail = ref([0, 0, 0, 0, 0, 0, 0, 0]);
 const value1 = computed(() => detail.value[0]);
 const value2 = computed(() => detail.value[1]);
 const value3 = computed(() => detail.value[2]);
@@ -29,16 +34,49 @@ const value6 = computed(() => detail.value[5]);
 const value7 = computed(() => detail.value[6]);
 const value8 = computed(() => detail.value[7]);
 
+const fetchCarSeriesDetail = async (series) => {
+    try {
+        const response = await getCarSeries(series)
+        if (response.data.success) {
+            seriesDetail.value = response.data.data
+        } else {
+            console.error('查询失败:', response.data.msg)
+        }
+    } catch (error) {
+        console.error('获取数据失败:', error)
+    }
+}
+
+const fetchCarEvaluation = async (id) => {
+    try {
+        const response = await getCarEvl(id)
+        if (response.data.success) {
+            const evalData = response.data.data
+            // 使用从后端获取的数据替换 detail 数组的数值
+            detail.value = [
+                evalData.overallRating,
+                evalData.space,
+                evalData.driveFeel,
+                evalData.powerConsum,
+                evalData.outDecor,
+                evalData.inDecor,
+                evalData.qpRatio,
+                evalData.configure
+            ]
+        } else {
+            console.error('查询失败:', response.data.msg)
+        }
+    } catch (error) {
+        console.error('获取数据失败:', error)
+    }
+}
 
 const rows = computed(() => {
-    const flatData = data.value.flat(); // 将二维数组展平为一维数组
-    const numberOfColumns = 4; // 每行的列数
+    const numberOfColumns = 4;
     const result = [];
-
-    for (let i = 0; i < flatData.length; i += numberOfColumns) {
-        result.push(flatData.slice(i, i + numberOfColumns));
+    for (let i = 0; i < data.value.length; i += numberOfColumns) {
+        result.push(data.value.slice(i, i + numberOfColumns));
     }
-
     return result;
 });
 
@@ -125,7 +163,7 @@ function goBack() {
 <template>
     <div class="flex flex-col">
         <div class="card">
-            <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-10">车型详情</span>
+            <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-10">车系详情</span>
             <Button label="返回" class="layout-menu-button layout-topbar-action" @click="goBack()"></Button>
         </div>
 
@@ -139,15 +177,21 @@ function goBack() {
                         <!-- 两行居中的文字 -->
                         <div class="text-center mb-4">
                             <div class="font-bold" style="font-size: 24pt; margin-bottom: 15px; margin-top: 15px;">
-                                东南大学校园接驳车</div>
-                            <div class="text-gray-600" style="font-size: 16pt;">￥114,514 ~ ￥1,919,810</div>
+                                {{ seriesDetail.brand }}</div>
+                        </div>
+
+                        <div class="text-center mb-4">
+                            <div class="font-bold" style="font-size: 24pt; margin-bottom: 15px; margin-top: 15px;">
+                                {{ seriesDetail.series }}</div>
+                            <div class="text-gray-600" style="font-size: 16pt;">￥{{ seriesDetail.priceMin }} 万 ~ ￥{{
+                                seriesDetail.priceMax }} 万</div>
                         </div>
 
                         <!-- 填充了字的文本框 -->
                         <Card>
                             <template v-slot:content>
                                 <p class="leading-normal m-0" style="font-size: 20px;">
-                                    啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
+                                    {{ seriesDetail.type }}
                                 </p>
                             </template>
                         </Card>
@@ -158,81 +202,66 @@ function goBack() {
 
                 <div class="flex flex-wrap md:w-2/3">
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
-                                    参数1</div>
+                        <div class="card flex flex-col items-center relative">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                综合评分
                             </div>
                             <Knob v-model="value1" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
                                 rangeColor="SlateGray" readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
-                                    参数2</div>
-                            </div>
+                        <div class="card flex flex-col items-center relative">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                空间评分</div>
                             <Knob v-model="value2" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
                                 rangeColor="SlateGray" readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
-                                    参数3</div>
-                            </div>
+                        <div class="card flex flex-col items-center relative">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                驾驶感受</div>
                             <Knob v-model="value3" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
                                 rangeColor="SlateGray" readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
-                                    参数4</div>
-                            </div>
+                        <div class="card flex flex-col items-center relative">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                能耗评分</div>
                             <Knob v-model="value4" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
                                 rangeColor="SlateGray" readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
-                                    参数5</div>
-                            </div>
+                        <div class="card flex flex-col items-center relative">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                外观评分</div>
                             <Knob v-model="value5" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
                                 rangeColor="SlateGray" readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
-                                    参数6</div>
-                            </div>
+                        <div class="card flex flex-col items-center relative">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                内饰评分</div>
                             <Knob v-model="value6" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
                                 rangeColor="SlateGray" readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
-                                    参数7</div>
-                            </div>
+                        <div class="card flex flex-col items-center relative">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                性价比</div>
                             <Knob v-model="value7" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
                                 rangeColor="SlateGray" readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
-                                    参数8</div>
-                            </div>
+                        <div class="card flex flex-col items-center relative">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                配置评分</div>
                             <Knob v-model="value8" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
                                 rangeColor="SlateGray" readonly />
                         </div>
@@ -267,7 +296,7 @@ function goBack() {
                     </div>
                 </div>
             </div>
-            <div class="font-bold" style="font-size: 20pt; margin-bottom: 20px; margin-top: 40px;">车型参数</div>
+            <div class="font-bold" style="font-size: 20pt; margin-bottom: 20px; margin-top: 40px;">车系所包含车型</div>
             <div class="w-full overflow-x-auto">
                 <table class="min-w-full border-2 border-gray-300 divide-y divide-gray-300">
                     <tbody class="bg-white divide-y divide-gray-300">

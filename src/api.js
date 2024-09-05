@@ -127,6 +127,7 @@ export async function fetchMonthData(year) {
 export function getTopProvinces() {
   return api.post('/CarRegionalSale/TopTenProvinces');
 }
+
 export function getProvinces() {
   return api.post('/CarRegionalSale/Provinces');
 }
@@ -154,13 +155,49 @@ export function getProvinceTopSeries(provinceName) {
 export function getCityTopSeries(cityName) {
   return api.post('/CarRegionalSale/CityTopTenSeries',{cityName});
 }
-
-// 获取全国车型销量占比数据
-export function getVehicleSales() {
-  return api.post('/sales/vehicle-sales');
+//通过省份获取城市
+export function getCitiesFromProvince(provinceName){
+  return api.post('/CarRegionalSale/getCitiesFromProvince',{provinceName});
 }
+export function getAllCities(){
+  return api.post('/CarRegionalSale/getCities');
+}
+
+// // 获取全国车型销量占比数据
+// export function getVehicleSales() {
+//   return api.post('/sales/vehicle-sales');
+// }
 
 //搜索车型
 export function SearchCarTirm(pageNum,pageSize,keyword){
   return api.post('/search/keyword',{pageNum,pageSize,keyword});
+}
+
+export function getBrandSaleMonth(year,month){
+  return api.post('/getBrandSaleMonth',{year,month});
+}
+export function getBrandSaleYear(year){
+  return api.post('/getBrandSaleYear',{year});
+}
+export function getSeriesSaleYear(year){
+  return api.post('/carseries/getSeriesSaleYear',{year});
+}
+export function getSeriesSaleMonth(year,month){
+  return api.post('/carseries/getSeriesSaleMonth',{year,month});
+}
+
+export function getSeriesPurpose(series){
+  return api.post('/carseries/getSeriesPurpose',{series});
+}
+
+export function getCarSeries(series){
+  return api.post('/carseries/getCarSeries',{series});
+}
+
+export function getCarSeriesImg(id){
+  return api.post('/carseries/img',{id});
+}
+
+export function getCarEvl(id){
+  return api.post('/carseries/evl',{id});
 }

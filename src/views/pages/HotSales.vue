@@ -1,11 +1,15 @@
 <script setup>
+import { getBrandSaleMonth, getBrandSaleYear, getSeriesSaleMonth, getSeriesSaleYear } from '@/api';
 import { useLayout } from '@/layout/composables/layout';
 import { onMounted, ref, watch } from 'vue';
 
+
 const { getPrimary, getSurface, isDarkTheme } = useLayout();
 const barData = ref(null);
+const barData2 = ref(null);
+const barData3 = ref(null);
+const barData4 = ref(null);
 const barOptions = ref(null);
-
 onMounted(() => {
     setColorOptions();
 });
@@ -23,23 +27,23 @@ function setColorOptions() {
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-    barData.value = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'My First dataset',
-                backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
-                borderColor: documentStyle.getPropertyValue('--p-primary-500'),
-                data: [65, 59, 80, 81, 56, 55, 40]
-            },
-            {
-                label: 'My Second dataset',
-                backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
-                borderColor: documentStyle.getPropertyValue('--p-primary-200'),
-                data: [28, 48, 40, 19, 86, 27, 90]
-            }
-        ]
-    };
+    // barData.value = {
+    //     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    //     datasets: [
+    //         {
+    //             label: 'My First dataset',
+    //             backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
+    //             borderColor: documentStyle.getPropertyValue('--p-primary-500'),
+    //             data: [65, 59, 80, 81, 56, 55, 40]
+    //         },
+    //         {
+    //             label: 'My Second dataset',
+    //             backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
+    //             borderColor: documentStyle.getPropertyValue('--p-primary-200'),
+    //             data: [28, 48, 40, 19, 86, 27, 90]
+    //         }
+    //     ]
+    // };
     barOptions.value = {
         plugins: {
             legend: {
@@ -75,10 +79,10 @@ function setColorOptions() {
 }
 
 const dropdownValues = ref([
-    { name: '2015', code: 2015 },
-    { name: '2016', code: 2016 },
-    { name: '2017', code: 2017 },
-    { name: '2018', code: 2018 },
+    // { name: '2015', code: 2015 },
+    // { name: '2016', code: 2016 },
+    // { name: '2017', code: 2017 },
+    // { name: '2018', code: 2018 },
     { name: '2019', code: 2019 },
     { name: '2020', code: 2020 },
     { name: '2021', code: 2021 },
@@ -103,7 +107,75 @@ const dropdownValues2 = ref([
     { name: '十二月', code: 12 },
 ]);
 const dropdownValue2 = ref(null);
+async function handleSearch() {
+    loading.value[1] = true;
+    try {
+        const year = dropdownValue.value?.code || null;
+        const month = dropdownValue2.value?.code || null;
 
+        let yearlyData = [];
+        let monthlyData = [];
+        let yearlySeriesData = [];
+        let monthlySeriesData = [];
+
+        if (year) {
+            yearlyData = await getBrandSaleYear(year);
+            yearlyData = yearlyData.data.data;
+            yearlySeriesData = await getSeriesSaleYear(year);
+            yearlySeriesData = yearlySeriesData.data.data;
+        }
+
+        if (month && year) {
+            monthlyData = await getBrandSaleMonth(year, month);
+            monthlyData = monthlyData.data.data;
+            monthlySeriesData = await getSeriesSaleMonth(year, month);
+            monthlySeriesData = monthlySeriesData.data.data;
+        }
+
+        updateChartData(yearlyData, monthlyData, yearlySeriesData, monthlySeriesData);
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+    } finally {
+        loading.value[1] = false;
+    }
+}
+
+function updateChartData(yearlyData, monthlyData, yearlySeriesData, monthlySeriesData) {
+    barData.value = formatBarData(yearlyData);
+    barData2.value = formatBarData(monthlyData);
+    barData3.value = formatBarDataSeries(yearlySeriesData);
+    barData4.value = formatBarDataSeries(monthlySeriesData);
+
+    // barData3.value = formatBarData3(monthlyData);
+}
+function formatBarData(data) {
+    return {
+        labels: data.map(item => item.brand),
+        datasets: [
+            {
+                label: '销量',
+                backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--p-primary-500'),
+                borderColor: getComputedStyle(document.documentElement).getPropertyValue('--p-primary-500'),
+                data: data.map(item => item.totalSale),
+                ranking: data.map(item => item.ranking)
+            }
+        ]
+    };
+}
+function formatBarDataSeries(data) {
+    return {
+        labels: data.map(item => item.series),
+        datasets: [
+            {
+                label: '销量',
+                backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--p-primary-500'),
+                borderColor: getComputedStyle(document.documentElement).getPropertyValue('--p-primary-500'),
+                data: data.map(item => item.totalSale),
+                ranking: data.map(item => item.ranking)
+            }
+        ]
+    };
+}
 watch(
     [getPrimary, getSurface, isDarkTheme],
     () => {
@@ -122,7 +194,7 @@ watch(
             <Select v-model="dropdownValue2" :options="dropdownValues2" optionLabel="name" placeholder="选择月份"
                 style="margin-bottom: 20px; margin-right: 20px;" />
             <Button type="button" class="mr-2 mb-2" label="查询" icon="pi pi-search" iconPos="right" :loading="loading[1]"
-                @click="load(1)" style="margin-left: 20px;" />
+                @click="handleSearch" style="margin-left: 20px;" />
         </IconField>
     </div>
     <Fluid class="grid grid-cols-12 gap-8">
@@ -135,19 +207,19 @@ watch(
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
                 <div class="font-semibold text-xl mb-4">年度车系销售排行</div>
-                <Chart type="bar" :data="barData" :options="barOptions"></Chart>
+                <Chart type="bar" :data="barData3" :options="barOptions"></Chart>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
                 <div class="font-semibold text-xl mb-4">月度品牌销售排行</div>
-                <Chart type="bar" :data="barData" :options="barOptions"></Chart>
+                <Chart type="bar" :data="barData2" :options="barOptions"></Chart>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
                 <div class="font-semibold text-xl mb-4">月度车系销售排行</div>
-                <Chart type="bar" :data="barData" :options="barOptions"></Chart>
+                <Chart type="bar" :data="barData4" :options="barOptions"></Chart>
             </div>
         </div>
     </Fluid>

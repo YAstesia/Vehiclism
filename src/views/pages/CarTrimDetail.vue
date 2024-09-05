@@ -1,4 +1,5 @@
 <script setup>
+import { } from '@/api';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -18,8 +19,7 @@ onMounted(() => {
 });
 
 
-const data = ref([213, 414, 4241, 24124, 42531, 12312, 154251, 1312, 333, 312]);
-
+const data = ref([[111, 444], [222, 555], [333, 666]]);
 const detail = ref([4.13, 4.14, 2.49, 2.4, 4, 3.36, 5.00, 1.19]);
 const value1 = computed(() => detail.value[0]);
 const value2 = computed(() => detail.value[1]);
@@ -30,12 +30,16 @@ const value6 = computed(() => detail.value[5]);
 const value7 = computed(() => detail.value[6]);
 const value8 = computed(() => detail.value[7]);
 
+
 const rows = computed(() => {
-    const numberOfColumns = 4;
+    const flatData = data.value.flat(); // 将二维数组展平为一维数组
+    const numberOfColumns = 4; // 每行的列数
     const result = [];
-    for (let i = 0; i < data.value.length; i += numberOfColumns) {
-        result.push(data.value.slice(i, i + numberOfColumns));
+
+    for (let i = 0; i < flatData.length; i += numberOfColumns) {
+        result.push(flatData.slice(i, i + numberOfColumns));
     }
+
     return result;
 });
 
@@ -122,7 +126,7 @@ function goBack() {
 <template>
     <div class="flex flex-col">
         <div class="card">
-            <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-10">车系详情</span>
+            <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-10">车型详情</span>
             <Button label="返回" class="layout-menu-button layout-topbar-action" @click="goBack()"></Button>
         </div>
 
@@ -155,9 +159,9 @@ function goBack() {
 
                 <div class="flex flex-wrap md:w-2/3">
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
+                        <div class="card flex flex-col items-center relative">
                             <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数1</div>
                             </div>
                             <Knob v-model="value1" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
@@ -165,9 +169,9 @@ function goBack() {
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
+                        <div class="card flex flex-col items-center relative">
                             <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数2</div>
                             </div>
                             <Knob v-model="value2" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
@@ -175,9 +179,9 @@ function goBack() {
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
+                        <div class="card flex flex-col items-center relative">
                             <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数3</div>
                             </div>
                             <Knob v-model="value3" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
@@ -185,9 +189,9 @@ function goBack() {
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
+                        <div class="card flex flex-col items-center relative">
                             <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数4</div>
                             </div>
                             <Knob v-model="value4" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
@@ -195,9 +199,9 @@ function goBack() {
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
+                        <div class="card flex flex-col items-center relative">
                             <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数5</div>
                             </div>
                             <Knob v-model="value5" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
@@ -205,9 +209,9 @@ function goBack() {
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
+                        <div class="card flex flex-col items-center relative">
                             <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数6</div>
                             </div>
                             <Knob v-model="value6" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
@@ -215,9 +219,9 @@ function goBack() {
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
+                        <div class="card flex flex-col items-center relative">
                             <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数7</div>
                             </div>
                             <Knob v-model="value7" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
@@ -225,9 +229,9 @@ function goBack() {
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-row items-center">
+                        <div class="card flex flex-col items-center relative">
                             <div class="flex flex-col items-center mb-4">
-                                <div class="font-bold" style="font-size: 20pt; margin-left: -60px; margin-top: -70px;">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
                                     参数8</div>
                             </div>
                             <Knob v-model="value8" :min="0.00" :max="5.00" valueColor="MediumTurquoise"
@@ -264,7 +268,7 @@ function goBack() {
                     </div>
                 </div>
             </div>
-            <div class="font-bold" style="font-size: 20pt; margin-bottom: 20px; margin-top: 40px;">车系所包含车型</div>
+            <div class="font-bold" style="font-size: 20pt; margin-bottom: 20px; margin-top: 40px;">车型参数</div>
             <div class="w-full overflow-x-auto">
                 <table class="min-w-full border-2 border-gray-300 divide-y divide-gray-300">
                     <tbody class="bg-white divide-y divide-gray-300">

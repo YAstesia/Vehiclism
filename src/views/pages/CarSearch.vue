@@ -73,15 +73,38 @@
     </table>
     <div v-if="!hasData" class="mt-4">找不到符合条件的数据。</div>
     <div v-if="isLoading" class="mt-4">正在筛选，请等待……</div>
-    <v-pagination v-model="currentPage" :length="Math.ceil(totalRecords / pageSize)" @input="handlePageChange" />
+    <el-pagination v-model:current-page="currentPage1" :page-size="100" :size="size" :disabled="disabled"
+      :background="background" layout="total, prev, pager, next" :total="1000" @size-change="handleSizeChange"
+      @current-change="handleCurrentChange" />
 
   </div>
 </template>
 <script setup>
 import { SearchCarTirm } from "@/api";
+// import { ElPagination } from 'element-plus'; // 注意这里使用的包名是 element-plus
+// import 'element-plus/dist/index.css'; // 引入样式
 import { onMounted, ref } from 'vue';
-import { VPagination } from 'vuetify/components';
-
+// export default {
+//   components: {
+//     ElPagination,
+//   },
+//   data() {
+//     return {
+//       currentPage1: 1,
+//       // 其他数据...
+//     };
+//   },
+//   methods: {
+//     handleSizeChange(val) {
+//       console.log(`每页 ${val} 条`);
+//       // 这里可以处理分页大小变化时的逻辑
+//     },
+//     handleCurrentChange(val) {
+//       console.log(`当前页: ${val}`);
+//       // 这里可以处理当前页码变化时的逻辑
+//     }
+//   }
+// };
 // 定义变量
 const searchQuery = ref('');
 const currentPage = ref(2);
@@ -135,6 +158,7 @@ const search = async () => {
 
 // 分页改变时触发搜索
 const handlePageChange = (newPage) => {
+  console.log(OK);
   currentPage.value = newPage;
   search();
 };
