@@ -360,9 +360,6 @@ function goBack() {
     <div class="flex flex-col">
         <div class="card">
             <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-10">车系详情</span>
-            <Button label="收藏" class="layout-menu-button layout-topbar-action"
-                style="background-color: crimson; margin-right: 10px; border-color: crimson;"
-                @click="goBack()"></Button>
             <Button label="返回" class="layout-menu-button layout-topbar-action" @click="goBack()"></Button>
         </div>
 

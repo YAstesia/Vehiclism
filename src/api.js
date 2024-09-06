@@ -204,3 +204,13 @@ export function getCarSales(id,year){
 export function getCarTirmBySeriesId(id){
   return api.post('/cartirm/getCarTirmBySeriesId',{id});
 }
+
+export function getCarTirm(tirm){
+  return api.post('/cartirm/getCarTirm',{tirm});
+}
+export function getCarTirmImg(id){
+  return api.post('/cartirm/img',{id});
+}
+export function getCarTirmConfig(id){
+  return api.post('/cartirm/config');
+}

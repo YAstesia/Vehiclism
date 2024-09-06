@@ -39,13 +39,17 @@
       <tbody>
         <tr v-for="item in displayedData" :key="item.id"
           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-          <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ item.brand }}</span></td>
+          <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px; ">{{ item.brand }}</span></td>
           <td class="px-6 py-4" @click="navigateToCarSeriesDetail(item)"><span class="font-bold"
-              style="font-size: 16px;">{{ item.series }}</span></td>
-          <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{ item.tirm }}</span></td>
-          <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ item.type }}</span></td>
+              style="font-size: 16px; text-decoration: underline;">{{ item.series }}</span></td>
+          <td class="px-6 py-4" @click="navigateToCarTirmDetail(item)"><span class="font-bold"
+              style="font-size: 16px; text-decoration: underline;">{{
+                item.tirm }}</span></td>
+          <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{
+            item.type }}</span></td>
           <td class="px-6 py-4">
-            <Tag :options="statuses" :value="item.energyType" :severity="getSeverity(item.energyType)"></Tag>
+            <Tag :options="statuses" :value="item.energyType" :severity="getSeverity(item.energyType)"
+              style="font-size: 14px;"></Tag>
           </td>
           <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{ formatCurrency(item.price) }}</span>
           </td>
@@ -79,7 +83,7 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 // 定义变量
-const searchQuery = ref('');
+const searchQuery = ref(localStorage.getItem('searchQuery') || '');
 const currentPage = ref(1);
 const pageSize = ref(10);
 const pages = ref(0);
@@ -155,11 +159,15 @@ const router = useRouter();
 const navigateToCarSeriesDetail = (item) => {
   router.push(`/cardetail/${item.series}`);
 };
+const navigateToCarTirmDetail = (item) => {
+  router.push(`/typedetail/${item.tirm}`);
+};
 // 搜索函数
 const search = async () => {
   try {
     currentPage.value = 1;
     isLoading.value = true;
+    localStorage.setItem('searchQuery', searchQuery.value);
     const response = await SearchCarTirm(currentPage.value, pageSize.value, searchQuery.value);
     displayedData.value = response.data.data.records || [];
     totalRecords.value = response.data.data.total || 0;
@@ -176,6 +184,7 @@ const search = async () => {
 const searchPage = async () => {
   try {
     isLoading.value = true;
+    localStorage.setItem('searchQuery', searchQuery.value);
     const response = await SearchCarTirm(currentPage.value, pageSize.value, searchQuery.value);
     displayedData.value = response.data.data.records || [];
     totalRecords.value = response.data.data.total || 0;
@@ -189,6 +198,7 @@ const searchPage = async () => {
 };
 function ClearFilter() {
   searchQuery.value = '';
+  localStorage.removeItem('searchQuery');
   currentPage.value = 1;
   search();
 }

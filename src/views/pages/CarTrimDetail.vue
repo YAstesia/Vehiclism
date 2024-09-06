@@ -1,26 +1,102 @@
 <script setup>
-import { } from '@/api';
-import { computed, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { getCarEvl, getCarSales, getCarSeriesImg, getCarTirmBySeriesId, getSeriesPurpose } from '@/api';
+import { computed, onBeforeMount, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-const tableData = [
-    { /* 表格数据1 */ },
-    { /* 表格数据2 */ }
-];
-
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
 const pieData = ref(null);
 const pieOptions = ref(null);
 const lineData = ref(null);
 const lineOptions = ref(null);
+const radarData = ref(null);
+const radarOptions = ref(null);
+const displayedData = ref([]);
+// 状态严重性映射
+const statuses = ["汽油",
+    "纯电动",
+    "汽油+48V轻混系统",
+    "-",
+    "插电式混合动力",
+    "柴油",
+    "增程式",
+    "氢燃料",
+    "油电混合",
+    "汽油+CNG",
+    "汽油电驱",
+    "柴油+48V轻混系统",
+    "甲醇混动",
+    "CNG",
+    "汽油+24V轻混系统"];
 
-onMounted(() => {
+// 获取严重性
+function getSeverity(status) {
+    switch (status) {
+        case '汽油':
+            return 'danger';
+        case '柴油':
+            return 'danger';
+        case '-':
+            return 'danger';
+        case '纯电动':
+            return 'success';
+        case '氢燃料':
+            return 'info';
+        case 'CNG':
+            return 'info';
+        case '甲醇混动':
+            return 'info';
+        case '汽油+48V轻混系统':
+            return 'warn';
+        case '插电式混合动力':
+            return 'warn';
+        case '汽油+48V轻混系统':
+            return 'warn';
+        case '增程式':
+            return 'warn';
+        case '油电混合':
+            return 'warn';
+        case '汽油+CNG':
+            return 'warn';
+        case '汽油+汽油电驱':
+            return 'warn';
+        case '柴油+48V轻混系统':
+            return 'warn';
+        case '汽油+24V轻混系统':
+            return 'warn';
+    }
+}
+// 格式化货币
+function formatCurrency(value) {
+    if (value === null) {
+        return '暂无数据';
+    }
+    const formattedValue = (value).toLocaleString();
+    return formattedValue + '万元';
+}
+onBeforeMount(() => {
     setColorOptions();
+    fetchCarTirmDetail(route.params.tirm);
+    // fetchCarSeriesPurpose(route.params.series);
+});
+
+watch(() => route.params.tirm, (newTirm) => {
+    fetchCarTirmDetail(newTirm);
+    fetchCarSeriesPurpose(newSeries);
 });
 
 
-const data = ref([[111, 444], [222, 555], [333, 666]]);
-const detail = ref([4.13, 4.14, 2.49, 2.4, 4, 3.36, 5.00, 1.19]);
+// onMounted(() => {
+//     setColorOptions();
+//     fetchCarSeriesDetail('Model Y');
+//     fetchCarSeriesPurpose('Model Y');
+// });
+
+
+const data = ref([213, 414, 4241, 24124, 42531, 12312, 154251, 1312, 333, 312]);
+const seriesDetail = ref({ brand: '', series: '', priceMin: 0, priceMax: 0, type: '' })
+
+const detail = ref([0, 0, 0, 0, 0, 0, 0, 0]);
 const value1 = computed(() => detail.value[0]);
 const value2 = computed(() => detail.value[1]);
 const value3 = computed(() => detail.value[2]);
@@ -29,17 +105,180 @@ const value5 = computed(() => detail.value[4]);
 const value6 = computed(() => detail.value[5]);
 const value7 = computed(() => detail.value[6]);
 const value8 = computed(() => detail.value[7]);
+let id = null;
+// let year=null;
+let YearlySale = null;
+let imgsrc = ref(null);
+const fetchCarTirmDetail = async (tirm) => {
+    try {
+        const response = await getCarTirm(tirm)
+        if (response.data.success) {
+            seriesDetail.value = response.data.data;
+            id = response.data.data.id;
+            fetchCarEvaluation(id);
+            fetchCarSeriesImage(id);
+            fetchCarSales(id, 2024);
+            fetchCarTirms(id);
+        } else {
+            console.error('查询失败:', response.data.msg)
+        }
+    } catch (error) {
+        console.error('获取数据失败:', error)
+    }
+}
+const fetchCarTirms = async (id) => {
+    try {
+        const response = await getCarTirmBySeriesId(id)
+        if (response.data.success) {
+            displayedData.value = response.data.data;
+        } else {
+            console.error('查询失败:', response.data.msg)
+        }
+    } catch (error) {
+        console.error('获取数据失败:', error)
+    }
+}
+const fetchCarSeriesImage = async (id) => {
+    try {
+        const response = await getCarSeriesImg(id)
+        if (response.data.success) {
+            imgsrc = response.data.data;
+        } else {
+            console.error('查询失败:', response.data.msg)
+        }
+    } catch (error) {
+        console.error('获取数据失败:', error)
+    }
+}
+const fetchCarSales = async (id, year) => {
+    try {
+        const response = await getCarSales(id, year)
+        let sales = [];
+        if (response.data.success) {
+            sales = response.data.data;
+            updataLineData(sales);
+            updataYearlySale(sales);
+        }
+        else {
+            console.error('查询失败:', response.data.msg)
+        }
+    } catch (error) {
+        console.error('获取数据失败:', error)
+    }
+}
+const fetchCarEvaluation = async (id) => {
+    try {
+        const response = await getCarEvl(id)
+        if (response.data.success) {
+            const evalData = response.data.data
+            // 使用从后端获取的数据替换 detail 数组的数值
+            detail.value = [
+                evalData.overallRating,
+                evalData.space,
+                evalData.driveFeel,
+                evalData.powerConsum,
+                evalData.outDecor,
+                evalData.inDecor,
+                evalData.qpRatio,
+                evalData.configure
+            ]
+            updataRadarData(detail);
+        } else {
+            console.error('查询失败:', response.data.msg)
+        }
+    } catch (error) {
+        console.error('获取数据失败:', error)
+    }
+}
 
+const fetchCarSeriesPurpose = async (series) => {
+    try {
+        const response = await getSeriesPurpose(series)
+        let purpose = [];
+        if (response.data.success) {
+            purpose = await getSeriesPurpose(series);
+            purpose = purpose.data.data;
+            updataChartData(purpose);
+        }
+        else {
+            console.error('查询失败:', response.data.msg)
+        }
+    } catch (error) {
+        console.error('获取数据失败:', error)
+    }
+}
+function updataYearlySale(sales) {
+    sales.forEach(sale => {
+        YearlySale += sale.totalSale;
+    });
+}
+function updataChartData(purpose) {
+    pieData.value = formatPieData(purpose);
+}
+
+function updataRadarData(detail) {
+    radarData.value = formatRadarData(detail);
+}
+function updataLineData(sales) {
+    lineData.value = formatLineData(sales);
+}
+
+function formatPieData(data) {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    return {
+        labels: data.map(item => item.purpose),
+        datasets: [{
+            data: data.map(item => item.percentage),
+            backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-red-500'), documentStyle.getPropertyValue('--p-blue-500'), documentStyle.getPropertyValue('--p-yellow-500'), documentStyle.getPropertyValue('--p-orange-500')],
+            hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400'), documentStyle.getPropertyValue('--p-red-400'), documentStyle.getPropertyValue('--p-blue-400'), documentStyle.getPropertyValue('--p-yellow-400'), documentStyle.getPropertyValue('--p-orange-400')],
+        }]
+    }
+}
+
+function formatRadarData(detail) {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    return {
+        labels: ['综合评分', '空间评分', '驾驶感受', '能耗评分', '外观评分', '内饰评分', '性价比', '配置评分'],
+        datasets: [{
+            label: '评分',
+            data: detail,
+            borderColor: documentStyle.getPropertyValue('--p-primary-400'),
+            pointBackgroundColor: documentStyle.getPropertyValue('--p-primary-400'),
+            pointBorderColor: documentStyle.getPropertyValue('--p-primary-400'),
+            pointHoverBackgroundColor: textColor,
+            pointHoverBorderColor: documentStyle.getPropertyValue('--p-primary-400'),
+        }]
+    }
+}
+function formatLineData(data) {
+    const documentStyle = getComputedStyle(document.documentElement);
+    return {
+        labels: data.map(item => item.month),
+        datasets: [
+            {
+                label: data[0].year + '月销量',
+                data: data.map(item => item.totalSale),
+                fill: false,
+                backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
+                borderColor: documentStyle.getPropertyValue('--p-primary-500'),
+                tension: 0.4
+            },
+        ]
+    }
+}
 
 const rows = computed(() => {
-    const flatData = data.value.flat(); // 将二维数组展平为一维数组
-    const numberOfColumns = 4; // 每行的列数
+    const numberOfColumns = 4;
     const result = [];
-
-    for (let i = 0; i < flatData.length; i += numberOfColumns) {
-        result.push(flatData.slice(i, i + numberOfColumns));
+    for (let i = 0; i < data.value.length; i += numberOfColumns) {
+        result.push(data.value.slice(i, i + numberOfColumns));
     }
-
     return result;
 });
 
@@ -48,16 +287,6 @@ function setColorOptions() {
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-
-    pieData.value = {
-        datasets: [
-            {
-                data: [79, 100],
-                backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500')],
-                hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400')]
-            }
-        ]
-    };
 
     pieOptions.value = {
         plugins: {
@@ -68,19 +297,6 @@ function setColorOptions() {
                 }
             }
         }
-    };
-    lineData.value = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                fill: false,
-                backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
-                borderColor: documentStyle.getPropertyValue('--p-primary-500'),
-                tension: 0.4
-            },
-        ]
     };
 
     lineOptions.value = {
@@ -112,6 +328,23 @@ function setColorOptions() {
             }
         }
     };
+
+    radarOptions.value = {
+        plugins: {
+            legend: {
+                labels: {
+                    fontColor: textColor
+                }
+            }
+        },
+        scales: {
+            r: {
+                grid: {
+                    color: textColorSecondary
+                }
+            }
+        }
+    };
 }
 
 function goBack() {
@@ -126,7 +359,10 @@ function goBack() {
 <template>
     <div class="flex flex-col">
         <div class="card">
-            <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-10">车型详情</span>
+            <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-10">车系详情</span>
+            <Button label="收藏" class="layout-menu-button layout-topbar-action"
+                style="background-color: crimson; margin-right: 10px; border-color: crimson;"
+                @click="goBack()"></Button>
             <Button label="返回" class="layout-menu-button layout-topbar-action" @click="goBack()"></Button>
         </div>
 
@@ -134,35 +370,40 @@ function goBack() {
             <div class="flex flex-col md:flex-row gap-16 mt-6">
                 <div class="md:w-1/3 p-4">
                     <div class="card p-4 border rounded shadow-lg">
-                        <!-- 图片 -->
-                        <img src="https://via.placeholder.com/150" alt="Image" class="w-full h-auto mb-4">
+                        <!-- 图片 :src="imgsrc"-->
+                        <meta name="referrer" content="no-referrer">
+                        <img :src="imgsrc" alt="Image" class="w-full h-auto mb-4">
 
                         <!-- 两行居中的文字 -->
                         <div class="text-center mb-4">
                             <div class="font-bold" style="font-size: 24pt; margin-bottom: 15px; margin-top: 15px;">
-                                东南大学校园接驳车</div>
-                            <div class="text-gray-600" style="font-size: 16pt;">￥114,514 ~ ￥1,919,810</div>
+                                {{ seriesDetail.brand }}</div>
+                        </div>
+
+                        <div class="text-center mb-4">
+                            <div class="font-bold" style="font-size: 24pt; margin-bottom: 15px; margin-top: 15px;">
+                                {{ seriesDetail.series }}</div>
+                            <div class="text-gray-600" style="font-size: 16pt;">￥{{ seriesDetail.priceMin }} 万 ~ ￥{{
+                                seriesDetail.priceMax }} 万</div>
                         </div>
 
                         <!-- 填充了字的文本框 -->
                         <Card>
                             <template v-slot:content>
-                                <p class="leading-normal m-0" style="font-size: 20px;">
-                                    啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
+                                <p class="leading-normal m-0 text-center" style="font-size: 20px;">
+                                    {{ seriesDetail.type }}
                                 </p>
                             </template>
                         </Card>
+                        <Chart type="radar" style="margin-top: 50px;" :data="radarData" :options="radarOptions"></Chart>
                     </div>
                 </div>
-
-                <div class="w-px bg-gray-300 mx-2"></div>
 
                 <div class="flex flex-wrap md:w-2/3">
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                    参数1</div>
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                综合评分
                             </div>
                             <Knob v-model="value1" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
@@ -170,70 +411,56 @@ function goBack() {
                     </div>
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                    参数2</div>
-                            </div>
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                空间评分</div>
                             <Knob v-model="value2" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                    参数3</div>
-                            </div>
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                驾驶感受</div>
                             <Knob v-model="value3" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                    参数4</div>
-                            </div>
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                能耗评分</div>
                             <Knob v-model="value4" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                    参数5</div>
-                            </div>
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                外观评分</div>
                             <Knob v-model="value5" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                    参数6</div>
-                            </div>
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                内饰评分</div>
                             <Knob v-model="value6" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                    参数7</div>
-                            </div>
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                性价比</div>
                             <Knob v-model="value7" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
                         </div>
                     </div>
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="flex flex-col items-center mb-4">
-                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                    参数8</div>
-                            </div>
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                配置评分</div>
                             <Knob v-model="value8" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
                         </div>
@@ -243,12 +470,15 @@ function goBack() {
 
                     <div class="card flex flex-row w-full">
                         <div class="md:w-1/2 p-2 text-center">
-                            <div class="font-bold" style="font-size: 20pt;">总销量</div>
-                            <div class="font-bold" style="font-size: 20pt;">114,514</div>
+                            <div class="font-bold" style="font-size: 20pt; margin-top: -20px">2024年销量</div>
+                            <div class="font-bold" style="font-size: 32pt; color: red; margin-bottom: -40px">
+                                {{ YearlySale }}
+                            </div>
                         </div>
                         <div class="md:w-1/2 p-2 text-center">
-                            <div class="font-bold" style="font-size: 20pt;">总销量排行</div>
-                            <div class="font-bold" style="font-size: 20pt;">2</div>
+                            <div class="font-bold" style="font-size: 20pt; margin-top: -20px">综合评分</div>
+                            <div class="font-bold" style="font-size: 32pt; color: crimson; margin-bottom: -40px">{{
+                                value1 }}</div>
                         </div>
                     </div>
 
@@ -256,26 +486,55 @@ function goBack() {
 
                     <div class="card flex flex-row w-full">
                         <div class="md:w-1/2 p-2 flex flex-col items-center">
-                            <div class="font-bold" style="font-size: 20pt; margin-bottom: 10px;">销售趋势</div>
+                            <div class="font-bold" style="font-size: 20pt; margin-bottom: 60px;">销售趋势</div>
                             <Chart type="line" :data="lineData" :options="lineOptions"
                                 style="width: 400px; height: 200px;"></Chart>
                         </div>
                         <div class="md:w-1/2 p-2 flex flex-col items-center">
                             <div class="font-bold" style="font-size: 20pt; margin-bottom: 10px;">购车目的</div>
                             <Chart type="pie" :data="pieData" :options="pieOptions"
-                                style="width: 200px; height: 200px;"></Chart>
+                                style="width: 320px; height: 320px;"></Chart>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="font-bold" style="font-size: 20pt; margin-bottom: 20px; margin-top: 40px;">车型参数</div>
+            <div class="font-bold" style="font-size: 20pt; margin-bottom: 20px; margin-top: 40px;">车系所包含车型</div>
             <div class="w-full overflow-x-auto">
                 <table class="min-w-full border-2 border-gray-300 divide-y divide-gray-300">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                <div class="font-semibold text-xl">品牌</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                <div class="font-semibold text-xl">车系</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                <div class="font-semibold text-xl">车型</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                <div class="font-semibold text-xl">汽车类型</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                <div class="font-semibold text-xl">能源类型</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                <div class="font-semibold text-xl">价格</div>
+                            </th>
+                        </tr>
+                    </thead>
                     <tbody class="bg-white divide-y divide-gray-300">
-                        <tr v-for="(row, index) in rows" :key="index">
-                            <td v-for="(item, i) in row" :key="i" class="px-4 py-2 text-center">
-                                {{ item || '' }}
+                        <tr v-for="item in displayedData" :key="item.id"
+                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <td class="px-6 py-4">{{ item.brand }}</td>
+                            <td class="px-6 py-4">{{ item.series }}</td>
+                            <td class="px-6 py-4">{{ item.tirm }}</td>
+                            <td class="px-6 py-4">{{ item.type }}</td>
+                            <td class="px-6 py-4">
+                                <Tag :options="statuses" :value="item.energyType"
+                                    :severity="getSeverity(item.energyType)"></Tag>
                             </td>
+                            <td class="px-6 py-4">{{ formatCurrency(item.price) }}</td>
                         </tr>
                     </tbody>
                 </table>
