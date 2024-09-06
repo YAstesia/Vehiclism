@@ -212,5 +212,5 @@ export function getCarTirmImg(id){
   return api.post('/cartirm/img',{id});
 }
 export function getCarTirmConfig(id){
-  return api.post('/cartirm/config');
+  return api.post('/cartirm/config',{id});
 }

@@ -30,7 +30,7 @@ const router = createRouter({
                 //     component: () => import('@/views/pages/CarSeriesDetail.vue')
                 // },
                 {
-                    path: '/typedetail/:series',
+                    path: '/typedetail/:tirm',
                     name: 'typedetail',
                     component: () => import('@/views/pages/CarTrimDetail.vue')
                 },
