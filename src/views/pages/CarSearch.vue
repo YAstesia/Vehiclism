@@ -6,7 +6,8 @@
       <div class="flex flex-col md:flex-row gap-4">
         <InputGroup class="mb-4">
           <Button label="搜索" @click="search" />
-          <InputText v-model="searchQuery" placeholder="Keyword" />
+          <InputText v-model="searchQuery" placeholder="在此处进行搜索" />
+          <div v-if="isLoading" class="mt-4" style="margin-left: 20px;">正在筛选，请等待……</div>
         </InputGroup>
       </div>
       <!-- 清空过滤器 -->
@@ -38,13 +39,16 @@
       <tbody>
         <tr v-for="item in displayedData" :key="item.id"
           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-          <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ item.brand }}</span></td>
+          <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px; ">{{ item.brand }}</span></td>
           <td class="px-6 py-4" @click="navigateToCarSeriesDetail(item)"><span class="font-bold"
-              style="font-size: 16px;">{{ item.series }}</span></td>
-          <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{ item.tirm }}</span></td>
-          <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ item.type }}</span></td>
+              style="font-size: 16px; text-decoration: underline;">{{ item.series }}</span></td>
+          <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px; text-decoration: underline;">{{
+            item.tirm }}</span></td>
+          <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{
+            item.type }}</span></td>
           <td class="px-6 py-4">
-            <Tag :value="item.energyType" :severity="getSeverity(item.status)"></Tag>
+            <Tag :options="statuses" :value="item.energyType" :severity="getSeverity(item.energyType)"
+              style="font-size: 14px;"></Tag>
           </td>
           <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{ formatCurrency(item.price) }}</span>
           </td>
@@ -68,7 +72,6 @@
       </tbody> -->
     </table>
     <div v-if="!hasData" class="mt-4">找不到符合条件的数据。</div>
-    <div v-if="isLoading" class="mt-4">正在筛选，请等待……</div>
     <custom-pagination :currentPage="currentPage" :totalPages="pages" @page-change="handlePageChange" />
   </div>
 </template>
@@ -80,7 +83,7 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 // 定义变量
-const searchQuery = ref('');
+const searchQuery = ref(localStorage.getItem('searchQuery') || '');
 const currentPage = ref(1);
 const pageSize = ref(10);
 const pages = ref(0);
@@ -90,21 +93,57 @@ const isLoading = ref(false);
 const hasData = ref(true);
 
 // 状态严重性映射
-const statuses = ['unqualified', 'qualified', 'new', 'negotiation', 'renewal', 'proposal'];
+const statuses = ["汽油",
+  "纯电动",
+  "汽油+48V轻混系统",
+  "-",
+  "插电式混合动力",
+  "柴油",
+  "增程式",
+  "氢燃料",
+  "油电混合",
+  "汽油+CNG",
+  "汽油电驱",
+  "柴油+48V轻混系统",
+  "甲醇混动",
+  "CNG",
+  "汽油+24V轻混系统"];
 
 // 获取严重性
 function getSeverity(status) {
   switch (status) {
-    case 'unqualified':
+    case '汽油':
       return 'danger';
-    case 'qualified':
+    case '柴油':
+      return 'danger';
+    case '-':
+      return 'danger';
+    case '纯电动':
       return 'success';
-    case 'new':
+    case '氢燃料':
       return 'info';
-    case 'negotiation':
+    case 'CNG':
+      return 'info';
+    case '甲醇混动':
+      return 'info';
+    case '汽油+48V轻混系统':
       return 'warn';
-    case 'renewal':
-      return null;
+    case '插电式混合动力':
+      return 'warn';
+    case '汽油+48V轻混系统':
+      return 'warn';
+    case '增程式':
+      return 'warn';
+    case '油电混合':
+      return 'warn';
+    case '汽油+CNG':
+      return 'warn';
+    case '汽油+汽油电驱':
+      return 'warn';
+    case '柴油+48V轻混系统':
+      return 'warn';
+    case '汽油+24V轻混系统':
+      return 'warn';
   }
 }
 
@@ -124,6 +163,7 @@ const navigateToCarSeriesDetail = (item) => {
 const search = async () => {
   try {
     isLoading.value = true;
+    localStorage.setItem('searchQuery', searchQuery.value);
     const response = await SearchCarTirm(currentPage.value, pageSize.value, searchQuery.value);
     displayedData.value = response.data.data.records || [];
     totalRecords.value = response.data.data.total || 0;
@@ -137,6 +177,7 @@ const search = async () => {
 };
 function ClearFilter() {
   searchQuery.value = '';
+  localStorage.removeItem('searchQuery');
   currentPage.value = 1;
   search();
 }
