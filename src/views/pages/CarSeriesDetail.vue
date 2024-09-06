@@ -13,21 +13,57 @@ const radarData = ref(null);
 const radarOptions = ref(null);
 const displayedData = ref([]);
 // 状态严重性映射
-const statuses = ['unqualified', 'qualified', 'new', 'negotiation', 'renewal', 'proposal'];
+const statuses = ["汽油",
+    "纯电动",
+    "汽油+48V轻混系统",
+    "-",
+    "插电式混合动力",
+    "柴油",
+    "增程式",
+    "氢燃料",
+    "油电混合",
+    "汽油+CNG",
+    "汽油电驱",
+    "柴油+48V轻混系统",
+    "甲醇混动",
+    "CNG",
+    "汽油+24V轻混系统"];
 
 // 获取严重性
 function getSeverity(status) {
     switch (status) {
-        case 'unqualified':
+        case '汽油':
             return 'danger';
-        case 'qualified':
+        case '柴油':
+            return 'danger';
+        case '-':
+            return 'danger';
+        case '纯电动':
             return 'success';
-        case 'new':
+        case '氢燃料':
             return 'info';
-        case 'negotiation':
+        case 'CNG':
+            return 'info';
+        case '甲醇混动':
+            return 'info';
+        case '汽油+48V轻混系统':
             return 'warn';
-        case 'renewal':
-            return null;
+        case '插电式混合动力':
+            return 'warn';
+        case '汽油+48V轻混系统':
+            return 'warn';
+        case '增程式':
+            return 'warn';
+        case '油电混合':
+            return 'warn';
+        case '汽油+CNG':
+            return 'warn';
+        case '汽油+汽油电驱':
+            return 'warn';
+        case '柴油+48V轻混系统':
+            return 'warn';
+        case '汽油+24V轻混系统':
+            return 'warn';
     }
 }
 // 格式化货币
@@ -495,7 +531,8 @@ function goBack() {
                             <td class="px-6 py-4">{{ item.tirm }}</td>
                             <td class="px-6 py-4">{{ item.type }}</td>
                             <td class="px-6 py-4">
-                                <Tag :value="item.energyType" :severity="getSeverity(item.status)"></Tag>
+                                <Tag :options="statuses" :value="item.energyType"
+                                    :severity="getSeverity(item.energyType)"></Tag>
                             </td>
                             <td class="px-6 py-4">{{ formatCurrency(item.price) }}</td>
                         </tr>

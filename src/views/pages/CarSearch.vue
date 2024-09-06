@@ -7,6 +7,7 @@
         <InputGroup>
           <Button label="搜索" @click="search" />
           <InputText v-model="searchQuery" placeholder="Keyword" />
+          <div v-if="isLoading" class="mt-4" style="margin-left: 20px">正在筛选，请等待……</div>
         </InputGroup>
       </div>
       <!-- 清空过滤器 -->
@@ -44,7 +45,7 @@
           <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{ item.tirm }}</span></td>
           <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ item.type }}</span></td>
           <td class="px-6 py-4">
-            <Tag :value="item.energyType" :severity="getSeverity(item.status)"></Tag>
+            <Tag :options="statuses" :value="item.energyType" :severity="getSeverity(item.energyType)"></Tag>
           </td>
           <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{ formatCurrency(item.price) }}</span>
           </td>
@@ -67,7 +68,6 @@
       </tbody> -->
     </table>
     <div v-if="!hasData" class="mt-4">找不到符合条件的数据。</div>
-    <div v-if="isLoading" class="mt-4">正在筛选，请等待……</div>
     <custom-pagination :currentPage="currentPage" :totalPages="pages" @page-change="handlePageChange" />
   </div>
 </template>
@@ -89,21 +89,57 @@ const isLoading = ref(false);
 const hasData = ref(true);
 
 // 状态严重性映射
-const statuses = ['unqualified', 'qualified', 'new', 'negotiation', 'renewal', 'proposal'];
+const statuses = ["汽油",
+  "纯电动",
+  "汽油+48V轻混系统",
+  "-",
+  "插电式混合动力",
+  "柴油",
+  "增程式",
+  "氢燃料",
+  "油电混合",
+  "汽油+CNG",
+  "汽油电驱",
+  "柴油+48V轻混系统",
+  "甲醇混动",
+  "CNG",
+  "汽油+24V轻混系统"];
 
 // 获取严重性
 function getSeverity(status) {
   switch (status) {
-    case 'unqualified':
+    case '汽油':
       return 'danger';
-    case 'qualified':
+    case '柴油':
+      return 'danger';
+    case '-':
+      return 'danger';
+    case '纯电动':
       return 'success';
-    case 'new':
+    case '氢燃料':
       return 'info';
-    case 'negotiation':
+    case 'CNG':
+      return 'info';
+    case '甲醇混动':
+      return 'info';
+    case '汽油+48V轻混系统':
       return 'warn';
-    case 'renewal':
-      return null;
+    case '插电式混合动力':
+      return 'warn';
+    case '汽油+48V轻混系统':
+      return 'warn';
+    case '增程式':
+      return 'warn';
+    case '油电混合':
+      return 'warn';
+    case '汽油+CNG':
+      return 'warn';
+    case '汽油+汽油电驱':
+      return 'warn';
+    case '柴油+48V轻混系统':
+      return 'warn';
+    case '汽油+24V轻混系统':
+      return 'warn';
   }
 }
 
@@ -121,6 +157,23 @@ const navigateToCarSeriesDetail = (item) => {
 };
 // 搜索函数
 const search = async () => {
+  try {
+    currentPage.value = 1;
+    isLoading.value = true;
+    const response = await SearchCarTirm(currentPage.value, pageSize.value, searchQuery.value);
+    displayedData.value = response.data.data.records || [];
+    totalRecords.value = response.data.data.total || 0;
+    pages.value = Math.ceil(totalRecords.value / pageSize.value);
+    hasData.value = displayedData.value.length > 0;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// 搜索函数
+const searchPage = async () => {
   try {
     isLoading.value = true;
     const response = await SearchCarTirm(currentPage.value, pageSize.value, searchQuery.value);
@@ -142,7 +195,7 @@ function ClearFilter() {
 // 分页改变时触发搜索
 const handlePageChange = (newPage) => {
   currentPage.value = newPage;
-  search();
+  searchPage();
 };
 
 // 初始化加载数据
