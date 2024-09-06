@@ -394,8 +394,8 @@ function goBack() {
         </div>
 
         <div class="card">
-            <div class="flex flex-col md:flex-row gap-16 mt-6">
-                <div class="md:w-1/3 p-4">
+            <div class="flex flex-col md:flex-row gap-4 mt-6">
+                <div class="md:w-1/2 p-4">
                     <div class="card p-4 border rounded shadow-lg">
                         <!-- 图片 :src="imgsrc"-->
                         <meta name="referrer" content="no-referrer">
@@ -404,176 +404,216 @@ function goBack() {
                         <!-- 两行居中的文字 -->
                         <div class="text-center mb-4">
                             <div class="font-bold" style="font-size: 24pt; margin-bottom: 15px; margin-top: 15px;">
-                                {{ seriesDetail.brand }}</div>
+                                {{ seriesDetail.brand }} &nbsp; &nbsp; {{ seriesDetail.series }}</div>
                         </div>
 
                         <div class="text-center mb-4">
                             <div class="font-bold" style="font-size: 24pt; margin-bottom: 15px; margin-top: 15px;">
-                                {{ seriesDetail.series }}</div>
-                            <div class="text-gray-600" style="font-size: 16pt;">￥{{ seriesDetail.priceMin }} 万 ~ ￥{{
-                                seriesDetail.priceMax }} 万</div>
+                                {{ tirmDetail.tirm }}</div>
+                            <div class="text-gray-600" style="font-size: 24pt;">￥{{ tirmDetail.price }} 万</div>
                         </div>
 
                         <!-- 填充了字的文本框 -->
                         <Card>
                             <template v-slot:content>
-                                <p class="leading-normal m-0 text-center" style="font-size: 20px;">
+                                <p class="leading-normal m-0 text-center" style="font-size: 24px;">
                                     {{ seriesDetail.type }}
                                 </p>
                             </template>
                         </Card>
-                        <Chart type="radar" style="margin-top: 50px;" :data="radarData" :options="radarOptions"></Chart>
                     </div>
-                </div>
-
-                <div class="flex flex-wrap md:w-2/3">
-                    <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                综合评分
-                            </div>
-                            <Knob v-model="value1" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
-                                readonly />
-                        </div>
+                    <div class="font-bold" style="font-size: 20pt; margin-bottom: 20px; margin-left: 45%;">
+                        车系信息
                     </div>
-                    <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                空间评分</div>
-                            <Knob v-model="value2" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
-                                readonly />
-                        </div>
-                    </div>
-                    <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                驾驶感受</div>
-                            <Knob v-model="value3" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
-                                readonly />
-                        </div>
-                    </div>
-                    <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                能耗评分</div>
-                            <Knob v-model="value4" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
-                                readonly />
-                        </div>
-                    </div>
-                    <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                外观评分</div>
-                            <Knob v-model="value5" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
-                                readonly />
-                        </div>
-                    </div>
-                    <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                内饰评分</div>
-                            <Knob v-model="value6" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
-                                readonly />
-                        </div>
-                    </div>
-                    <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                性价比</div>
-                            <Knob v-model="value7" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
-                                readonly />
-                        </div>
-                    </div>
-                    <div class="md:w-1/4 p-2">
-                        <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
-                                配置评分</div>
-                            <Knob v-model="value8" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
-                                readonly />
-                        </div>
-                    </div>
-
-                    <div class="w-full border-2 border-gray-300 my-4"></div>
-
-                    <div class="card flex flex-row w-full">
-                        <div class="md:w-1/2 p-2 text-center">
-                            <div class="font-bold" style="font-size: 20pt; margin-top: -20px">2024年销量</div>
-                            <div class="font-bold" style="font-size: 32pt; color: red; margin-bottom: -40px">
-                                {{ YearlySale }}
+                    <div class="flex flex-wrap">
+                        <div class="md:w-1/4 p-2">
+                            <div class="card flex flex-col items-center relative">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                    综合评分
+                                </div>
+                                <Knob v-model="value1" :min="0.00" :max="5.00" valueColor="#10b981"
+                                    rangeColor="SlateGray" readonly />
                             </div>
                         </div>
-                        <div class="md:w-1/2 p-2 text-center">
-                            <div class="font-bold" style="font-size: 20pt; margin-top: -20px">综合评分</div>
-                            <div class="font-bold" style="font-size: 32pt; color: crimson; margin-bottom: -40px">{{
-                                value1 }}</div>
+                        <div class="md:w-1/4 p-2">
+                            <div class="card flex flex-col items-center relative">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                    空间评分</div>
+                                <Knob v-model="value2" :min="0.00" :max="5.00" valueColor="#10b981"
+                                    rangeColor="SlateGray" readonly />
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="w-full border-2 border-gray-300 my-4"></div>
-
-                    <div class="card flex flex-row w-full">
-                        <div class="md:w-1/2 p-2 flex flex-col items-center">
-                            <div class="font-bold" style="font-size: 20pt; margin-bottom: 60px;">销售趋势</div>
-                            <Chart type="line" :data="lineData" :options="lineOptions"
-                                style="width: 400px; height: 200px;"></Chart>
+                        <div class="md:w-1/4 p-2">
+                            <div class="card flex flex-col items-center relative">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                    驾驶感受</div>
+                                <Knob v-model="value3" :min="0.00" :max="5.00" valueColor="#10b981"
+                                    rangeColor="SlateGray" readonly />
+                            </div>
                         </div>
-                        <div class="md:w-1/2 p-2 flex flex-col items-center">
-                            <div class="font-bold" style="font-size: 20pt; margin-bottom: 10px;">购车目的</div>
-                            <Chart type="pie" :data="pieData" :options="pieOptions"
-                                style="width: 320px; height: 320px;"></Chart>
+                        <div class="md:w-1/4 p-2">
+                            <div class="card flex flex-col items-center relative">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                    能耗评分</div>
+                                <Knob v-model="value4" :min="0.00" :max="5.00" valueColor="#10b981"
+                                    rangeColor="SlateGray" readonly />
+                            </div>
+                        </div>
+                        <div class="md:w-1/4 p-2">
+                            <div class="card flex flex-col items-center relative">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                    外观评分</div>
+                                <Knob v-model="value5" :min="0.00" :max="5.00" valueColor="#10b981"
+                                    rangeColor="SlateGray" readonly />
+                            </div>
+                        </div>
+                        <div class="md:w-1/4 p-2">
+                            <div class="card flex flex-col items-center relative">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                    内饰评分</div>
+                                <Knob v-model="value6" :min="0.00" :max="5.00" valueColor="#10b981"
+                                    rangeColor="SlateGray" readonly />
+                            </div>
+                        </div>
+                        <div class="md:w-1/4 p-2">
+                            <div class="card flex flex-col items-center relative">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                    性价比</div>
+                                <Knob v-model="value7" :min="0.00" :max="5.00" valueColor="#10b981"
+                                    rangeColor="SlateGray" readonly />
+                            </div>
+                        </div>
+                        <div class="md:w-1/4 p-2">
+                            <div class="card flex flex-col items-center relative">
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                                    配置评分</div>
+                                <Knob v-model="value8" :min="0.00" :max="5.00" valueColor="#10b981"
+                                    rangeColor="SlateGray" readonly />
+                            </div>
+                        </div>
+
+                        <div class="w-full border-2 border-gray-300 my-4"></div>
+
+                        <div class="card flex flex-row w-full">
+                            <div class="md:w-1/2 p-2 text-center">
+                                <div class="font-bold" style="font-size: 20pt; margin-top: -20px">2024年销量</div>
+                                <div class="font-bold" style="font-size: 32pt; color: red; margin-bottom: -40px">
+                                    {{ YearlySale }}
+                                </div>
+                            </div>
+                            <div class="md:w-1/2 p-2 text-center">
+                                <div class="font-bold" style="font-size: 20pt; margin-top: -20px">综合评分</div>
+                                <div class="font-bold" style="font-size: 32pt; color: crimson; margin-bottom: -40px">{{
+                                    value1 }}</div>
+                            </div>
+                        </div>
+
+                        <div class="w-full border-2 border-gray-300 my-4"></div>
+
+                        <div class="card flex flex-row w-full">
+                            <div class="md:w-1/2 p-2 flex flex-col items-center">
+                                <div class="font-bold" style="font-size: 20pt; margin-bottom: 0px;">车型参数图</div>
+                                <Chart type="radar" style="margin-top: 20px;" :data="radarData" :options="radarOptions">
+                                </Chart>
+                            </div>
+                            <div class="md:w-1/2 p-2 flex flex-col items-center">
+                                <div class="font-bold" style="font-size: 20pt; margin-bottom: 10px;">购车目的</div>
+                                <Chart type="pie" :data="pieData" :options="pieOptions"
+                                    style="width: 320px; height: 320px;"></Chart>
+                            </div>
+                        </div>
+
+                        <div class="font-bold" style="font-size: 20pt; margin-bottom: 20px; margin-top: 40px;">车系所包含车型
+                        </div>
+                        <div class="w-full overflow-x-auto">
+                            <table class="min-w-full border-2 border-gray-300 divide-y divide-gray-300">
+                                <thead
+                                    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-2 py-3">
+                                            <div class="font-semibold text-xl">品牌</div>
+                                        </th>
+                                        <th scope="col" class="px-2 py-3">
+                                            <div class="font-semibold text-xl">车系</div>
+                                        </th>
+                                        <th scope="col" class="px-2 py-3">
+                                            <div class="font-semibold text-xl">车型</div>
+                                        </th>
+                                        <th scope="col" class="px-2 py-3">
+                                            <div class="font-semibold text-xl">汽车类型</div>
+                                        </th>
+                                        <th scope="col" class="px-2 py-3">
+                                            <div class="font-semibold text-xl">能源类型</div>
+                                        </th>
+                                        <th scope="col" class="px-2 py-3">
+                                            <div class="font-semibold text-xl">价格</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-300">
+                                    <tr v-for="item in displayedData" :key="item.id"
+                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <td class="px-2 py-4"><span class="font-bold" style="font-size: 16px; ">{{
+                                            item.brand
+                                                }}</span></td>
+                                        <td class="px-2 py-4" @click="navigateToCarSeriesDetail(item)"><span
+                                                class="font-bold" style="font-size: 16px; text-decoration: underline;">
+                                                {{ item.series
+                                                }}</span></td>
+                                        <td class="px-2 py-4"><span class="font-bold" style="font-size: 16px; ">
+                                                {{ item.tirm }}</span></td>
+                                        <td class="px-2 py-4"><span class="font-bold" style="font-size: 16px;">{{
+                                            item.type
+                                                }}</span></td>
+                                        <td class="px-2 py-4">
+                                            <Tag :options="statuses" :value="item.energyType"
+                                                :severity="getSeverity(item.energyType)" style="font-size: 16px;"></Tag>
+                                        </td>
+                                        <td class="px-2 py-4"><span class="font-bold" style="font-size: 16px;">{{
+                                            formatCurrency(item.price)
+                                                }}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="font-bold" style="font-size: 20pt; margin-bottom: 20px; margin-top: 40px;">车系所包含车型</div>
-            <div class="w-full overflow-x-auto">
-                <table class="min-w-full border-2 border-gray-300 divide-y divide-gray-300">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                                <div class="font-semibold text-xl">品牌</div>
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                <div class="font-semibold text-xl">车系</div>
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                <div class="font-semibold text-xl">车型</div>
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                <div class="font-semibold text-xl">汽车类型</div>
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                <div class="font-semibold text-xl">能源类型</div>
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                <div class="font-semibold text-xl">价格</div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-300">
-                        <tr v-for="item in displayedData" :key="item.id"
-                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px; ">{{ item.brand
-                                    }}</span></td>
-                            <td class="px-6 py-4" @click="navigateToCarSeriesDetail(item)"><span class="font-bold"
-                                    style="font-size: 16px; text-decoration: underline;">
-                                    {{ item.series
-                                    }}</span></td>
-                            <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px; ">
-                                    {{ item.tirm }}</span></td>
-                            <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{ item.type
-                                    }}</span></td>
-                            <td class="px-6 py-4">
-                                <Tag :options="statuses" :value="item.energyType"
-                                    :severity="getSeverity(item.energyType)" style="font-size: 14px;"></Tag>
-                            </td>
-                            <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{
-                                formatCurrency(item.price)
-                                    }}</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="md:w-1/2 p-4">
+                    <div class="w-full overflow-x-auto">
+                        <table class="min-w-full border-2 border-gray-300 divide-y divide-gray-300">
+                            <thead
+                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+                                style="text-align: left;">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 w-1/5">
+                                        <div class="font-semibold text-xl">参数类型</div>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 w-2/5">
+                                        <div class="font-semibold text-xl">参数名称</div>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 w-2/5">
+                                        <div class="font-semibold text-xl">配置</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-300">
+                                <tr v-for="item in configData" :key="item.id"
+                                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <td class="px-6"><span style="font-size: 10pt; ">{{
+                                        item.configType
+                                            }}</span></td>
+                                    <td class="px-6" @click="navigateToCarSeriesDetail(item)"><span
+                                            style="font-size: 10pt;">
+                                            {{ item.configName
+                                            }}</span></td>
+                                    <td><span style="font-size: 10pt; ">
+                                            {{ item.configValue }}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
