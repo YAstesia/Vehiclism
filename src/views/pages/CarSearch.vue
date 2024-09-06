@@ -4,7 +4,7 @@
     <div class="flex justify-between">
       <!-- 关键词搜索 -->
       <div class="flex flex-col md:flex-row gap-4">
-        <InputGroup>
+        <InputGroup class="mb-4">
           <Button label="搜索" @click="search" />
           <InputText v-model="searchQuery" placeholder="Keyword" />
         </InputGroup>
@@ -38,14 +38,15 @@
       <tbody>
         <tr v-for="item in displayedData" :key="item.id"
           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-          <td class="px-6 py-4">{{ item.brand }}</td>
-          <td class="px-6 py-4">{{ item.series }}</td>
-          <td class="px-6 py-4">{{ item.tirm }}</td>
-          <td class="px-6 py-4">{{ item.type }}</td>
+          <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ item.brand }}</span></td>
+          <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{ item.series }}</span></td>
+          <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{ item.tirm }}</span></td>
+          <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ item.type }}</span></td>
           <td class="px-6 py-4">
             <Tag :value="item.energyType" :severity="getSeverity(item.status)"></Tag>
           </td>
-          <td class="px-6 py-4">{{ formatCurrency(item.price) }}</td>
+          <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{ formatCurrency(item.price) }}</span>
+          </td>
         </tr>
       </tbody>
     </table>
