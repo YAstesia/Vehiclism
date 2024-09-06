@@ -4,10 +4,10 @@
     <div class="flex justify-between">
       <!-- 关键词搜索 -->
       <div class="flex flex-col md:flex-row gap-4">
-        <InputGroup>
+        <InputGroup class="mb-4">
           <Button label="搜索" @click="search" />
-          <InputText v-model="searchQuery" placeholder="Keyword" />
-          <div v-if="isLoading" class="mt-4" style="margin-left: 20px">正在筛选，请等待……</div>
+          <InputText v-model="searchQuery" placeholder="在此处进行搜索" />
+          <div v-if="isLoading" class="mt-4" style="margin-left: 20px;">正在筛选，请等待……</div>
         </InputGroup>
       </div>
       <!-- 清空过滤器 -->
@@ -67,7 +67,8 @@
           <td class="px-6 py-4">
             <Tag :value="item.energyType" :severity="getSeverity(item.status)"></Tag>
           </td>
-          <td class="px-6 py-4">{{ formatCurrency(item.price) }}</td>
+          <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{ formatCurrency(item.price) }}</span>
+          </td>
         </tr>
       </tbody> -->
     </table>
