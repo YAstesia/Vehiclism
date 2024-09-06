@@ -1,5 +1,5 @@
 <script setup>
-import { getCarEvl, getCarSales, getCarSeriesImg, getCarTirmBySeriesId, getSeriesPurpose } from '@/api';
+import { getCarEvl, getCarSales, getCarSeries, getCarTirm, getCarTirmBySeriesId, getCarTirmConfig, getCarTirmImg, getSeriesPurpose } from '@/api';
 import { computed, onBeforeMount, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -12,6 +12,7 @@ const lineOptions = ref(null);
 const radarData = ref(null);
 const radarOptions = ref(null);
 const displayedData = ref([]);
+const configData = ref([]);
 // 状态严重性映射
 const statuses = ["汽油",
     "纯电动",
@@ -66,6 +67,9 @@ function getSeverity(status) {
             return 'warn';
     }
 }
+const navigateToCarSeriesDetail = (item) => {
+    router.push(`/cardetail/${item.series}`);
+};
 // 格式化货币
 function formatCurrency(value) {
     if (value === null) {
@@ -82,7 +86,7 @@ onBeforeMount(() => {
 
 watch(() => route.params.tirm, (newTirm) => {
     fetchCarTirmDetail(newTirm);
-    fetchCarSeriesPurpose(newSeries);
+    // fetchCarSeriesPurpose(newSeries);
 });
 
 
@@ -95,6 +99,7 @@ watch(() => route.params.tirm, (newTirm) => {
 
 const data = ref([213, 414, 4241, 24124, 42531, 12312, 154251, 1312, 333, 312]);
 const seriesDetail = ref({ brand: '', series: '', priceMin: 0, priceMax: 0, type: '' })
+const tirmDetail = ref({ brand: '', series: '', tirm: '', energyType: '', type: '', price: '' })
 
 const detail = ref([0, 0, 0, 0, 0, 0, 0, 0]);
 const value1 = computed(() => detail.value[0]);
@@ -106,6 +111,7 @@ const value6 = computed(() => detail.value[5]);
 const value7 = computed(() => detail.value[6]);
 const value8 = computed(() => detail.value[7]);
 let id = null;
+let seriesId = null;
 // let year=null;
 let YearlySale = null;
 let imgsrc = ref(null);
@@ -113,12 +119,21 @@ const fetchCarTirmDetail = async (tirm) => {
     try {
         const response = await getCarTirm(tirm)
         if (response.data.success) {
-            seriesDetail.value = response.data.data;
+            tirmDetail.value = response.data.data;
             id = response.data.data.id;
-            fetchCarEvaluation(id);
-            fetchCarSeriesImage(id);
-            fetchCarSales(id, 2024);
-            fetchCarTirms(id);
+            const responseSeries = await getCarSeries(response.data.data.series)
+            if (responseSeries.data.success) {
+                seriesDetail.value = responseSeries.data.data;
+                seriesId = responseSeries.data.data.id;
+                fetchCarEvaluation(seriesId);
+                fetchCarSales(seriesId, 2024);
+                fetchCarTirms(seriesId);
+                fetchCarSeriesPurpose(response.data.data.series);
+            } else {
+                console.error('查询失败:', responseSeries.data.msg)
+            }
+            fetchCarTirmImage(id);
+            fetchCarTirmConfig(id);
         } else {
             console.error('查询失败:', response.data.msg)
         }
@@ -138,11 +153,23 @@ const fetchCarTirms = async (id) => {
         console.error('获取数据失败:', error)
     }
 }
-const fetchCarSeriesImage = async (id) => {
+const fetchCarTirmImage = async (id) => {
     try {
-        const response = await getCarSeriesImg(id)
+        const response = await getCarTirmImg(id)
         if (response.data.success) {
             imgsrc = response.data.data;
+        } else {
+            console.error('查询失败:', response.data.msg)
+        }
+    } catch (error) {
+        console.error('获取数据失败:', error)
+    }
+}
+const fetchCarTirmConfig = async (id) => {
+    try {
+        const response = await getCarTirmConfig(id)
+        if (response.data.success) {
+            configData.value = response.data.data;
         } else {
             console.error('查询失败:', response.data.msg)
         }
@@ -526,15 +553,24 @@ function goBack() {
                     <tbody class="bg-white divide-y divide-gray-300">
                         <tr v-for="item in displayedData" :key="item.id"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-6 py-4">{{ item.brand }}</td>
-                            <td class="px-6 py-4">{{ item.series }}</td>
-                            <td class="px-6 py-4">{{ item.tirm }}</td>
-                            <td class="px-6 py-4">{{ item.type }}</td>
+                            <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px; ">{{ item.brand
+                                    }}</span></td>
+                            <td class="px-6 py-4" @click="navigateToCarSeriesDetail(item)"><span class="font-bold"
+                                    style="font-size: 16px; text-decoration: underline;">
+                                    {{ item.series
+                                    }}</span></td>
+                            <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px; ">
+                                    {{ item.tirm }}</span></td>
+                            <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{ item.type
+                                    }}</span></td>
                             <td class="px-6 py-4">
                                 <Tag :options="statuses" :value="item.energyType"
-                                    :severity="getSeverity(item.energyType)"></Tag>
+                                    :severity="getSeverity(item.energyType)" style="font-size: 14px;"></Tag>
                             </td>
-                            <td class="px-6 py-4">{{ formatCurrency(item.price) }}</td>
+                            <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{
+                                formatCurrency(item.price)
+                                    }}</span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

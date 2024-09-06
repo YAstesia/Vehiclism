@@ -66,6 +66,9 @@ function getSeverity(status) {
             return 'warn';
     }
 }
+const navigateToCarTirmDetail = (item) => {
+    router.push(`/typedetail/${item.tirm}`);
+};
 // 格式化货币
 function formatCurrency(value) {
     if (value === null) {
@@ -523,15 +526,23 @@ function goBack() {
                     <tbody class="bg-white divide-y divide-gray-300">
                         <tr v-for="item in displayedData" :key="item.id"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-6 py-4">{{ item.brand }}</td>
-                            <td class="px-6 py-4">{{ item.series }}</td>
-                            <td class="px-6 py-4">{{ item.tirm }}</td>
-                            <td class="px-6 py-4">{{ item.type }}</td>
+                            <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px; ">{{ item.brand
+                                    }}</span></td>
+                            <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px; ">{{ item.series
+                                    }}</span></td>
+                            <td class="px-6 py-4" @click="navigateToCarTirmDetail(item)"><span class="font-bold"
+                                    style="font-size: 16px; text-decoration: underline;">
+                                    {{ item.tirm }}</span></td>
+                            <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{ item.type
+                                    }}</span></td>
                             <td class="px-6 py-4">
                                 <Tag :options="statuses" :value="item.energyType"
-                                    :severity="getSeverity(item.energyType)"></Tag>
+                                    :severity="getSeverity(item.energyType)" style="font-size: 14px;"></Tag>
                             </td>
-                            <td class="px-6 py-4">{{ formatCurrency(item.price) }}</td>
+                            <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{
+                                formatCurrency(item.price)
+                                    }}</span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
