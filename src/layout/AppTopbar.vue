@@ -21,7 +21,7 @@ const handleLogout = () => {
 
 
 function showSuccess() {
-    toast.add({ severity: 'success', summary: '欢迎来到Vehiclism平台！', detail: '我们希望这个平台能满足您的所有需求。\n 如果有任何问题请致电：17321612271', life: 5000 });
+    toast.add({ severity: 'success', summary: '欢迎来到Vehiclism汽车主义大数据平台！', detail: '我们希望这个平台能满足您的所有需求。\n 如果有任何问题请致电：17321612271', life: 5000 });
 }
 
 </script>
@@ -50,7 +50,7 @@ function showSuccess() {
                     </g>
                 </svg>
 
-                <span>Vehiclism</span>
+                <em>Vehiclism汽车主义</em>
             </div>
         </div>
 

@@ -42,8 +42,9 @@
           <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px; ">{{ item.brand }}</span></td>
           <td class="px-6 py-4" @click="navigateToCarSeriesDetail(item)"><span class="font-bold"
               style="font-size: 16px; text-decoration: underline;">{{ item.series }}</span></td>
-          <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px; text-decoration: underline;">{{
-            item.tirm }}</span></td>
+          <td class="px-6 py-4" @click="navigateToCarTirmDetail(item)"><span class="font-bold"
+              style="font-size: 16px; text-decoration: underline;">{{
+                item.tirm }}</span></td>
           <td class="px-6 py-4"><span class="font-bold" style="font-size: 16px;">{{
             item.type }}</span></td>
           <td class="px-6 py-4">
@@ -159,8 +160,29 @@ const router = useRouter();
 const navigateToCarSeriesDetail = (item) => {
   router.push(`/cardetail/${item.series}`);
 };
+const navigateToCarTirmDetail = (item) => {
+  router.push(`/typedetail/${item.tirm}`);
+};
 // 搜索函数
 const search = async () => {
+  try {
+    currentPage.value = 1;
+    isLoading.value = true;
+    localStorage.setItem('searchQuery', searchQuery.value);
+    const response = await SearchCarTirm(currentPage.value, pageSize.value, searchQuery.value);
+    displayedData.value = response.data.data.records || [];
+    totalRecords.value = response.data.data.total || 0;
+    pages.value = Math.ceil(totalRecords.value / pageSize.value);
+    hasData.value = displayedData.value.length > 0;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// 搜索函数
+const searchPage = async () => {
   try {
     isLoading.value = true;
     localStorage.setItem('searchQuery', searchQuery.value);
@@ -184,7 +206,7 @@ function ClearFilter() {
 // 分页改变时触发搜索
 const handlePageChange = (newPage) => {
   currentPage.value = newPage;
-  search();
+  searchPage();
 };
 
 // 初始化加载数据
