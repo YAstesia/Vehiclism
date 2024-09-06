@@ -376,6 +376,8 @@ async function loadMapData() {
     chartInstance.on('click', function (params) {
         console.log('点击了省份：', params.name);
         handleProvinceClick(params.name);
+        // dropdownValuePro.value = params.name;
+
     });
 }
 
