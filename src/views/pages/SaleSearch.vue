@@ -139,6 +139,7 @@ onMounted(() => {
                 <InputGroup>
                     <Button label="搜索" @click="search" />
                     <InputText v-model="searchQuery" placeholder="Keyword" />
+                    <div v-if="isLoading" class="mt-4" style="margin-left: 20px">正在筛选，请等待……</div>
                 </InputGroup>
             </div>
             <!-- 清空过滤器 -->
@@ -183,7 +184,6 @@ onMounted(() => {
             </tbody>
         </table>
         <div v-if="!hasData" class="mt-4">找不到符合条件的数据。</div>
-        <div v-if="isLoading" class="mt-4">正在筛选，请等待……</div>
         <custom-pagination :currentPage="currentPage" :totalPages="pages" @page-change="handlePageChange" />
     </div>
 </template>
