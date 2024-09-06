@@ -112,10 +112,27 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
             <div class="card">
                 <div class="font-semibold text-xl mb-4">当月热销车系</div>
                 <DataTable :value="products" :rows="5" :paginator="true" responsiveLayout="scroll">
-                    <Column field="rank" header="排名" :sortable="false" style="width: 15%"></Column>
-                    <Column field="series" header="品牌" :sortable="false" style="width: 25%"></Column>
-                    <Column field="type" header="车系" :sortable="false" style="width: 30%"></Column>
-                    <Column field="sales" header="月销量" :sortable="false" style="width: 30%"></Column>
+                    <Column field="rank" header="排名" :sortable="false" style="width: 15%">
+                        <template #body="slotProps">
+                            <span class="font-bold" style="font-size: 14pt;">{{ slotProps.data.rank }}</span>
+                        </template>
+                    </Column>
+                    <Column field="series" header="品牌" :sortable="false" style="width: 25%">
+                        <template #body="slotProps">
+                            <span class="font-semibold" style="font-size: 12pt;">{{ slotProps.data.series }}</span>
+                        </template>
+                    </Column>
+                    <Column field="type" header="车系" :sortable="false" style="width: 30%">
+                        <template #body="slotProps">
+                            <span class="font-bold" style="font-size: 12pt;">{{ slotProps.data.type }}</span>
+                        </template>
+                    </Column>
+                    <Column field="sales" header="月销量" :sortable="false" style="width: 30%">
+                        <template #body="slotProps">
+                            <span class="font-bold" style="font-size: 14pt; color: crimson;">{{ slotProps.data.sales
+                                }}</span>
+                        </template>
+                    </Column>
                 </DataTable>
             </div>
             <div class="card">
@@ -127,10 +144,11 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                 <ul class="list-none p-0 m-0">
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                         <div>
-                            <span class="text-surface-900 dark:text-surface-0 mr-2 mb-1 md:mb-0 font-bold">比亚迪</span>
+                            <span class="text-surface-900 dark:text-surface-0 mr-2 mb-1 md:mb-0 font-bold"
+                                style="font-size: 14pt;">比亚迪</span>
                             <div class="mt-1 text-muted-color">月销量No.1</div>
                         </div>
-                        <div class="mt-2 md:mt-0 flex items-center">
+                        <div class="mt-2 md:mt-0 flex justify-center items-center h-full">
                             <span class="text-red-500 ml-4 font-bold" style="font-size: 20pt;">1601022</span>
                         </div>
                         <div class="mt-2 md:mt-0 flex items-center">
@@ -139,10 +157,11 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                     </li>
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                         <div>
-                            <span class="text-surface-900 dark:text-surface-0 font-bold mr-2 mb-1 md:mb-0">大众</span>
+                            <span class="text-surface-900 dark:text-surface-0 font-bold mr-2 mb-1 md:mb-0"
+                                style="font-size: 14pt;">大众</span>
                             <div class="mt-1 text-muted-color">月销量No.2</div>
                         </div>
-                        <div class="mt-2 md:mt-0 ml-0   flex items-center">
+                        <div class="mt-2 md:mt-0 ml-0   flex justify-center items-center h-full">
                             <span class="text-red-400 ml-4 font-bold" style="font-size: 20pt;">1069775</span>
                         </div>
                         <div class="mt-2 md:mt-0 ml-0   flex items-center">
@@ -151,11 +170,13 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                     </li>
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                         <div>
-                            <span class="text-surface-900 dark:text-surface-0 font-bold mr-2 mb-1 md:mb-0">丰田</span>
+                            <span class="text-surface-900 dark:text-surface-0 font-bold mr-2 mb-1 md:mb-0"
+                                style="font-size: 14pt;">丰田</span>
                             <div class="mt-1 text-muted-color">月销量No.3</div>
                         </div>
-                        <div class="mt-2 md:mt-0 ml-0   flex items-center">
-                            <span class="text-orange-400 ml-4 font-bold" style="font-size: 20pt;">810968</span>
+                        <div class="mt-2 md:mt-0 ml-0   flex justify-center items-center h-full">
+                            <span class="text-orange-400 ml-4 font-bold"
+                                style="font-size: 20pt; margin-right: -15px;">810968</span>
                         </div>
                         <div class="mt-2 md:mt-0 ml-0   flex items-center">
                             <span class="text-orange-400 ml-4 font-bold" style="font-size: 20pt;">125027</span>
@@ -163,11 +184,13 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                     </li>
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                         <div>
-                            <span class="text-surface-900 dark:text-surface-0 font-bold mr-2 mb-1 md:mb-0">吉利汽车</span>
+                            <span class="text-surface-900 dark:text-surface-0 font-bold mr-2 mb-1 md:mb-0"
+                                style="font-size: 14pt;">吉利汽车</span>
                             <div class="mt-1 text-muted-color">月销量No.4</div>
                         </div>
-                        <div class="mt-2 md:mt-0 ml-0   flex items-center">
-                            <span class="text-yellow-500 ml-4 font-bold" style="font-size: 20pt;">509588</span>
+                        <div class="mt-2 md:mt-0 ml-0   flex justify-center items-center h-full">
+                            <span class="text-yellow-500 ml-4 font-bold"
+                                style="font-size: 20pt; margin-right: 5px;">509588</span>
                         </div>
                         <div class="mt-2 md:mt-0 ml-0   flex items-center">
                             <span class="text-yellow-500 ml-4 font-bold" style="font-size: 20pt;">63458</span>
@@ -175,10 +198,11 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                     </li>
                     <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                         <div>
-                            <span class="text-surface-900 dark:text-surface-0 font-bold mr-2 mb-1 md:mb-0">本田</span>
+                            <span class="text-surface-900 dark:text-surface-0 font-bold mr-2 mb-1 md:mb-0"
+                                style="font-size: 14pt;">本田</span>
                             <div class="mt-1 text-muted-color">月销量No.7</div>
                         </div>
-                        <div class="mt-2 md:mt-0 ml-0 flex items-center">
+                        <div class="mt-2 md:mt-0 ml-0 flex justify-center items-center h-full">
                             <span class="text-green-500 font-bold" style="font-size: 20pt;">498106</span>
                         </div>
                         <div class="mt-2 md:mt-0 ml-0 flex items-center">
@@ -241,8 +265,8 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                 </ul>
 
 
-                <ul class="p-0 m-0 list-none mb-6">
-                    <li class="flex items-center py-2 border-b border-surface">
+                <ul class="p-0 m-0 list-none mb-4">
+                    <li class=" flex items-center py-2 border-b border-surface">
                         <div
                             class="w-12 h-12 flex items-center justify-center bg-green-100 dark:bg-blue-400/10 rounded-full mr-4 shrink-0">
                             <i class="pi pi-dollar !text-xl text-green-500"></i>
@@ -254,7 +278,19 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                         </span>
                     </li>
                 </ul>
-
+            </div>
+            <div class="card" style="margin-top: -20px;">
+                <li class="flex items-center border-b border-surface">
+                    <div
+                        class="w-12 h-12 flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-full mr-4 shrink-0">
+                        <i class="pi pi-car !text-xl text-blue-500"></i>
+                    </div>
+                    <span class="text-surface-900 dark:text-surface-0 leading-normal">
+                        <span class="text-surface-700 dark:text-surface-100 font-bold">本网站共统计汽车类型信息 <span
+                                class="text-primary font-bold"
+                                style="font-size: 22pt; margin-left: 5px; margin-right: 5px; color: crimson;">12765</span>条</span>
+                    </span>
+                </li>
             </div>
         </div>
     </div>

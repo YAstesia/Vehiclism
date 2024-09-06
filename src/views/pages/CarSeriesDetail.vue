@@ -1,9 +1,10 @@
 <script setup>
 import { getCarEvl, getCarSales, getCarSeries, getCarSeriesImg, getCarTirmBySeriesId, getSeriesPurpose } from '@/api';
-import { computed, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed, onBeforeMount, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
 const pieData = ref(null);
 const pieOptions = ref(null);
 const lineData = ref(null);
@@ -37,11 +38,23 @@ function formatCurrency(value) {
     const formattedValue = (value).toLocaleString();
     return formattedValue + '万元';
 }
-onMounted(() => {
+onBeforeMount(() => {
     setColorOptions();
-    fetchCarSeriesDetail('Model Y');
-    fetchCarSeriesPurpose('Model Y');
+    fetchCarSeriesDetail(route.params.series);
+    fetchCarSeriesPurpose(route.params.series);
 });
+
+watch(() => route.params.series, (newSeries) => {
+    fetchCarSeriesDetail(newSeries);
+    fetchCarSeriesPurpose(newSeries);
+});
+
+
+// onMounted(() => {
+//     setColorOptions();
+//     fetchCarSeriesDetail('Model Y');
+//     fetchCarSeriesPurpose('Model Y');
+// });
 
 
 const data = ref([213, 414, 4241, 24124, 42531, 12312, 154251, 1312, 333, 312]);

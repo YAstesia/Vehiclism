@@ -12,8 +12,12 @@ const lineOptions = ref(null);
 const barOptions = ref(null);
 const combinedData = ref(null);
 const combinedOptions = ref(null);
+const Sales = ref();
 // const years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
-
+const columns = [
+    { field: 'year', header: '年份' },
+    { field: 'sales', header: '总销量(辆)' }
+];
 let dropdownValues = ref([
     { name: '近十年', code: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024] },
     { name: '近五年', code: [2020, 2021, 2022, 2023, 2024] },
@@ -33,13 +37,13 @@ let dropdownValue = ref(null);
 
 onMounted(async () => {
     const salesData = await fetchSalesData();
-
+    Sales.value = salesData;
     combinedData.value = {
         labels: salesData.map(item => item.year), // 从数据中提取年份
         datasets: [
             {
                 type: 'line', // 折线图类型
-                label: '折线图',
+                label: '',
                 data: salesData.map(item => item.sales), // 从数据中提取销量
                 fill: false,
                 backgroundColor: '#42A5F5',
@@ -48,7 +52,7 @@ onMounted(async () => {
             },
             {
                 type: 'bar', // 条形图类型
-                label: '条形图',
+                label: '(单位:辆)',
                 backgroundColor: '#83dbea',
                 borderColor: '#83dbea',
                 data: salesData.map(item => item.sales) // 从数据中提取销量
@@ -60,7 +64,7 @@ onMounted(async () => {
         labels: salesData.map(item => item.year), // 从数据中提取年份
         datasets: [
             {
-                label: '(单位：销量)',
+                label: '(单位:辆)',
                 data: salesData.map(item => item.sales), // 从数据中提取销量
                 fill: false,
                 backgroundColor: '#42A5F5',
@@ -74,7 +78,7 @@ onMounted(async () => {
         labels: salesData.map(item => item.year),
         datasets: [
             {
-                label: '(单位：销量)',
+                label: '(单位:辆)',
                 backgroundColor: '#42A5F5',
                 borderColor: '#42A5F5',
                 data: salesData.map(item => item.sales)
@@ -110,7 +114,7 @@ async function showAllChartData(years) {
 
             // 构建数据集
             const dataset = {
-                label: `${year}年销售额`,
+                label: `${year}年销售量`,
                 data: uniqueLabels.map(label => {
                     const month = parseInt(label.replace('月', ''), 10);
                     const saleItem = salesDataForYear.find(item => item.month === month);
@@ -139,7 +143,7 @@ async function showAllChartData(years) {
 
             // 构建数据集
             const dataset = {
-                label: `${year}年销售额`,
+                label: `${year}年销售量`,
                 backgroundColor: color,
                 borderColor: color,
                 data: uniqueLabels.map(label => {
@@ -201,7 +205,7 @@ function generateColors(count) {
 //             labels: salesData2.map(item => item.month),
 //             datasets: [
 //                 {
-//                     label: '月销售额',
+//                     label: '月销售量',
 //                     data: salesData2.map(item => item.sales),
 //                     fill: false,
 //                     backgroundColor: '#42A5F5',
@@ -216,7 +220,7 @@ function generateColors(count) {
 //             labels: salesData2.map(item => item.month),
 //             datasets: [
 //                 {
-//                     label: '月销售额',
+//                     label: '月销售量',
 //                     backgroundColor: '#42A5F5',
 //                     borderColor: '#42A5F5',
 //                     data: salesData2.map(item => item.sales)
@@ -360,7 +364,9 @@ watch(
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
                 <div class="font-semibold text-xl mb-4">近十年汽车年销量统计</div>
-                <Chart type="bar" :data="barData" :options="barOptions"></Chart>
+                <DataTable :value="Sales" scrollable scrollHeight="295px" tableStyle="min-width: 40rem">
+                    <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header"></Column>
+                </DataTable>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-12">

@@ -188,7 +188,7 @@ function smoothScroll(id) {
                 <div class="grid grid-cols-12 gap-4 mt-20 pb-2 md:pb-20">
                     <div class="flex justify-center col-span-12 lg:col-span-6 bg-purple-100 p-0 order-1 lg:order-none"
                         style="border-radius: 8px">
-                        <img src="E:\Vue\sakai-vue-master\src\assets\load3.png" class="w-11/12" alt="mockup mobile" />
+                        <img src="\src\assets\load3.png" class="w-11/12" alt="mockup mobile" />
                     </div>
 
                     <div
@@ -211,14 +211,14 @@ function smoothScroll(id) {
 
                     <div class="flex justify-center order-1 sm:order-2 col-span-12 lg:col-span-6 bg-yellow-100 p-0"
                         style="border-radius: 8px">
-                        <img src="E:\Vue\sakai-vue-master\src\assets\load2.png" class="w-11/12" alt="mockup" />
+                        <img src="\src\assets\load2.png" class="w-11/12" alt="mockup" />
                     </div>
                 </div>
 
                 <div class="grid grid-cols-12 gap-4 mt-20 pb-2 md:pb-20">
                     <div class="flex justify-center col-span-12 lg:col-span-6 bg-purple-100 p-0 order-1 lg:order-none"
                         style="border-radius: 8px">
-                        <img src="E:\Vue\sakai-vue-master\src\assets\load1.png" class="w-11/12" alt="mockup mobile" />
+                        <img src="\src\assets\load1.png" class="w-11/12" alt="mockup mobile" />
                     </div>
 
                     <div

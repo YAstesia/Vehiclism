@@ -55,7 +55,7 @@ import { onMounted, ref } from 'vue';
 
 // 定义变量
 const searchQuery = ref('');
-const currentPage1 = ref(1);
+const currentPage = ref(1);
 const pageSize = ref(10);
 const pages = ref(0);
 const totalRecords = ref(0);
@@ -98,11 +98,16 @@ function formatTime(year, month) {
     return formattedValue;
 }
 
+function ClearFilter() {
+    searchQuery = ref('');
+    currentPage = 1;
+    search();
+}
 // 搜索函数
 const search = async () => {
     try {
         isLoading.value = true;
-        const response = await SearchCarSeriesSale(currentPage1.value, pageSize.value, searchQuery.value);
+        const response = await SearchCarSeriesSale(currentPage.value, pageSize.value, searchQuery.value);
         displayedData.value = response.data.data.records || [];
         totalRecords.value = response.data.data.total || 0;
         pages.value = Math.ceil(totalRecords.value / pageSize.value);
@@ -116,7 +121,7 @@ const search = async () => {
 
 // 分页改变时触发搜索
 const handlePageChange = (newPage) => {
-    currentPage1.value = newPage;
+    currentPage.value = newPage;
     search();
 };
 
@@ -137,7 +142,7 @@ onMounted(() => {
                 </InputGroup>
             </div>
             <!-- 清空过滤器 -->
-            <Button type="button" icon="pi pi-filter-slash" label="清空" outlined @click="clearFilter" />
+            <Button type="button" icon="pi pi-filter-slash" label="清空" outlined @click="ClearFilter" />
         </div>
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -165,18 +170,21 @@ onMounted(() => {
             <tbody>
                 <tr v-for="item in displayedData" :key="item.id"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td class="px-6 py-4">{{ item.brand }}</td>
-                    <td class="px-6 py-4">{{ item.series }}</td>
-                    <td class="px-6 py-4">{{ item.type }}</td>
-                    <td class="px-6 py-4">{{ formatCurrency(item.priceMin, item.priceMax) }}</td>
-                    <td class="px-6 py-4">{{ formatTime(item.year, item.month) }}</td>
-                    <td class="px-6 py-4">{{ item.totalSale }}</td>
+                    <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ item.brand }}</span></td>
+                    <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ item.series }}</span></td>
+                    <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ item.type }}</span></td>
+                    <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{
+                        formatCurrency(item.priceMin, item.priceMax) }}</span></td>
+                    <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ formatTime(item.year,
+                        item.month) }}</span></td>
+                    <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ item.totalSale }}</span>
+                    </td>
                 </tr>
             </tbody>
         </table>
         <div v-if="!hasData" class="mt-4">找不到符合条件的数据。</div>
         <div v-if="isLoading" class="mt-4">正在筛选，请等待……</div>
-        <custom-pagination :currentPage="currentPage1" :totalPages="pages" @page-change="handlePageChange" />
+        <custom-pagination :currentPage="currentPage" :totalPages="pages" @page-change="handlePageChange" />
     </div>
 </template>
 

@@ -15,15 +15,20 @@ const router = createRouter({
             component: AppLayout,
             children: [
                 {
+                    path: '/cardetail/:series', // 添加参数 :series
+                    name: 'cardetail',
+                    component: () => import('@/views/pages/CarSeriesDetail.vue')
+                },
+                {
                     path: '/uikit/formlayout',
                     name: 'formlayout',
                     component: () => import('@/views/uikit/FormLayout.vue')
                 },
-                {
-                    path: '/cardetail',
-                    name: 'cardetail',
-                    component: () => import('@/views/pages/CarSeriesDetail.vue')
-                },
+                // {
+                //     path: '/cardetail',
+                //     name: 'cardetail',
+                //     component: () => import('@/views/pages/CarSeriesDetail.vue')
+                // },
                 {
                     path: '/typedetail',
                     name: 'typedetail',
