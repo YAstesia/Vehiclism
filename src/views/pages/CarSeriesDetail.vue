@@ -264,10 +264,10 @@ function formatRadarData(detail) {
 function formatLineData(data) {
     const documentStyle = getComputedStyle(document.documentElement);
     return {
-        labels: data.map(item => item.month),
+        labels: data.map(item => item.month + '月'),
         datasets: [
             {
-                label: data[0].year + '月销量',
+                label: data[0].year + '年的月销量',
                 data: data.map(item => item.totalSale),
                 fill: false,
                 backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
@@ -344,6 +344,13 @@ function setColorOptions() {
         },
         scales: {
             r: {
+                beginAtZero: true,  // 中心值从 0 开始
+                min: 0,  // 中心值
+                max: 5,  // 最外圈值
+                ticks: {
+                    stepSize: 1,  // 刻度间隔
+                    color: '#000',  // 刻度颜色
+                },
                 grid: {
                     color: textColorSecondary
                 }
@@ -374,7 +381,7 @@ function goBack() {
                     <div class="card p-4 border rounded shadow-lg">
                         <!-- 图片 :src="imgsrc"-->
                         <meta name="referrer" content="no-referrer">
-                        <img :src="imgsrc" alt="Image" class="w-full h-auto mb-4">
+                        <img :src="imgsrc || defaultImageUrl" alt="Image" class="w-full h-auto mb-4">
 
                         <!-- 两行居中的文字 -->
                         <div class="text-center mb-4">
@@ -404,7 +411,8 @@ function goBack() {
                 <div class="flex flex-wrap md:w-2/3">
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold"
+                                style="font-size: 16px;">
                                 综合评分
                             </div>
                             <Knob v-model="value1" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
@@ -413,7 +421,8 @@ function goBack() {
                     </div>
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold"
+                                style="font-size: 16px;">
                                 空间评分</div>
                             <Knob v-model="value2" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
@@ -421,7 +430,8 @@ function goBack() {
                     </div>
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold"
+                                style="font-size: 16px;">
                                 驾驶感受</div>
                             <Knob v-model="value3" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
@@ -429,7 +439,8 @@ function goBack() {
                     </div>
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold"
+                                style="font-size: 16px;">
                                 能耗评分</div>
                             <Knob v-model="value4" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
@@ -437,7 +448,8 @@ function goBack() {
                     </div>
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold"
+                                style="font-size: 16px;">
                                 外观评分</div>
                             <Knob v-model="value5" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
@@ -445,7 +457,8 @@ function goBack() {
                     </div>
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold"
+                                style="font-size: 16px;">
                                 内饰评分</div>
                             <Knob v-model="value6" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
@@ -453,7 +466,8 @@ function goBack() {
                     </div>
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold"
+                                style="font-size: 16px;">
                                 性价比</div>
                             <Knob v-model="value7" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
@@ -461,7 +475,8 @@ function goBack() {
                     </div>
                     <div class="md:w-1/4 p-2">
                         <div class="card flex flex-col items-center relative">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold text-xl">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 font-bold"
+                                style="font-size: 16px;">
                                 配置评分</div>
                             <Knob v-model="value8" :min="0.00" :max="5.00" valueColor="#10b981" rangeColor="SlateGray"
                                 readonly />
