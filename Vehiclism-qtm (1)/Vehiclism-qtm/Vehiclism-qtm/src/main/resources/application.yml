@@ -8,7 +8,6 @@ spring:
     proxy-target-class: true
   ai:
     openai:
-      api-key: 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
       base-url: https://api.openai.com
       chat:
         options:
