@@ -6,13 +6,6 @@ spring:
     name: vehiclism
   aop:
     proxy-target-class: true
-  ai:
-    openai:
-      base-url: https://api.openai.com
-      chat:
-        options:
-          model: gpt-4o-mini
-          temperature: 0.7
 
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
