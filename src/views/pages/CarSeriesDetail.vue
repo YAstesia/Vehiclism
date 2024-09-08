@@ -12,6 +12,7 @@ const lineOptions = ref(null);
 const radarData = ref(null);
 const radarOptions = ref(null);
 const displayedData = ref([]);
+const defaultImageUrl = 'https://www.sucaijishi.com/uploadfile/2017/0510/20170510104938756.gif';
 // 状态严重性映射
 const statuses = ["汽油",
     "纯电动",
@@ -144,9 +145,10 @@ const fetchCarTirms = async (id) => {
 const fetchCarSeriesImage = async (id) => {
     try {
         const response = await getCarSeriesImg(id)
-        if (response.data.success) {
+        if (response.data.success && response.data.data != null) {
             imgsrc = response.data.data;
         } else {
+            imgsrc.value = defaultImageUrl;
             console.error('查询失败:', response.data.msg)
         }
     } catch (error) {

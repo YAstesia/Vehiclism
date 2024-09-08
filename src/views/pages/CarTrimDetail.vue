@@ -16,7 +16,7 @@ const configData = ref([]);
 const data = ref([213, 414, 4241, 24124, 42531, 12312, 154251, 1312, 333, 312]);
 const seriesDetail = ref({ brand: '', series: '', priceMin: 0, priceMax: 0, type: '' })
 const tirmDetail = ref({ brand: '', series: '', tirm: '', energyType: '', type: '', price: '' })
-
+const defaultImageUrl = 'https://www.sucaijishi.com/uploadfile/2017/0510/20170510104938756.gif';
 const detail = ref([0, 0, 0, 0, 0, 0, 0, 0]);
 const value1 = computed(() => detail.value[0]);
 const value2 = computed(() => detail.value[1]);
@@ -162,9 +162,10 @@ const fetchCarTirms = async (id) => {
 const fetchCarTirmImage = async (id) => {
     try {
         const response = await getCarTirmImg(id)
-        if (response.data.success) {
+        if (response.data.success && response.data.data != null) {
             imgsrc = response.data.data;
         } else {
+            imgsrc.value = defaultImageUrl;
             console.error('查询失败:', response.data.msg)
         }
     } catch (error) {
