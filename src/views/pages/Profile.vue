@@ -236,7 +236,7 @@ function showError(message) {
           <div class="mb-4 font-medium">{{ slotProps.data.brand }} {{ slotProps.data.series }} {{ slotProps.data.tirm }}
           </div>
           <div class="flex justify-between items-center">
-            <div class="mt-0 font-semibold text-xl">${{ slotProps.data.price }}</div>
+            <div class="mt-0 font-semibold text-xl">{{ slotProps.data.price }} 万元</div>
             <span>
               <Button icon="pi pi-search" class="ml-2" />
             </span>

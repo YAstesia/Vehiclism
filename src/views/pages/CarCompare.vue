@@ -124,12 +124,12 @@ watch(
             <div class="flex flex-col grow basis-0 gap-2">
                 <label for="name2">车型A</label>
                 <AutoComplete v-model="selectedAutoValue" :suggestions="autoFilteredValue" optionLabel="name"
-                    placeholder="Search" dropdown multiple display="chip" @complete="searchCountry($event)" />
+                    placeholder="Search" dropdown display="chip" @complete="searchCountry($event)" />
             </div>
             <div class="flex flex-col grow basis-0 gap-2">
                 <label for="email2">车型B</label>
                 <AutoComplete v-model="selectedAutoValue2" :suggestions="autoFilteredValue" optionLabel="name"
-                    placeholder="Search" dropdown multiple display="chip" @complete="searchCountry($event)" />
+                    placeholder="Search" dropdown display="chip" @complete="searchCountry($event)" />
             </div>
         </div>
     </div>
