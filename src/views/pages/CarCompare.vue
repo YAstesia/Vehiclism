@@ -8,6 +8,10 @@ const barData = ref(null);
 const barOptions = ref(null);
 const radarData = ref(null);
 const radarOptions = ref(null);
+const lineData = ref(null);
+const lineOptions = ref(null);
+const polarData = ref(null);
+const polarOptions = ref(null);
 const selectedAutoValue = ref(null);
 const autoFilteredValue = ref([]);
 const autoValue = ref(null);
@@ -107,6 +111,86 @@ function setColorOptions() {
             }
         }
     };
+    lineData.value = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [
+            {
+                label: 'First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                fill: false,
+                backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
+                borderColor: documentStyle.getPropertyValue('--p-primary-500'),
+                tension: 0.4
+            },
+            {
+                label: 'Second Dataset',
+                data: [28, 48, 40, 19, 86, 27, 90],
+                fill: false,
+                backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
+                borderColor: documentStyle.getPropertyValue('--p-primary-200'),
+                tension: 0.4
+            }
+        ]
+    };
+
+    lineOptions.value = {
+        plugins: {
+            legend: {
+                labels: {
+                    fontColor: textColor
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder,
+                    drawBorder: false
+                }
+            },
+            y: {
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder,
+                    drawBorder: false
+                }
+            }
+        }
+    };
+
+    polarData.value = {
+        datasets: [
+            {
+                data: [11, 16, 7, 3],
+                backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-orange-500')],
+                label: 'My dataset'
+            }
+        ],
+        labels: ['Indigo', 'Purple', 'Teal', 'Orange']
+    };
+
+    polarOptions.value = {
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    color: textColor
+                }
+            }
+        },
+        scales: {
+            r: {
+                grid: {
+                    color: surfaceBorder
+                }
+            }
+        }
+    };
     radarData.value = {
         labels: ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'],
         datasets: [
@@ -176,103 +260,75 @@ watch(
     </div>
     <div class="grid grid-cols-12 gap-8 mt-8">
         <div class="col-span-12 xl:col-span-6">
-            <div class="card" style="height: 500px;">
+            <div class="card flex flex-col justify-center items-center" style="height: 500px;">
+                <div class="font-semibold text-xl mb-4">价格</div>
+                <Chart type="polarArea" :data="polarData" :options="polarOptions"
+                    style="height: 100%; width: 100%; padding: 0;">
+                </Chart>
+            </div>
+        </div>
+        <div class=" col-span-12 xl:col-span-6">
+            <div class="card flex flex-col justify-center items-center" style="height: 500px;">
+                <div class="font-semibold text-xl mb-4">趋势折线图</div>
+                <Chart type="line" :data="lineData" :options="lineOptions" style="margin-top: 50px;"></Chart>
+            </div>
+        </div>
+    </div>
+    <div class="grid grid-cols-12 gap-8 mt-8">
+        <div class="col-span-12 xl:col-span-6">
+            <div class="card flex flex-col justify-center items-center" style="height: 500px;">
                 <div class="font-semibold text-xl mb-4">条形图</div>
-                <Chart type="bar" :data="barData" :options="barOptions" style="margin-top: 100px;"></Chart>
+                <Chart type="bar" :data="barData" :options="barOptions" style="margin-top: 50px;"></Chart>
             </div>
         </div>
         <div class="col-span-12 xl:col-span-6">
             <div class="card flex flex-col justify-center items-center" style="height: 500px;">
-                <div class="font-semibold text-xl mb-4">雷达图</div>
-                <Chart type="radar" :data="radarData" :options="radarOptions"></Chart>
+                <div class="font-semibold text-xl mb-4">条形图</div>
+                <Chart type="bar" :data="barData" :options="barOptions" style="margin-top: 50px;"></Chart>
             </div>
         </div>
     </div>
-    <div class="grid grid-cols-12 gap-8 mt-8">
-        <div class="col-span-12 xl:col-span-6">
-            <div class="card" style="height: 500px;">
-                <div class="font-semibold text-xl mb-4">条形图</div>
-                <Chart type="bar" :data="barData" :options="barOptions" style="margin-top: 100px;"></Chart>
-            </div>
-        </div>
-        <div class="col-span-12 xl:col-span-6">
-            <div class="card" style="height: 500px;">
-                <div class="font-semibold text-xl mb-4">条形图</div>
-                <Chart type="bar" :data="barData" :options="barOptions" style="margin-top: 100px;"></Chart>
-            </div>
-        </div>
-    </div>
-    <div class="grid grid-cols-12 gap-8 mt-8">
-        <div class="col-span-12 xl:col-span-6">
-            <div class="card">
-                <div class="w-full overflow-x-auto">
-                    <table class="min-w-full border-2 border-gray-300 divide-y divide-gray-300">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-                            style="text-align: left;">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 w-1/5">
-                                    <div class="font-semibold text-xl">参数类型</div>
-                                </th>
-                                <th scope="col" class="px-6 py-3 w-2/5">
-                                    <div class="font-semibold text-xl">参数名称</div>
-                                </th>
-                                <th scope="col" class="px-6 py-3 w-2/5">
-                                    <div class="font-semibold text-xl">配置</div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-300">
-                            <tr v-for="item in configData" :key="item.id"
-                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <td class="px-6"><span style="font-size: 10pt; ">{{
-                                    item.configType
-                                        }}</span></td>
-                                <td class="px-6" @click="navigateToCarSeriesDetail(item)"><span
-                                        style="font-size: 10pt;">
-                                        {{ item.configName
-                                        }}</span></td>
-                                <td><span style="font-size: 10pt; ">
-                                        {{ item.configValue }}</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-span-12 xl:col-span-6">
-            <div class="card">
-                <div class="w-full overflow-x-auto">
-                    <table class="min-w-full border-2 border-gray-300 divide-y divide-gray-300">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-                            style="text-align: left;">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 w-1/5">
-                                    <div class="font-semibold text-xl">参数类型</div>
-                                </th>
-                                <th scope="col" class="px-6 py-3 w-2/5">
-                                    <div class="font-semibold text-xl">参数名称</div>
-                                </th>
-                                <th scope="col" class="px-6 py-3 w-2/5">
-                                    <div class="font-semibold text-xl">配置</div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-300">
-                            <tr v-for="item in configData" :key="item.id"
-                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <td class="px-6"><span style="font-size: 10pt; ">{{
-                                    item.configType
-                                        }}</span></td>
-                                <td class="px-6" @click="navigateToCarSeriesDetail(item)"><span
-                                        style="font-size: 10pt;">
-                                        {{ item.configName
-                                        }}</span></td>
-                                <td><span style="font-size: 10pt; ">
-                                        {{ item.configValue }}</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+    <div class="col-span-12 xl:col-span-6">
+        <div class="card">
+            <div class="w-full overflow-x-auto">
+                <table class="min-w-full border-2 border-gray-300 divide-y divide-gray-300">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+                        style="text-align: left;">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 w-1/10">
+                                <div class="font-semibold text-xl">参数类型</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 w-7/30">
+                                <div class="font-semibold text-xl">参数名称</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 w-1/6">
+                                <div class="font-semibold text-xl">配置1</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 w-1/6">
+                                <div class="font-semibold text-xl">配置2</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 w-1/6">
+                                <div class="font-semibold text-xl">配置3</div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 w-1/6">
+                                <div class="font-semibold text-xl">配置4</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-300">
+                        <tr v-for="item in configData" :key="item.id"
+                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <td class="px-6"><span style="font-size: 10pt; ">{{
+                                item.configType
+                                    }}</span></td>
+                            <td class="px-6" @click="navigateToCarSeriesDetail(item)"><span style="font-size: 10pt;">
+                                    {{ item.configName
+                                    }}</span></td>
+                            <td><span style="font-size: 10pt; ">
+                                    {{ item.configValue }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
