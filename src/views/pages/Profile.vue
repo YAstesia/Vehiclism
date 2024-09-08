@@ -16,7 +16,7 @@ const userName = ref('');
 const userPhone = ref('');
 const userEmail = ref('');
 const defaultImageUrl = 'https://www.sucaijishi.com/uploadfile/2017/0510/20170510104938756.gif';
-
+let energyTypeCount = [{ "energyType": "传统能源", "cnt": 0 }, { "energyType": "混合能源", "cnt": 0 }, { "energyType": "新能源", "cnt": 0 }];
 
 const carouselResponsiveOptions = ref([
   {
@@ -57,6 +57,9 @@ onMounted(() => {
           .catch(error => {
             images.value[product.id] = defaultImageUrl; // 设置默认图片 URL
           });
+        let energyType = getSeverity(product.energyType);
+        energyTypeCount[energyType].cnt++;
+        updataChartData(energyTypeCount);
       });
     })
     .catch(error => {
@@ -68,21 +71,57 @@ onMounted(() => {
 
 });
 
-
+// 获取能源类型
+function getSeverity(status) {
+  switch (status) {
+    case '汽油':
+      return 0;
+    case '柴油':
+      return 0;
+    case '-':
+      return 0;
+    case '纯电动':
+      return 2;
+    case '氢燃料':
+      return 2;
+    case 'CNG':
+      return 2;
+    case '甲醇混动':
+      return 2;
+    case '汽油+48V轻混系统':
+      return 1;
+    case '插电式混合动力':
+      return 1;
+    case '汽油+48V轻混系统':
+      return 1;
+    case '增程式':
+      return 1;
+    case '油电混合':
+      return 1;
+    case '汽油+CNG':
+      return 1;
+    case '汽油+汽油电驱':
+      return 1;
+    case '柴油+48V轻混系统':
+      return 1;
+    case '汽油+24V轻混系统':
+      return 1;
+  }
+}
 function setColorOptions() {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue('--text-color');
 
-  pieData.value = {
-    labels: ['纯电动汽车', '燃料电池汽车', '混合动力汽车'],
-    datasets: [
-      {
-        data: [17, 24, 5],
-        backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500')],
-        hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400')]
-      }
-    ]
-  };
+  // pieData.value = {
+  //   labels: ['纯电动汽车', '燃料电池汽车', '混合动力汽车'],
+  //   datasets: [
+  //     {
+  //       data: [17, 24, 5],
+  //       backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500')],
+  //       hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400')]
+  //     }
+  //   ]
+  // };
 
   pieOptions.value = {
     plugins: {
@@ -95,7 +134,20 @@ function setColorOptions() {
     }
   };
 }
-
+function updataChartData(energyType) {
+  pieData.value = formatPieData(energyType);
+}
+function formatPieData(data) {
+  const documentStyle = getComputedStyle(document.documentElement);
+  return {
+    labels: data.map(item => item.energyType),
+    datasets: [{
+      data: data.map(item => item.cnt),
+      backgroundColor: [documentStyle.getPropertyValue('--p-red-500'), documentStyle.getPropertyValue('--p-yellow-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-red-500'), documentStyle.getPropertyValue('--p-blue-500'), documentStyle.getPropertyValue('--p-yellow-500'), documentStyle.getPropertyValue('--p-orange-500')],
+      hoverBackgroundColor: [documentStyle.getPropertyValue('--p-red-400'), documentStyle.getPropertyValue('--p-yellow-400'), documentStyle.getPropertyValue('--p-teal-400'), documentStyle.getPropertyValue('--p-red-400'), documentStyle.getPropertyValue('--p-blue-400'), documentStyle.getPropertyValue('--p-yellow-400'), documentStyle.getPropertyValue('--p-orange-400')],
+    }]
+  }
+}
 // 用于处理头像图片的更换功能
 function triggerFileInput() {
   document.getElementById('file-input').click();
