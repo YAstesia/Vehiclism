@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://192.168.43.129:8081', //校园网10.208.112.75，oasis192.168.43.129
+  baseURL: 'http://localhost:8081', //校园网10.208.112.75，oasis192.168.43.129
   headers: {
     'Content-Type': 'application/json',
   },
@@ -213,4 +213,13 @@ export function getCarTirmImg(id){
 }
 export function getCarTirmConfig(id){
   return api.post('/cartirm/config',{id});
+}
+export function addToFavorite(id,tirmId){
+  return api.post('/user/addLike',{id,tirmId});
+}
+export function deleteFavorite(id,tirmId){
+  return api.post('/user/deleteLike',{id,tirmId});
+}
+export function checkLike(id,tirmId){
+  return api.post('/user/checkLike',{id,tirmId});
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { getCarEvl, getCarSales, getCarSeries, getCarTirm, getCarTirmBySeriesId, getCarTirmConfig, getCarTirmImg, getSeriesPurpose } from '@/api';
+import { addToFavorite, checkLike, deleteFavorite, getCarEvl, getCarSales, getCarSeries, getCarTirm, getCarTirmBySeriesId, getCarTirmConfig, getCarTirmImg, getSeriesPurpose } from '@/api';
 import { computed, onBeforeMount, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -13,6 +13,26 @@ const radarData = ref(null);
 const radarOptions = ref(null);
 const displayedData = ref([]);
 const configData = ref([]);
+const data = ref([213, 414, 4241, 24124, 42531, 12312, 154251, 1312, 333, 312]);
+const seriesDetail = ref({ brand: '', series: '', priceMin: 0, priceMax: 0, type: '' })
+const tirmDetail = ref({ brand: '', series: '', tirm: '', energyType: '', type: '', price: '' })
+
+const detail = ref([0, 0, 0, 0, 0, 0, 0, 0]);
+const value1 = computed(() => detail.value[0]);
+const value2 = computed(() => detail.value[1]);
+const value3 = computed(() => detail.value[2]);
+const value4 = computed(() => detail.value[3]);
+const value5 = computed(() => detail.value[4]);
+const value6 = computed(() => detail.value[5]);
+const value7 = computed(() => detail.value[6]);
+const value8 = computed(() => detail.value[7]);
+let id = null;
+let seriesId = null;
+let userId = localStorage.getItem('user_id');
+// let year=null;
+let YearlySale = null;
+let imgsrc = ref(null);
+const liked = ref(null);
 // 状态严重性映射
 const statuses = ["汽油",
     "纯电动",
@@ -88,39 +108,25 @@ watch(() => route.params.tirm, (newTirm) => {
     fetchCarTirmDetail(newTirm);
     // fetchCarSeriesPurpose(newSeries);
 });
-
-
-// onMounted(() => {
-//     setColorOptions();
-//     fetchCarSeriesDetail('Model Y');
-//     fetchCarSeriesPurpose('Model Y');
-// });
-
-
-const data = ref([213, 414, 4241, 24124, 42531, 12312, 154251, 1312, 333, 312]);
-const seriesDetail = ref({ brand: '', series: '', priceMin: 0, priceMax: 0, type: '' })
-const tirmDetail = ref({ brand: '', series: '', tirm: '', energyType: '', type: '', price: '' })
-
-const detail = ref([0, 0, 0, 0, 0, 0, 0, 0]);
-const value1 = computed(() => detail.value[0]);
-const value2 = computed(() => detail.value[1]);
-const value3 = computed(() => detail.value[2]);
-const value4 = computed(() => detail.value[3]);
-const value5 = computed(() => detail.value[4]);
-const value6 = computed(() => detail.value[5]);
-const value7 = computed(() => detail.value[6]);
-const value8 = computed(() => detail.value[7]);
-let id = null;
-let seriesId = null;
-// let year=null;
-let YearlySale = null;
-let imgsrc = ref(null);
+watch(() => liked.value, (newLiked) => {
+    // 当 liked 发生变化时，可以在这里执行一些额外的操作
+    // 例如：console.log(`liked changed to ${newLiked}`);
+}, { immediate: true });
+async function LikeCheck() {
+    const responseLike = await checkLike(userId, id);
+    if (responseLike.data.success) {
+        liked.value = responseLike.data.data;
+    } else {
+        console.error('查询失败:', responseLike.data.msg)
+    }
+}
 const fetchCarTirmDetail = async (tirm) => {
     try {
         const response = await getCarTirm(tirm)
         if (response.data.success) {
             tirmDetail.value = response.data.data;
-            id = response.data.data.id;
+            id = response.data.data.id;//cartirm的id
+            LikeCheck();
             const responseSeries = await getCarSeries(response.data.data.series)
             if (responseSeries.data.success) {
                 seriesDetail.value = responseSeries.data.data;
@@ -233,6 +239,14 @@ const fetchCarSeriesPurpose = async (series) => {
     } catch (error) {
         console.error('获取数据失败:', error)
     }
+}
+async function addToUserFavorite() {
+    const response = await addToFavorite(userId, id);
+    LikeCheck();
+}
+async function deleteUserFavorite() {
+    const response = await deleteFavorite(userId, id);
+    LikeCheck();
 }
 function updataYearlySale(sales) {
     sales.forEach(sale => {
@@ -387,10 +401,19 @@ function goBack() {
     <div class="flex flex-col">
         <div class="card">
             <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-10">车系详情</span>
-            <Button label="收藏" class="layout-menu-button layout-topbar-action"
-                style="background-color: crimson; margin-right: 10px; border-color: crimson;"
-                @click="goBack()"></Button>
+            <!-- 根据 liked 的值显示不同的按钮 -->
+            <template v-if="liked">
+                <Button label="取消收藏" class="layout-menu-button layout-topbar-action"
+                    style="background-color: crimson; margin-right: 10px; border-color: crimson;"
+                    @click="deleteUserFavorite"></Button>
+            </template>
+            <template v-else>
+                <Button label="收藏" class="layout-menu-button layout-topbar-action"
+                    style="background-color: crimson; margin-right: 10px; border-color: crimson;"
+                    @click="addToUserFavorite"></Button>
+            </template>
             <Button label="返回" class="layout-menu-button layout-topbar-action" @click="goBack()"></Button>
+
         </div>
 
         <div class="card">
@@ -519,7 +542,8 @@ function goBack() {
                             <div class="md:w-1/2 p-2 flex flex-col items-center">
                                 <div class="font-bold" style="font-size: 20pt; margin-bottom: 10px;">购车目的</div>
                                 <Chart type="pie" :data="pieData" :options="pieOptions"
-                                    style="width: 320px; height: 320px;"></Chart>
+                                    style="width: 320px; height: 320px;">
+                                </Chart>
                             </div>
                         </div>
 

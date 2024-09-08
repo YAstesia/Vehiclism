@@ -15,6 +15,7 @@ const userId = ref('');
 const userName = ref('');
 const userPhone = ref('');
 const userEmail = ref('');
+const defaultImageUrl = 'https://www.sucaijishi.com/uploadfile/2017/0510/20170510104938756.gif';
 
 
 const carouselResponsiveOptions = ref([
@@ -225,9 +226,8 @@ function showError(message) {
             <div class="relative mx-auto">
               <!-- E:\vscode_my_code\Vehiclism\src\assets\R-C.jpg -->
               <meta name="referrer" content="no-referrer">
-              <img
-                :src="images[slotProps.data.id] || 'https://www.sucaijishi.com/uploadfile/2017/0510/20170510104938756.gif'"
-                :alt="slotProps.data.tirm" class="w-full rounded" />
+              <img :src="images[slotProps.data.id] || defaultImageUrl" :alt="slotProps.data.tirm"
+                class="w-full rounded" />
               <div class="dark:bg-surface-900 absolute rounded-border" style="left: 5px; top: 5px">
                 <Tag :value="slotProps.data.type" />
               </div>
