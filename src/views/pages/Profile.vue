@@ -4,7 +4,9 @@ import { editEmail, editName, editPhone } from '@/api';
 import { getProductImage, getProducts } from '@/api'; // 引入 api.js 中定义的函数
 import { useToast } from 'primevue/usetoast';
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const toast = useToast();
 const products = ref([]);
 const images = ref([]);
@@ -227,6 +229,10 @@ function showError(message) {
   toast.add({ severity: 'error', summary: '修改失败', detail: message, life: 5000 });
 }
 
+const navigateToCarTirmDetail = (item) => {
+  router.push(`/typedetail/${item.tirm}`);
+};
+
 </script>
 
 <template>
@@ -290,7 +296,7 @@ function showError(message) {
           <div class="flex justify-between items-center">
             <div class="mt-0 font-semibold text-xl">{{ slotProps.data.price }} 万元</div>
             <span>
-              <Button icon="pi pi-search" class="ml-2" />
+              <Button icon="pi pi-search" class="ml-2" @click="navigateToCarTirmDetail(slotProps.data)" />
             </span>
           </div>
         </div>
