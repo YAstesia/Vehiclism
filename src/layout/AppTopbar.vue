@@ -18,6 +18,7 @@ const handleLogout = () => {
     localStorage.removeItem('user_phone');
     localStorage.removeItem('user_email');
     localStorage.removeItem('searchQuery');
+    localStorage.removeItem('salesQuery');
 };
 
 

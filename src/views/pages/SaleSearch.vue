@@ -52,9 +52,10 @@ function formatCurrency(value) {
 import { SearchCarSeriesSale } from "@/api";
 import CustomPagination from '@/views/uikit/CustomePaginator.vue';
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 // 定义变量
-const searchQuery = ref('');
+const salesQuery = ref(localStorage.getItem('salesQuery') || '');
 const currentPage = ref(1);
 const pageSize = ref(10);
 const pages = ref(0);
@@ -99,15 +100,23 @@ function formatTime(year, month) {
 }
 
 function ClearFilter() {
-    searchQuery = ref('');
-    currentPage = 1;
+    salesQuery.value = '';
+    localStorage.removeItem('salesQuery');
+    currentPage.value = 1;
     search();
 }
+
+const router = useRouter();
+const navigateToCarSeriesDetail = (item) => {
+    router.push(`/cardetail/${item.series}`);
+};
 // 搜索函数
 const search = async () => {
     try {
+        currentPage.value = 1;
         isLoading.value = true;
-        const response = await SearchCarSeriesSale(currentPage.value, pageSize.value, searchQuery.value);
+        localStorage.setItem('salesQuery', salesQuery.value);
+        const response = await SearchCarSeriesSale(currentPage.value, pageSize.value, salesQuery.value);
         displayedData.value = response.data.data.records || [];
         totalRecords.value = response.data.data.total || 0;
         pages.value = Math.ceil(totalRecords.value / pageSize.value);
@@ -119,10 +128,27 @@ const search = async () => {
     }
 };
 
+const searchPage = async () => {
+    try {
+        isLoading.value = true;
+        localStorage.setItem('salesQuery', salesQuery.value);
+        const response = await SearchCarSeriesSale(currentPage.value, pageSize.value, salesQuery.value);
+        displayedData.value = response.data.data.records || [];
+        totalRecords.value = response.data.data.total || 0;
+        pages.value = Math.ceil(totalRecords.value / pageSize.value);
+        hasData.value = displayedData.value.length > 0;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    } finally {
+        isLoading.value = false;
+    }
+};
+
+
 // 分页改变时触发搜索
 const handlePageChange = (newPage) => {
     currentPage.value = newPage;
-    search();
+    searchPage();
 };
 
 // 初始化加载数据
@@ -138,7 +164,7 @@ onMounted(() => {
             <div class="flex flex-col md:flex-row gap-4">
                 <InputGroup>
                     <Button label="搜索" @click="search" />
-                    <InputText v-model="searchQuery" placeholder="Keyword" />
+                    <InputText v-model="salesQuery" placeholder="Keyword" />
                     <div v-if="isLoading" class="mt-4" style="margin-left: 20px">正在筛选，请等待……</div>
                 </InputGroup>
             </div>
@@ -172,7 +198,8 @@ onMounted(() => {
                 <tr v-for="item in displayedData" :key="item.id"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ item.brand }}</span></td>
-                    <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ item.series }}</span></td>
+                    <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;  text-decoration: underline;"
+                            @click="navigateToCarSeriesDetail(item)">{{ item.series }}</span></td>
                     <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{ item.type }}</span></td>
                     <td class="px-6 py-4"><span class="font-bold" style="font-size: 14px;">{{
                         formatCurrency(item.priceMin, item.priceMax) }}</span></td>
