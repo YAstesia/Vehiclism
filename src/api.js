@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://10.208.112.75:8081', //校园网10.208.112.75，oasis192.168.43.129
+  baseURL: 'http://192.168.43.131:8081', //校园网10.208.112.75，oasis192.168.43.129
   headers: {
     'Content-Type': 'application/json',
   },
@@ -222,4 +222,8 @@ export function deleteFavorite(id,tirmId){
 }
 export function checkLike(id,tirmId){
   return api.post('/user/checkLike',{id,tirmId});
+}
+
+export function sendSearchQuery(data) {
+  return api.post('carseries/getSeriesPurposeAnalysis', data);
 }

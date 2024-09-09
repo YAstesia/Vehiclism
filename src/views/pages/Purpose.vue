@@ -1,5 +1,5 @@
 <script setup>
-import { getSeriesPurpose } from '@/api';
+import { getSeriesPurpose, sendSearchQuery } from '@/api';
 import { useLayout } from '@/layout/composables/layout';
 import { onMounted, ref, watch } from 'vue';
 const { getPrimary, getSurface, isDarkTheme } = useLayout();
@@ -19,17 +19,6 @@ function setColorOptions() {
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-
-    // pieData.value = {
-    //     labels: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
-    //     datasets: [
-    //         {
-    //             data: [540, 325, 702, 114, 514, 1919, 810],
-    //             backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-red-500'), documentStyle.getPropertyValue('--p-blue-500'), documentStyle.getPropertyValue('--p-yellow-500'), documentStyle.getPropertyValue('--p-orange-500')],
-    //             hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400'), documentStyle.getPropertyValue('--p-red-400'), documentStyle.getPropertyValue('--p-blue-400'), documentStyle.getPropertyValue('--p-yellow-400'), documentStyle.getPropertyValue('--p-orange-400')],
-    //         }
-    //     ]
-    // };
 
     pieOptions.value = {
         plugins: {
@@ -58,24 +47,6 @@ function setColorOptions() {
             }
         },
     };
-
-    // barData.value = {
-    //     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    //     datasets: [
-    //         {
-    //             label: 'My First dataset',
-    //             backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
-    //             borderColor: documentStyle.getPropertyValue('--p-primary-500'),
-    //             data: [65, 59, 80, 81, 56, 55, 40]
-    //         },
-    //         {
-    //             label: 'My Second dataset',
-    //             backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
-    //             borderColor: documentStyle.getPropertyValue('--p-primary-200'),
-    //             data: [28, 48, 40, 19, 86, 27, 90]
-    //         }
-    //     ]
-    // };
     barOptions.value = {
         plugins: {
             legend: {
@@ -129,10 +100,20 @@ async function handleClick() {
     try {
         let purpose = [];
         if (searchQuery) {
-            purpose = await getSeriesPurpose(searchQuery);
-            purpose = purpose.data.data;
+            // 发送 searchQuery 到后端
+            const response = await sendSearchQuery({ series: searchQuery });
+            const dataPurpose = await getSeriesPurpose(searchQuery);
+            purpose = response.data.data; // 获取后端返回的数据
+
+            // 更新图表数据
+            updataChartData(dataPurpose.data.data);
+
+            // 更新 textarea 的内容
+            const textarea = document.querySelector('textarea');
+            if (textarea) {
+                textarea.value = purpose;
+            }
         }
-        updataChartData(purpose);
     } catch (error) {
         console.error("Error fetching data: ", error);
     } finally {
@@ -195,16 +176,21 @@ watch(
         </div>
         <div class="grid grid-cols-12 gap-8 mt-8">
             <div class="col-span-12 xl:col-span-6">
-                <div class="card">
+                <div class="card" style="height: 800px;">
                     <div class="font-semibold text-2xl mb-6 text-center">购车目的饼状图</div>
-                    <Chart type="pie" :data="pieData" :options="pieOptions" style="width: 80%; height: 500px;"></Chart>
+                    <Chart type="pie" :data="pieData" :options="pieOptions" style="width: 100%; height: 600px;"></Chart>
                 </div>
             </div>
             <div class="col-span-12 xl:col-span-6">
-                <div class="card flex flex-col">
+                <div class="card flex flex-col" style="height: 400px;">
                     <div class="font-semibold text-2xl mb-6">购车目的条形图</div>
                     <Chart type="bar" :data="barData" :options="barOptions"
                         style="width: 100%; height: 500px; margin-bottom: 0;"></Chart>
+                </div>
+                <div class="card flex flex-col" style="height: 375px;">
+                    <div class="font-semibold text-2xl mb-6">购车目的分析</div>
+                    <Textarea placeholder="目的分析" rows="3" cols="30"
+                        style="height: 300px; width: 600px; font-size: 10pt; resize: none;" readonly />
                 </div>
             </div>
         </div>

@@ -1,0 +1,124 @@
+Date : 2024-09-09 11:40:22
+Directory : e:\Vue\sakai-vue-master\src
+Total : 76 files,  11535 codes, 192 comments, 850 blanks, all 12577 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| vue        |         46 |      8,288 |        167 |        647 |      9,102 |
+| JavaScript |         11 |      2,603 |         23 |         92 |      2,718 |
+| SCSS       |         17 |        640 |          2 |        109 |        751 |
+| CSS        |          2 |          4 |          0 |          2 |          6 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                             | files      | code       | comment    | blank      | total      |
++------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                |         76 |     11,535 |        192 |        850 |     12,577 |
+| . (Files)                                                        |          3 |        229 |         18 |         33 |        280 |
+| assets                                                           |         19 |        644 |          2 |        111 |        757 |
+| assets (Files)                                                   |          2 |          6 |          1 |          3 |         10 |
+| assets\demo                                                      |          3 |         19 |          0 |          4 |         23 |
+| assets\demo (Files)                                              |          2 |         18 |          0 |          3 |         21 |
+| assets\demo\flags                                                |          1 |          1 |          0 |          1 |          2 |
+| assets\layout                                                    |         14 |        619 |          1 |        104 |        724 |
+| assets\layout (Files)                                            |         11 |        589 |          1 |        101 |        691 |
+| assets\layout\variables                                          |          3 |         30 |          0 |          3 |         33 |
+| components                                                       |          1 |         19 |          0 |          3 |         22 |
+| layout                                                           |          8 |        635 |          0 |         86 |        721 |
+| layout (Files)                                                   |          7 |        570 |          0 |         66 |        636 |
+| layout\composables                                               |          1 |         65 |          0 |         20 |         85 |
+| router                                                           |          1 |        194 |          5 |          6 |        205 |
+| service                                                          |          7 |      2,131 |          0 |         37 |      2,168 |
+| views                                                            |         37 |      7,683 |        167 |        574 |      8,424 |
+| views (Files)                                                    |          1 |        280 |          0 |         18 |        298 |
+| views\pages                                                      |         21 |      4,680 |        166 |        353 |      5,199 |
+| views\pages (Files)                                              |         17 |      4,443 |        166 |        320 |      4,929 |
+| views\pages\auth                                                 |          4 |        237 |          0 |         33 |        270 |
+| views\uikit                                                      |         15 |      2,723 |          1 |        203 |      2,927 |
++------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                         | language   | code       | comment    | blank      | total      |
++------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| e:\Vue\sakai-vue-master\src\App.vue                              | vue        |         16 |          0 |          4 |         20 |
+| e:\Vue\sakai-vue-master\src\api.js                               | JavaScript |        191 |         15 |         23 |        229 |
+| e:\Vue\sakai-vue-master\src\assets\demo\code.scss                | SCSS       |         16 |          0 |          2 |         18 |
+| e:\Vue\sakai-vue-master\src\assets\demo\demo.scss                | SCSS       |          2 |          0 |          1 |          3 |
+| e:\Vue\sakai-vue-master\src\assets\demo\flags\flags.css          | CSS        |          1 |          0 |          1 |          2 |
+| e:\Vue\sakai-vue-master\src\assets\layout\_core.scss             | SCSS       |         20 |          0 |          4 |         24 |
+| e:\Vue\sakai-vue-master\src\assets\layout\_footer.scss           | SCSS       |          8 |          0 |          1 |          9 |
+| e:\Vue\sakai-vue-master\src\assets\layout\_main.scss             | SCSS       |         12 |          0 |          2 |         14 |
+| e:\Vue\sakai-vue-master\src\assets\layout\_menu.scss             | SCSS       |        134 |          0 |         25 |        159 |
+| e:\Vue\sakai-vue-master\src\assets\layout\_mixins.scss           | SCSS       |         14 |          0 |          2 |         16 |
+| e:\Vue\sakai-vue-master\src\assets\layout\_preloading.scss       | SCSS       |         44 |          0 |          4 |         48 |
+| e:\Vue\sakai-vue-master\src\assets\layout\_responsive.scss       | SCSS       |         97 |          0 |         14 |        111 |
+| e:\Vue\sakai-vue-master\src\assets\layout\_topbar.scss           | SCSS       |        170 |          0 |         31 |        201 |
+| e:\Vue\sakai-vue-master\src\assets\layout\_typography.scss       | SCSS       |         56 |          0 |         13 |         69 |
+| e:\Vue\sakai-vue-master\src\assets\layout\_utils.scss            | SCSS       |         21 |          1 |          4 |         26 |
+| e:\Vue\sakai-vue-master\src\assets\layout\layout.scss            | SCSS       |         13 |          0 |          1 |         14 |
+| e:\Vue\sakai-vue-master\src\assets\layout\variables\_common.scss | SCSS       |         20 |          0 |          1 |         21 |
+| e:\Vue\sakai-vue-master\src\assets\layout\variables\_dark.scss   | SCSS       |          5 |          0 |          1 |          6 |
+| e:\Vue\sakai-vue-master\src\assets\layout\variables\_light.scss  | SCSS       |          5 |          0 |          1 |          6 |
+| e:\Vue\sakai-vue-master\src\assets\styles.scss                   | SCSS       |          3 |          1 |          2 |          6 |
+| e:\Vue\sakai-vue-master\src\assets\tailwind.css                  | CSS        |          3 |          0 |          1 |          4 |
+| e:\Vue\sakai-vue-master\src\components\FloatingConfigurator.vue  | vue        |         19 |          0 |          3 |         22 |
+| e:\Vue\sakai-vue-master\src\layout\AppConfigurator.vue           | vue        |        231 |          0 |         15 |        246 |
+| e:\Vue\sakai-vue-master\src\layout\AppFooter.vue                 | vue        |          9 |          0 |          2 |         11 |
+| e:\Vue\sakai-vue-master\src\layout\AppLayout.vue                 | vue        |         60 |          0 |         10 |         70 |
+| e:\Vue\sakai-vue-master\src\layout\AppMenu.vue                   | vue        |         63 |          0 |          5 |         68 |
+| e:\Vue\sakai-vue-master\src\layout\AppMenuItem.vue               | vue        |         76 |          0 |         17 |         93 |
+| e:\Vue\sakai-vue-master\src\layout\AppSidebar.vue                | vue        |          9 |          0 |          3 |         12 |
+| e:\Vue\sakai-vue-master\src\layout\AppTopbar.vue                 | vue        |        122 |          0 |         14 |        136 |
+| e:\Vue\sakai-vue-master\src\layout\composables\layout.js         | JavaScript |         65 |          0 |         20 |         85 |
+| e:\Vue\sakai-vue-master\src\main.js                              | JavaScript |         22 |          3 |          6 |         31 |
+| e:\Vue\sakai-vue-master\src\router\index.js                      | JavaScript |        194 |          5 |          6 |        205 |
+| e:\Vue\sakai-vue-master\src\service\CountryService.js            | JavaScript |        251 |          0 |          2 |        253 |
+| e:\Vue\sakai-vue-master\src\service\CustomerService.js           | JavaScript |         29 |          0 |          8 |         37 |
+| e:\Vue\sakai-vue-master\src\service\DashboardService.js          | JavaScript |         81 |          0 |          6 |         87 |
+| e:\Vue\sakai-vue-master\src\service\NodeService.js               | JavaScript |        428 |          0 |          4 |        432 |
+| e:\Vue\sakai-vue-master\src\service\PhotoService.js              | JavaScript |         99 |          0 |          2 |        101 |
+| e:\Vue\sakai-vue-master\src\service\ProductService.js            | JavaScript |      1,214 |          0 |          7 |      1,221 |
+| e:\Vue\sakai-vue-master\src\service\SalesService.js              | JavaScript |         29 |          0 |          8 |         37 |
+| e:\Vue\sakai-vue-master\src\views\Dashboard.vue                  | vue        |        280 |          0 |         18 |        298 |
+| e:\Vue\sakai-vue-master\src\views\pages\CarCompare.vue           | vue        |        319 |          0 |         17 |        336 |
+| e:\Vue\sakai-vue-master\src\views\pages\CarSearch.vue            | vue        |        193 |         93 |          8 |        294 |
+| e:\Vue\sakai-vue-master\src\views\pages\CarSeriesDetail.vue      | vue        |        537 |          3 |         29 |        569 |
+| e:\Vue\sakai-vue-master\src\views\pages\CarTrimDetail.vue        | vue        |        631 |          4 |         26 |        661 |
+| e:\Vue\sakai-vue-master\src\views\pages\Crud.vue                 | vue        |        259 |          0 |         32 |        291 |
+| e:\Vue\sakai-vue-master\src\views\pages\Documentation.vue        | vue        |         59 |          0 |         10 |         69 |
+| e:\Vue\sakai-vue-master\src\views\pages\Empty.vue                | vue        |          6 |          0 |          1 |          7 |
+| e:\Vue\sakai-vue-master\src\views\pages\HotSales.vue             | vue        |        211 |          0 |         16 |        227 |
+| e:\Vue\sakai-vue-master\src\views\pages\Landing.vue              | vue        |        235 |          1 |         20 |        256 |
+| e:\Vue\sakai-vue-master\src\views\pages\NotFound.vue             | vue        |         62 |          0 |          2 |         64 |
+| e:\Vue\sakai-vue-master\src\views\pages\PriceCompare.vue         | vue        |        255 |          0 |         15 |        270 |
+| e:\Vue\sakai-vue-master\src\views\pages\PriceSearch.vue          | vue        |        205 |          0 |         17 |        222 |
+| e:\Vue\sakai-vue-master\src\views\pages\Profile.vue              | vue        |        285 |          1 |         21 |        307 |
+| e:\Vue\sakai-vue-master\src\views\pages\Purpose.vue              | vue        |        223 |          0 |         18 |        241 |
+| e:\Vue\sakai-vue-master\src\views\pages\SaleSearch.vue           | vue        |        156 |         61 |         13 |        230 |
+| e:\Vue\sakai-vue-master\src\views\pages\SalesAnalysis.vue        | vue        |        447 |          3 |         44 |        494 |
+| e:\Vue\sakai-vue-master\src\views\pages\SalesTrend.vue           | vue        |        360 |          0 |         31 |        391 |
+| e:\Vue\sakai-vue-master\src\views\pages\auth\Access.vue          | vue        |         25 |          0 |          2 |         27 |
+| e:\Vue\sakai-vue-master\src\views\pages\auth\Error.vue           | vue        |         25 |          0 |          2 |         27 |
+| e:\Vue\sakai-vue-master\src\views\pages\auth\Login.vue           | vue        |         92 |          0 |         14 |        106 |
+| e:\Vue\sakai-vue-master\src\views\pages\auth\Register.vue        | vue        |         95 |          0 |         15 |        110 |
+| e:\Vue\sakai-vue-master\src\views\uikit\ButtonDoc.vue            | vue        |        194 |          0 |          5 |        199 |
+| e:\Vue\sakai-vue-master\src\views\uikit\ChartDoc.vue             | vue        |        255 |          0 |         15 |        270 |
+| e:\Vue\sakai-vue-master\src\views\uikit\CustomePaginator.vue     | vue        |        103 |          1 |         12 |        116 |
+| e:\Vue\sakai-vue-master\src\views\uikit\FileDoc.vue              | vue        |         32 |          0 |          5 |         37 |
+| e:\Vue\sakai-vue-master\src\views\uikit\FormLayout.vue           | vue        |        113 |          0 |          9 |        122 |
+| e:\Vue\sakai-vue-master\src\views\uikit\InputDoc.vue             | vue        |        225 |          0 |         24 |        249 |
+| e:\Vue\sakai-vue-master\src\views\uikit\ListDoc.vue              | vue        |        152 |          0 |         12 |        164 |
+| e:\Vue\sakai-vue-master\src\views\uikit\MenuDoc.vue              | vue        |        503 |          0 |         12 |        515 |
+| e:\Vue\sakai-vue-master\src\views\uikit\MessagesDoc.vue          | vue        |         60 |          0 |          9 |         69 |
+| e:\Vue\sakai-vue-master\src\views\uikit\MiscDoc.vue              | vue        |        177 |          0 |         21 |        198 |
+| e:\Vue\sakai-vue-master\src\views\uikit\OverlayDoc.vue           | vue        |        167 |          0 |         21 |        188 |
+| e:\Vue\sakai-vue-master\src\views\uikit\PanelsDoc.vue            | vue        |        206 |          0 |         11 |        217 |
+| e:\Vue\sakai-vue-master\src\views\uikit\TableDoc.vue             | vue        |        360 |          0 |         32 |        392 |
+| e:\Vue\sakai-vue-master\src\views\uikit\TimelineDoc.vue          | vue        |        150 |          0 |         10 |        160 |
+| e:\Vue\sakai-vue-master\src\views\uikit\TreeDoc.vue              | vue        |         26 |          0 |          5 |         31 |
+| Total                                                            |            |     11,535 |        192 |        850 |     12,577 |
++------------------------------------------------------------------+------------+------------+------------+------------+------------+
