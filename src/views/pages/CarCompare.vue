@@ -284,7 +284,8 @@ watch(
         <div class="col-span-12 xl:col-span-6">
             <div class="card flex flex-col justify-center items-center" style="height: 500px;">
                 <div class="font-semibold text-xl mb-4">条形图</div>
-                <Chart type="bar" :data="barData" :options="barOptions" style="margin-top: 50px;"></Chart>
+                <Chart type="bar" :data="barData" :options="barOptions" style="margin-top: 50px;">
+                </Chart>
             </div>
         </div>
     </div>

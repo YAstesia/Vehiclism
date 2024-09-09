@@ -1,7 +1,9 @@
 <script setup>
+import { chatAll, chatProvince } from '@/api';
 import { useLayout } from '@/layout/composables/layout';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { useToast } from 'primevue/usetoast';
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AppConfigurator from './AppConfigurator.vue';
 
@@ -25,6 +27,58 @@ const handleLogout = () => {
 function showSuccess() {
     toast.add({ severity: 'success', summary: '欢迎来到Vehiclism汽车主义大数据平台！', detail: '我们希望这个平台能满足您的所有需求。\n 如果有任何问题请致电：17321612271', life: 5000 });
 }
+
+// 定义响应式变量
+const showWindow = ref(false);
+const activeButton = ref('A');
+let inputValue;
+const dropdownValue = ref(null);
+let smallInputValue;
+const responseData = ref('');
+const dropdownOptions = ref([
+    { name: '江苏省', code: '江苏省' },
+    { name: '广东省', code: '广东省' },
+]);
+const popupStyle = ref({});  // 用于动态调整窗口位置
+const button = ref(null);    // 引用按钮元素
+
+// 切换窗口显示状态
+const toggleWindow = async () => {
+    showWindow.value = !showWindow.value;
+
+    // 弹窗显示时，动态调整弹窗位置
+    if (showWindow.value) {
+        await nextTick(); // 等待 DOM 更新
+        const buttonRect = button.value.getBoundingClientRect();
+        popupStyle.value = {
+            position: 'absolute',
+            top: `${buttonRect.bottom}px`,  // 按钮下方
+            right: `0px`,
+            zIndex: 9999,                   // 保证在页面顶层
+        };
+    }
+};
+
+// 切换按钮状态
+const setActiveButton = (button) => {
+    activeButton.value = button;
+};
+
+// 发送数据到后端
+const sendData = async () => {
+    if (activeButton.value === 'A' || activeButton.value === 'C') {
+        const response = await chatAll({ prompt: inputValue });
+        responseData.value = response.data.data;
+    } else if (activeButton.value === 'B') {
+        const response = await chatProvince({ region: dropdownValue.value.name, saleGroup: smallInputValue });
+        responseData.value = response.data.data;
+    }
+};
+
+// 清空对话框内容
+const clearResponse = () => {
+    responseData.value = '';
+};
 
 </script>
 
@@ -58,6 +112,45 @@ function showSuccess() {
 
         <div class="layout-topbar-actions">
             <div class="layout-config-menu">
+                <button type="button" class="layout-topbar-action" @click="toggleWindow">
+                    <font-awesome-icon icon="fa-solid fa-robot" />
+                </button>
+                <!-- 弹出窗口 -->
+                <div v-if="showWindow" class="popup-window">
+                    <div class="font-semibold text-xl mb-2 text-center">Vehiclism小助手</div>
+                    <!-- textarea 展示后端数据 -->
+                    <Textarea v-model="responseData" placeholder=" " style="height: 600px; width: 100%; resize: none;"
+                        readonly />
+
+                    <!-- A, B, C 切换按钮 -->
+                    <div class="button-group">
+                        <Button type="button" class="mr-2 mb-2" :disabled="activeButton === 'A'"
+                            @click="setActiveButton('A')" label="A" />
+                        <Button type="button" class="mr-2 mb-2" :disabled="activeButton === 'B'"
+                            @click="setActiveButton('B')" label="B" />
+                        <Button type="button" class="mr-2 mb-2" :disabled="activeButton === 'C'"
+                            @click="setActiveButton('C')" label="C" />
+                    </div>
+
+                    <!-- A 或 C 激活时显示 -->
+                    <div v-if="activeButton === 'A' || activeButton === 'C'">
+                        <InputText type="text" v-model="inputValue" placeholder="输入内容" style="width: 100%;" />
+                    </div>
+
+                    <!-- B 激活时显示 -->
+                    <div v-if="activeButton === 'B'">
+                        <Select v-model="dropdownValue" style="width: 30%;" :options="dropdownOptions"
+                            optionLabel="name" placeholder="Select">
+                        </select>
+                        <InputText type="text" v-model="smallInputValue" placeholder="输入内容" style="width: 70%;" />
+                    </div>
+
+                    <!-- 发送和清空按钮 -->
+                    <div class="action-buttons">
+                        <Button @click="sendData">发送</button>
+                        <Button @click="clearResponse">清空对话</button>
+                    </div>
+                </div>
                 <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
                     <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
                 </button>
@@ -132,5 +225,24 @@ function showSuccess() {
 .art-text:hover {
     transform: scale(1.1);
     /* 鼠标悬停放大 */
+}
+
+.popup-window {
+    position: absolute;
+    top: 60px;
+    background: white;
+    border: 1px solid #000000;
+    padding: 20px;
+    right: 10px;
+    width: 400px;
+    height: 800px;
+}
+
+.button-group button {
+    margin-right: 10px;
+}
+
+.action-buttons {
+    margin-top: 10px;
 }
 </style>

@@ -227,3 +227,11 @@ export function checkLike(id,tirmId){
 export function sendSearchQuery(data) {
   return api.post('carseries/getSeriesPurposeAnalysis', data);
 }
+
+export function chatAll(data) {
+  return api.post('chat/chatWithGpt', data);
+}
+
+export function chatProvince(region, saleGroup) {
+  return api.post('chat/salesStrategy-region', region, saleGroup);
+}
