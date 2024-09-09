@@ -52,7 +52,7 @@ function showSuccess() {
                     </g>
                 </svg>
 
-                <em>Vehiclism汽车主义</em>
+                <em class="art-text">Vehiclism汽车主义</em>
             </div>
         </div>
 
@@ -108,5 +108,29 @@ function showSuccess() {
     font-size: 12px;
     z-index: 10;
     pointer-events: none;
+}
+</style>
+<style scoped>
+.art-text {
+    display: inline-block;
+    font-family: 'Arial Unicode MS', sans-serif;
+    /* 或者使用其他艺术字体 */
+    font-size: 1.0em;
+    /* 放大字体*/
+    color: var(--p-primary-500);
+    /* 字体颜色 */
+    /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); */
+    /* 添加阴影 */
+    font-weight: bold;
+    /* 加粗字体 */
+    letter-spacing: 1px;
+    /* 字母间距 */
+    transition: transform 0.3s ease-in-out;
+    /* 过渡动画 */
+}
+
+.art-text:hover {
+    transform: scale(1.1);
+    /* 鼠标悬停放大 */
 }
 </style>

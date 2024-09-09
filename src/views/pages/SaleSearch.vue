@@ -56,7 +56,7 @@ import { useRouter } from 'vue-router';
 
 // 定义变量
 const salesQuery = ref(localStorage.getItem('salesQuery') || '');
-const currentPage = ref(1);
+const currentPage = ref(parseInt(localStorage.getItem('currentPage')) || 1);
 const pageSize = ref(10);
 const pages = ref(0);
 const totalRecords = ref(0);
@@ -116,6 +116,7 @@ const search = async () => {
         currentPage.value = 1;
         isLoading.value = true;
         localStorage.setItem('salesQuery', salesQuery.value);
+        localStorage.setItem('currentPage', currentPage.value);
         const response = await SearchCarSeriesSale(currentPage.value, pageSize.value, salesQuery.value);
         displayedData.value = response.data.data.records || [];
         totalRecords.value = response.data.data.total || 0;
@@ -132,6 +133,7 @@ const searchPage = async () => {
     try {
         isLoading.value = true;
         localStorage.setItem('salesQuery', salesQuery.value);
+        localStorage.setItem('currentPage', currentPage.value);
         const response = await SearchCarSeriesSale(currentPage.value, pageSize.value, salesQuery.value);
         displayedData.value = response.data.data.records || [];
         totalRecords.value = response.data.data.total || 0;
@@ -153,7 +155,7 @@ const handlePageChange = (newPage) => {
 
 // 初始化加载数据
 onMounted(() => {
-    search();
+    searchPage();
 });
 </script>
 <template>
