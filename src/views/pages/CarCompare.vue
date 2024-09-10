@@ -19,6 +19,7 @@ const selectedAutoValue = ref(null);
 const autoFilteredValue = ref([]);
 const autoValue = ref(null);
 const tirmDetail = ref([{ brand: '', series: '', tirm: '', energyType: '', type: '', price: '' }]);
+let selectedCars = [];
 
 onMounted(() => {
     setColorOptions();
@@ -386,19 +387,6 @@ watch(
 <template>
     <div class="card">
         <div class="font-semibold text-xl" style="margin-bottom: 30px;">详情比较</div>
-        <div class="flex flex-wrap gap-4">
-            <div class="flex flex-col grow basis-0 gap-2">
-                <label for="name2">选择车型</label>
-                <div class="flex grow basis-0 gap-2 flex-row">
-
-                    <AutoComplete class="w-3/4" v-model="selectedAutoValue" :suggestions="autoFilteredValue"
-                        optionLabel="name" placeholder="选择需要进行比较的车型" dropdown multiple display="chip"
-                        @complete="searchCarTirms($event)" />
-                    <Button type="button" class="mr-2 mb-2 w-1/12" label="比较" icon="pi pi-search" iconPos="right"
-                        style="margin-left: 25px;" @click="handleClick()" />
-                </div>
-            </div>
-        </div>
     </div>
     <div class="grid grid-cols-12 gap-8 mt-8">
         <div class="col-span-12 xl:col-span-6">
