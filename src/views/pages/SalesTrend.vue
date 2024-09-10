@@ -19,8 +19,8 @@ const columns = [
     { field: 'sales', header: '总销量(辆)' }
 ];
 let dropdownValues = ref([
-    { name: '近十年', code: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024] },
-    { name: '近五年', code: [2020, 2021, 2022, 2023, 2024] },
+    { name: '近十年', code: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025] },
+    { name: '近五年', code: [2020, 2021, 2022, 2023, 2024, 2025] },
     { name: '2015年', code: [2015] },
     { name: '2016年', code: [2016] },
     { name: '2017年', code: [2017] },
@@ -31,15 +31,17 @@ let dropdownValues = ref([
     { name: '2022年', code: [2022] },
     { name: '2023年', code: [2023] },
     { name: '2024年', code: [2024] },
+    { name: '2025年（预测）', code: [2025] },
 ]);
 let titleMonth = "近十年汽车月销量统计";
 let dropdownValue = ref(null);
 
 onMounted(async () => {
     const salesData = await fetchSalesData();
-    Sales.value = salesData;
+    Sales.value = JSON.parse(JSON.stringify(salesData)); // 深拷贝，避免修改原始数据
+    Sales.value[10].year = "2025（预测）"; // 修改Sales副本中的2025年
     combinedData.value = {
-        labels: salesData.map(item => item.year), // 从数据中提取年份
+        labels: salesData.map(item => item.year === 2025 ? [`${item.year}`, '（预测）'] : item.year), // 为2025年标签添加换行
         datasets: [
             {
                 type: 'line', // 折线图类型
@@ -114,7 +116,7 @@ async function showAllChartData(years) {
 
             // 构建数据集
             const dataset = {
-                label: `${year}年销售量`,
+                label: year === 2025 ? '2025（预测）' : `${year}年销售量`, // 修改2025的label
                 data: uniqueLabels.map(label => {
                     const month = parseInt(label.replace('月', ''), 10);
                     const saleItem = salesDataForYear.find(item => item.month === month);
@@ -123,7 +125,8 @@ async function showAllChartData(years) {
                 fill: false,
                 backgroundColor: color,
                 borderColor: color,
-                tension: 0.4
+                tension: 0.4,
+                borderDash: year === 2025 ? [5, 5] : [] // 为2025年添加虚线
             };
 
             // 添加到 datasets
@@ -143,7 +146,7 @@ async function showAllChartData(years) {
 
             // 构建数据集
             const dataset = {
-                label: `${year}年销售量`,
+                label: year === 2025 ? '2025（预测）' : `${year}年销售量`, // 修改2025的label
                 backgroundColor: color,
                 borderColor: color,
                 data: uniqueLabels.map(label => {
