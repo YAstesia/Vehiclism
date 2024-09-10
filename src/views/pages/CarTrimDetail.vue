@@ -643,8 +643,7 @@ function goBack() {
                                     <td class="px-6"><span style="font-size: 10pt; ">{{
                                         item.configType
                                             }}</span></td>
-                                    <td class="px-6" @click="navigateToCarSeriesDetail(item)"><span
-                                            style="font-size: 10pt;">
+                                    <td class="px-6"><span style="font-size: 10pt;">
                                             {{ item.configName
                                             }}</span></td>
                                     <td><span style="font-size: 10pt; ">

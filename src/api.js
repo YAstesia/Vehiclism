@@ -231,3 +231,11 @@ export function sendSearchQuery(data) {
 export function getAllCarTirms(){
   return api.get('/cartirm/tirmNames');
 }
+
+export function chatAll(data) {
+  return api.post('chat/chatWithGpt', data);
+}
+
+export function chatProvince(region, saleGroup) {
+  return api.post('chat/salesStrategy-region', region, saleGroup);
+}
