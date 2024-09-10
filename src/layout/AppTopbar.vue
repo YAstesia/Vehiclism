@@ -22,6 +22,11 @@ const handleLogout = () => {
     localStorage.removeItem('searchQuery');
     localStorage.removeItem('salesQuery');
     localStorage.removeItem('currentPage');
+    localStorage.removeItem('trim1');
+    localStorage.removeItem('trim2');
+    localStorage.removeItem('trim3');
+    localStorage.removeItem('trim4');
+    localStorage.removeItem('trim5');
 };
 
 

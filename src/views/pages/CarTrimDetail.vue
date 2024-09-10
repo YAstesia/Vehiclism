@@ -33,6 +33,7 @@ let userId = localStorage.getItem('user_id');
 let YearlySale = null;
 let imgsrc = ref(null);
 const liked = ref(null);
+const compared = ref(null);
 // 状态严重性映射
 const statuses = ["汽油",
     "纯电动",
@@ -101,7 +102,6 @@ function formatCurrency(value) {
 onBeforeMount(() => {
     setColorOptions();
     fetchCarTirmDetail(route.params.tirm);
-    // fetchCarSeriesPurpose(route.params.series);
 });
 
 watch(() => route.params.tirm, (newTirm) => {
@@ -127,6 +127,7 @@ const fetchCarTirmDetail = async (tirm) => {
             tirmDetail.value = response.data.data;
             id = response.data.data.id;//cartirm的id
             LikeCheck();
+            compareCheck();
             const responseSeries = await getCarSeries(response.data.data.series)
             if (responseSeries.data.success) {
                 seriesDetail.value = responseSeries.data.data;
@@ -248,6 +249,46 @@ async function deleteUserFavorite() {
     const response = await deleteFavorite(userId, id);
     LikeCheck();
 }
+
+async function compareCheck() {
+    compared.value = false;
+    for (let i = 1; i <= 5; i++) {
+        let trimKey = `trim${i}`;
+        let storedValue = localStorage.getItem(trimKey);
+
+        if (storedValue === tirmDetail.value.tirm) {  // 如果找到相同的值
+            compared.value = true;
+            return;
+        }
+    }
+    console.log(compared.value);
+}
+
+function addCompare() {
+    for (let i = 1; i <= 5; i++) {
+        let trimKey = `trim${i}`;
+        let storedValue = localStorage.getItem(trimKey);
+
+        if (!storedValue && !compared.value) {  // 检查localStorage的值是否为空
+            localStorage.setItem(trimKey, tirmDetail.value.tirm);  // 将tirmDetail.trim的值赋给该localStorage
+            compared.value = true;
+        }
+    }
+}
+
+function deleteCompare() {
+    console.log(tirmDetail.value.tirm);
+    for (let i = 1; i <= 5; i++) {
+        let trimKey = `trim${i}`;
+        let storedValue = localStorage.getItem(trimKey);
+
+        if (storedValue === tirmDetail.value.tirm) {  // 如果找到相同的值
+            localStorage.setItem(trimKey, '');  // 清空该localStorage
+            compared.value = false;
+        }
+    }
+}
+
 function updataYearlySale(sales) {
     sales.forEach(sale => {
         YearlySale += sale.totalSale;
@@ -418,6 +459,17 @@ function goBack() {
                 <Button label="收藏" class="layout-menu-button layout-topbar-action"
                     style="background-color: crimson; margin-right: 10px; border-color: crimson;"
                     @click="addToUserFavorite"></Button>
+            </template>
+
+            <template v-if="compared">
+                <Button label="取消对比" class="layout-menu-button layout-topbar-action"
+                    style="background-color: dodgerblue; margin-right: 10px; border-color: dodgerblue;"
+                    @click="deleteCompare()"></Button>
+            </template>
+            <template v-else>
+                <Button label="加入对比" class="layout-menu-button layout-topbar-action"
+                    style="background-color:dodgerblue; margin-right: 10px; border-color: dodgerblue;"
+                    @click="addCompare()"></Button>
             </template>
             <Button label="返回" class="layout-menu-button layout-topbar-action" @click="goBack()"></Button>
 
