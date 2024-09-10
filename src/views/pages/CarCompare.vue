@@ -1,8 +1,8 @@
-<script setup>
+<script setup>//!!!
 import { useLayout } from '@/layout/composables/layout';
 // import { CountryService } from '@/service/CountryService';
-import { getAllCarTirms, getCarEvl, getCarSales, getCarSeries, getCarTirm, getCarTirmConfig } from '@/api';
-import { computed, onMounted, ref, watch } from 'vue';
+import { getCarEvl, getCarSales, getCarSeries, getCarTirm } from '@/api';
+import { onMounted, ref, watch } from 'vue';
 
 const { getPrimary, getSurface, isDarkTheme } = useLayout();
 const pieData = ref(null);
@@ -14,90 +14,200 @@ const radarOptions = ref(null);
 const lineData = ref(null);
 const lineOptions = ref(null);
 const polarData = ref(null);
+const polarData1 = ref(null);
+
 const polarOptions = ref(null);
-const selectedAutoValue = ref(null);
-const autoFilteredValue = ref([]);
-const autoValue = ref(null);
-const tirmDetail = ref([{ brand: '', series: '', tirm: '', energyType: '', type: '', price: '' }]);
-let selectedCars = [];
+var tirmDetail = new Array();
+// const tirmDetail = ref([]);
+let TirmNames = ref([]);
+let YearlySales = [];
+let TirmSales = [];
 
 onMounted(() => {
     setColorOptions();
-    fetchAllCarTirms();
-    // CountryService.getCountries().then((data) => (autoValue.value = data));
-});
+    // fetchAllCarTirms();
+    // 从 localStorage 中获取存储的车型名称
+    const tirmKeys = ['trim1', 'trim2', 'trim3', 'trim4', 'trim5'];
+    tirmKeys.forEach(key => {
+        const tirmName = localStorage.getItem(key);
+        if (tirmName && tirmName.trim() !== '') {
+            TirmNames.value.push(tirmName);
+        }
+    });
+    showAllChartData();
+    // console.log(TirmNames.value);
 
-async function fetchAllCarTirms() {
-    let response = await getAllCarTirms();
-    autoValue.value = response.data.data.map(item => {
-        // 我们可以简化 `code` 为车型名称的前几个字符，例如取前三个字符
-        // const code = item.substring(0, 3);
-        return {
-            name: item
-            // code: item
-        };
-    });
+});
+async function showAllChartData() {
+    // 创建一个包含所有 fetchCarTirmDetail 调用的 Promise 数组
+    const promises = TirmNames.value.map(tirm => fetchCarTirmDetail(tirm));
+
+    // 使用 Promise.all 等待所有请求完成
+    await Promise.all(promises);
+    console.log(tirmDetail);
+    updatePolarData(tirmDetail);
+    updatePolarData1(YearlySales);
+    updateLineData(TirmSales);
+    updateBarData();
 }
-const handleClick = () => {
-    selectedAutoValue.value.forEach(async (tirm) => {
-        await fetchCarTirmDetail(tirm);
-    });
-    updataChartData(tirmDetail);
-};
+function updateBarData() {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const colors = [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-orange-500'), documentStyle.getPropertyValue('--p-red-500')];
+    barData.value = {
+        labels: ["综合评分", "空间评分", "驾驶感受", "能耗评分", "外观评分", "内饰评分", "性价比", "配置评分"],
+        datasets: []
+    }
+    console.log(tirmDetail.length);
+    for (let i = 0; i < tirmDetail.length; ++i) {
+        const color = colors[i];
+        if (tirmDetail[i].evls != null) {
+            const dataset = {
+                label: tirmDetail[i].tirm,
+                data: tirmDetail[i].evls,
+                fill: false,
+                backgroundColor: color,
+                borderColor: color,
+                tension: 0.4
+            }
+            barData.value.datasets.push(dataset);
+        }
+    }
+}
+// function updateLineData() {
+//     lineData = formatLineData();
+// }
+function updateLineData(data) {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const colors = [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-orange-500'), documentStyle.getPropertyValue('--p-red-500')];
+    lineData.value = {
+        labels: ["1月", "2月", "3月", "4月", "5月", "6月", "7月"],
+        datasets: []
+    }
+    for (let i = 0; i < tirmDetail.length; ++i) {
+        const color = colors[i];
+        if (tirmDetail[i].tirmSales != null) {
+            const dataset = {
+                label: tirmDetail[i].tirm,
+                data: tirmDetail[i].tirmSales.map(item => item.totalSale),
+                fill: false,
+                backgroundColor: color,
+                borderColor: color,
+                tension: 0.4
+            }
+            lineData.value.datasets.push(dataset);
+        }
+    }
+}
 const fetchCarTirmDetail = async (tirm) => {
     try {
         const response = await getCarTirm(tirm);
         if (response.data.success) {
-            tirmDetail.value.push({
-                brand: response.data.data.brand,
-                series: response.data.data.series,
-                tirm: response.data.data.tirm,
-                energyType: response.data.data.energyType,
-                type: response.data.data.type,
-                price: response.data.data.price
-            });
+            let tirmInfo = response.data.data;
+            // 将车型详细信息添加到 tirmDetail 数组中
+            // tirmDetail.push(response.data.data);
+            // console.log(tirmDetail);
             const id = response.data.data.id; // cartirm的id
-            // LikeCheck();
+            // 获取 CarSeries 信息
             const responseSeries = await getCarSeries(response.data.data.series);
             if (responseSeries.data.success) {
                 const seriesDetail = responseSeries.data.data;
                 const seriesId = seriesDetail.id;
-                fetchCarEvaluation(seriesId);
-                fetchCarSales(seriesId, 2024);
-                fetchCarTirms(seriesId);
-                fetchCarSeriesPurpose(seriesDetail.purpose);
+                const responseCarSales = await getCarSales(seriesId, 2024)
+                let sales = [];
+                let YearlySale = 0;
+                if (responseCarSales.data.success) {
+                    sales = responseCarSales.data.data;
+                    sales.forEach(sale => {
+                        YearlySale += sale.totalSale;
+                    });
+                    tirmInfo.yearSale = YearlySale;
+                    tirmInfo.tirmSales = sales;
+                    // TirmSales.push(sales);
+                    // console.log(TirmSales);
+                    // YearlySales.push({ sale: YearlySale });
+                    // 获取评价和销售数据
+                    // await fetchCarEvaluation(seriesId);
+                    // await fetchCarSales(seriesId, 2024);
+                } else {
+                    console.error('查询失败:', responseSeries.data.msg);
+                }
+                const responseEvl = await getCarEvl(id)
+                if (responseEvl.data.success) {
+                    const evalData = responseEvl.data.data
+                    // 使用从后端获取的数据替换 detail 数组的数值
+                    let detail = [
+                        evalData.overallRating,
+                        evalData.space,
+                        evalData.driveFeel,
+                        evalData.powerConsum,
+                        evalData.outDecor,
+                        evalData.inDecor,
+                        evalData.qpRatio,
+                        evalData.configure
+                    ]
+                    tirmInfo.evls = detail;
+                } else {
+                    console.error('查询失败:', response.data.msg)
+                }
+                console.log(tirmDetail);
+                tirmDetail.push(tirmInfo);
             } else {
-                console.error('查询失败:', responseSeries.data.msg);
+                console.error('查询失败:', response.data.msg);
             }
-            fetchCarTirmImage(id);
-            fetchCarTirmConfig(id);
-        } else {
-            console.error('查询失败:', response.data.msg);
         }
     } catch (error) {
         console.error('获取数据失败:', error);
     }
 };
-const fetchCarTirmConfig = async (id) => {
-    try {
-        const response = await getCarTirmConfig(id)
-        if (response.data.success) {
-            configData.value.push(response.data.data);
-        } else {
-            console.error('查询失败:', response.data.msg)
-        }
-    } catch (error) {
-        console.error('获取数据失败:', error)
-    }
+function updatePolarData(detail) {
+    polarData.value = formatPolarData(detail);
+}
+function formatPolarData(data) {
+    // const sortedData = data.sort((a, b) => b.price - a.price);
+    const documentStyle = getComputedStyle(document.documentElement);
+    return {
+        labels: data.map(item => item.tirm),
+        datasets: [
+            {
+                data: data.map(item => item.price),
+                backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-orange-500'), documentStyle.getPropertyValue('--p-red-500')],
+                // label: '车型价格'
+            }
+        ]
+    };
+}
+function updatePolarData1(yearlySale) {
+    polarData1.value = formatPolarData1(yearlySale);
+}
+function formatPolarData1(data) {
+    // const sortedData = data.sort((a, b) => b.price - a.price);
+    // console.log(data);
+    const documentStyle = getComputedStyle(document.documentElement);
+    return {
+        labels: tirmDetail.map(item => item.tirm),
+        datasets: [
+            {
+                data: tirmDetail.map(item => item.yearSale),
+                backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-orange-500'), documentStyle.getPropertyValue('--p-red-500')],
+                // label: '车型价格'
+            }
+        ]
+    };
 }
 const fetchCarSales = async (id, year) => {
     try {
         const response = await getCarSales(id, year)
         let sales = [];
+        let YearlySale = 0;
         if (response.data.success) {
             sales = response.data.data;
-            updataLineData(sales);
-            updataYearlySale(sales);
+            sales.forEach(sale => {
+                YearlySale += sale.totalSale;
+            });
+            TirmSales.push(sales);
+            console.log(TirmSales);
+            YearlySales.push({ sale: YearlySale });
+            // console.log(YearlySales);
         }
         else {
             console.error('查询失败:', response.data.msg)
@@ -122,7 +232,6 @@ const fetchCarEvaluation = async (id) => {
                 evalData.qpRatio,
                 evalData.configure
             ]
-            updataRadarData(detail);
         } else {
             console.error('查询失败:', response.data.msg)
         }
@@ -130,41 +239,6 @@ const fetchCarEvaluation = async (id) => {
         console.error('获取数据失败:', error)
     }
 }
-const data = ref([213, 414, 4241, 24124, 42531, 12312, 154251, 1312, 333, 312]);
-const data2 = ref([2139, 4149, 42419, 241249, 425319, 123192, 1542591, 13192, 3933, 3912]);
-
-const rows = computed(() => {
-    const numberOfColumns = 2;
-    const result = [];
-    for (let i = 0; i < data.value.length; i += numberOfColumns) {
-        result.push(data.value.slice(i, i + numberOfColumns));
-    }
-    return result;
-});
-
-const rows2 = computed(() => {
-    const numberOfColumns = 2;
-    const result = [];
-    for (let i = 0; i < data2.value.length; i += numberOfColumns) {
-        result.push(data2.value.slice(i, i + numberOfColumns));
-    }
-    return result;
-});
-
-
-function searchCarTirms(event) {
-    setTimeout(() => {
-        if (!event.query.trim().length) {
-            autoFilteredValue.value = [...autoValue.value];
-        } else {
-            autoFilteredValue.value = autoValue.value.filter((tirm) => {
-                return tirm.name.toLowerCase().startsWith(event.query.toLowerCase());
-            });
-        }
-    }, 600);
-    console.log(selectedAutoValue.value);
-}
-
 function setColorOptions() {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
@@ -222,24 +296,7 @@ function setColorOptions() {
     };
     lineData.value = {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                fill: false,
-                backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
-                borderColor: documentStyle.getPropertyValue('--p-primary-500'),
-                tension: 0.4
-            },
-            {
-                label: 'Second Dataset',
-                data: [28, 48, 40, 19, 86, 27, 90],
-                fill: false,
-                backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
-                borderColor: documentStyle.getPropertyValue('--p-primary-200'),
-                tension: 0.4
-            }
-        ]
+        datasets: []
     };
 
     lineOptions.value = {
@@ -275,12 +332,12 @@ function setColorOptions() {
     polarData.value = {
         datasets: [
             {
-                data: [11, 16, 7, 3],
+                data: [],
                 backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-orange-500')],
-                label: 'My dataset'
+                label: '车型价格'
             }
         ],
-        labels: ['Indigo', 'Purple', 'Teal', 'Orange']
+        labels: []
     };
 
     polarOptions.value = {
@@ -341,40 +398,7 @@ function setColorOptions() {
         }
     };
 }
-function formatLineData(data) {
-    const documentStyle = getComputedStyle(document.documentElement);
-    return {
-        labels: data.map(item => item.month),
-        datasets: [
-            {
-                label: data[0].year + '月销量',
-                data: data.map(item => item.totalSale),
-                fill: false,
-                backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
-                borderColor: documentStyle.getPropertyValue('--p-primary-500'),
-                tension: 0.4
-            },
-        ]
-    }
-}
-function updataChartData(purpose) {
-    console.log(purpose.value);
-    pieData.value = formatPieData(purpose);
-}
-function formatPieData(data) {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-    return {
-        labels: data.map(item => item.tirm),
-        datasets: [{
-            data: data.map(item => item.price),
-            backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-red-500'), documentStyle.getPropertyValue('--p-blue-500'), documentStyle.getPropertyValue('--p-yellow-500'), documentStyle.getPropertyValue('--p-orange-500')],
-            hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400'), documentStyle.getPropertyValue('--p-red-400'), documentStyle.getPropertyValue('--p-blue-400'), documentStyle.getPropertyValue('--p-yellow-400'), documentStyle.getPropertyValue('--p-orange-400')],
-        }]
-    }
-}
+
 watch(
     [getPrimary, getSurface, isDarkTheme],
     () => {
@@ -421,7 +445,7 @@ watch(
             </div>
         </div>
     </div>
-
+    <!-- 
     <div class="col-span-12 xl:col-span-6">
         <div class="card">
             <div class="w-full overflow-x-auto">
@@ -465,5 +489,5 @@ watch(
                 </table>
             </div>
         </div>
-    </div>
+    </div> -->
 </template>

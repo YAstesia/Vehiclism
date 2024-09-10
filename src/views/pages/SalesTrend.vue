@@ -197,44 +197,6 @@ function generateColors(count) {
     }
     return colors;
 }
-
-
-// async function updateChartData(year) {
-//     try {
-//         const salesData2 = await fetchMonthData(year);
-
-//         // 更新折线图数据
-//         lineData2.value = {
-//             labels: salesData2.map(item => item.month),
-//             datasets: [
-//                 {
-//                     label: '月销售量',
-//                     data: salesData2.map(item => item.sales),
-//                     fill: false,
-//                     backgroundColor: '#42A5F5',
-//                     borderColor: '#42A5F5',
-//                     tension: 0.4
-//                 }
-//             ]
-//         };
-
-//         // 更新柱状图数据
-//         barData2.value = {
-//             labels: salesData2.map(item => item.month),
-//             datasets: [
-//                 {
-//                     label: '月销售量',
-//                     backgroundColor: '#42A5F5',
-//                     borderColor: '#42A5F5',
-//                     data: salesData2.map(item => item.sales)
-//                 }
-//             ]
-//         };
-//     } catch (error) {
-//         console.error('Error updating chart data:', error.message);
-//     }
-// }
-
 function setColorOptions() {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
