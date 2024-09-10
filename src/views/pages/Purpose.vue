@@ -100,14 +100,12 @@ async function handleClick() {
     try {
         let purpose = [];
         if (searchQuery) {
-            // 发送 searchQuery 到后端
-            const response = await sendSearchQuery({ series: searchQuery });
             const dataPurpose = await getSeriesPurpose(searchQuery);
-            purpose = response.data.data; // 获取后端返回的数据
-
             // 更新图表数据
             updataChartData(dataPurpose.data.data);
-
+            // 发送 searchQuery 到后端
+            const response = await sendSearchQuery({ series: searchQuery });
+            purpose = response.data.data; // 获取后端返回的数据
             // 更新 textarea 的内容
             const textarea = document.querySelector('textarea');
             if (textarea) {
