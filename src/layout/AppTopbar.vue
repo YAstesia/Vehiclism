@@ -101,13 +101,22 @@ const sendData = async () => {
     responseData.value = "等待回复…………";
     if (activeButton.value === 'A') {
         const response = await chatAll({ prompt: inputValue.value });
-        responseData.value = response.data.data;
+        if (response.data.success) { responseData.value = response.data.data; }
+        else {
+            responseData.value = response.data.msg;
+        }
     } else if (activeButton.value === 'B') {
         const response = await chatProvince({ region: dropdownValue.value.name, saleGroup: smallInputValue.value });
-        responseData.value = response.data.data;
+        if (response.data.success) { responseData.value = response.data.data; }
+        else {
+            responseData.value = response.data.msg;
+        }
     } else if (activeButton.value === 'C') {
         const response = await chatSeries({ seriesName: inputValue.value });
-        responseData.value = response.data.data;
+        if (response.data.success) { responseData.value = response.data.data; }
+        else {
+            responseData.value = response.data.msg;
+        }
     }
 };
 
