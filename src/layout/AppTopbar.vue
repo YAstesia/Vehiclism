@@ -1,5 +1,5 @@
 <script setup>
-import { chatAll, chatProvince } from '@/api';
+import { chatAll, chatProvince, chatSeries } from '@/api';
 import { useLayout } from '@/layout/composables/layout';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { useToast } from 'primevue/usetoast';
@@ -31,13 +31,45 @@ function showSuccess() {
 // 定义响应式变量
 const showWindow = ref(false);
 const activeButton = ref('A');
-let inputValue;
+const inputValue = ref('');
 const dropdownValue = ref(null);
-let smallInputValue;
+const smallInputValue = ref('');
 const responseData = ref('');
 const dropdownOptions = ref([
+    { name: '北京市', code: '北京市' },
+    { name: '天津市', code: '天津市' },
+    { name: '上海市', code: '上海市' },
+    { name: '重庆市', code: '重庆市' },
+    { name: '河北省', code: '河北省' },
+    { name: '山西省', code: '山西省' },
+    { name: '辽宁省', code: '辽宁省' },
+    { name: '吉林省', code: '吉林省' },
+    { name: '黑龙江省', code: '黑龙江省' },
     { name: '江苏省', code: '江苏省' },
+    { name: '浙江省', code: '浙江省' },
+    { name: '安徽省', code: '安徽省' },
+    { name: '福建省', code: '福建省' },
+    { name: '江西省', code: '江西省' },
+    { name: '山东省', code: '山东省' },
+    { name: '河南省', code: '河南省' },
+    { name: '湖北省', code: '湖北省' },
+    { name: '湖南省', code: '湖南省' },
     { name: '广东省', code: '广东省' },
+    { name: '海南省', code: '海南省' },
+    { name: '四川省', code: '四川省' },
+    { name: '贵州省', code: '贵州省' },
+    { name: '云南省', code: '云南省' },
+    { name: '陕西省', code: '陕西省' },
+    { name: '甘肃省', code: '甘肃省' },
+    { name: '青海省', code: '青海省' },
+    { name: '台湾省', code: '台湾省' },
+    { name: '内蒙古自治区', code: '内蒙古自治区' },
+    { name: '广西壮族自治区', code: '广西壮族自治区' },
+    { name: '西藏自治区', code: '西藏自治区' },
+    { name: '宁夏回族自治区', code: '宁夏回族自治区' },
+    { name: '新疆维吾尔自治区', code: '新疆维吾尔自治区' },
+    { name: '香港特别行政区', code: '香港特别行政区' },
+    { name: '澳门特别行政区', code: '澳门特别行政区' }
 ]);
 const popupStyle = ref({});  // 用于动态调整窗口位置
 const button = ref(null);    // 引用按钮元素
@@ -66,11 +98,15 @@ const setActiveButton = (button) => {
 
 // 发送数据到后端
 const sendData = async () => {
-    if (activeButton.value === 'A' || activeButton.value === 'C') {
-        const response = await chatAll({ prompt: inputValue });
+    responseData.value = "等待回复…………";
+    if (activeButton.value === 'A') {
+        const response = await chatAll({ prompt: inputValue.value });
         responseData.value = response.data.data;
     } else if (activeButton.value === 'B') {
-        const response = await chatProvince({ region: dropdownValue.value.name, saleGroup: smallInputValue });
+        const response = await chatProvince({ region: dropdownValue.value.name, saleGroup: smallInputValue.value });
+        responseData.value = response.data.data;
+    } else if (activeButton.value === 'C') {
+        const response = await chatSeries({ seriesName: inputValue.value });
         responseData.value = response.data.data;
     }
 };
@@ -78,6 +114,11 @@ const sendData = async () => {
 // 清空对话框内容
 const clearResponse = () => {
     responseData.value = '';
+};
+
+const clearInput = () => {
+    inputValue.value = "";
+    smallInputValue.value = "";
 };
 
 </script>
@@ -117,38 +158,46 @@ const clearResponse = () => {
                 </button>
                 <!-- 弹出窗口 -->
                 <div v-if="showWindow" class="popup-window">
-                    <div class="font-semibold text-xl mb-2 text-center">Vehiclism小助手</div>
+                    <div class="font-semibold text-xl mb-2 text-center">🤖 Vehiclism小助手</div>
                     <!-- textarea 展示后端数据 -->
-                    <Textarea v-model="responseData" placeholder=" " style="height: 600px; width: 100%; resize: none;"
+                    <Textarea v-model="responseData" placeholder="" style="height: 500px; width: 100%; resize: none;"
                         readonly />
 
                     <!-- A, B, C 切换按钮 -->
                     <div class="button-group">
                         <Button type="button" class="mr-2 mb-2" :disabled="activeButton === 'A'"
-                            @click="setActiveButton('A')" label="A" />
+                            @click="setActiveButton('A')" label="智能问答" style="margin-right: 20px;" />
                         <Button type="button" class="mr-2 mb-2" :disabled="activeButton === 'B'"
-                            @click="setActiveButton('B')" label="B" />
+                            @click="setActiveButton('B')" label="个性化定制建议" style="margin-right: 20px;" />
                         <Button type="button" class="mr-2 mb-2" :disabled="activeButton === 'C'"
-                            @click="setActiveButton('C')" label="C" />
+                            @click="setActiveButton('C')" label="提供销售方案" />
                     </div>
 
                     <!-- A 或 C 激活时显示 -->
-                    <div v-if="activeButton === 'A' || activeButton === 'C'">
-                        <InputText type="text" v-model="inputValue" placeholder="输入内容" style="width: 100%;" />
+                    <div v-if="activeButton === 'A'">
+                        <InputText type="text" v-model="inputValue" placeholder="请在此输入想提问的内容，例如“什么是发动机排量？”"
+                            style="width: 100%;" />
+                    </div>
+
+                    <div v-if="activeButton === 'C'">
+                        <InputText type="text" v-model="inputValue" placeholder="请在此输入想要分析的车系" style="width: 100%;" />
                     </div>
 
                     <!-- B 激活时显示 -->
                     <div v-if="activeButton === 'B'">
-                        <Select v-model="dropdownValue" style="width: 30%;" :options="dropdownOptions"
-                            optionLabel="name" placeholder="Select">
+                        <Select v-model="dropdownValue" style="width: 40%;" :options="dropdownOptions"
+                            optionLabel="name" placeholder="选择省份" append-to="self">
                         </select>
-                        <InputText type="text" v-model="smallInputValue" placeholder="输入内容" style="width: 70%;" />
+                        <InputText type="text" v-model="smallInputValue" placeholder="输入您的身份/职业" style="width: 60%;" />
                     </div>
 
                     <!-- 发送和清空按钮 -->
                     <div class="action-buttons">
-                        <Button @click="sendData">发送</button>
-                        <Button @click="clearResponse">清空对话</button>
+                        <Button type="button" class="mr-2 mb-2" @click="sendData">发送提问</button>
+                        <Button type="button" class="mr-2 mb-2" @click="clearInput"
+                            style="background-color: crimson; margin-left:70px;">清空输入框</button>
+                        <Button type="button" class="mr-2 mb-2" @click="clearResponse"
+                            style="background-color: crimson;">清空对话框</button>
                     </div>
                 </div>
                 <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
@@ -235,7 +284,7 @@ const clearResponse = () => {
     padding: 20px;
     right: 10px;
     width: 400px;
-    height: 800px;
+    height: 700px;
 }
 
 .button-group button {

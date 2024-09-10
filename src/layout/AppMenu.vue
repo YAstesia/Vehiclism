@@ -31,7 +31,6 @@ const model = ref([
                             { label: '汽车销量分析', icon: 'pi pi-fw pi-chart-bar', to: '/salesanalysis' },
                             { label: '汽车销售排行榜', icon: 'pi pi-fw pi-chart-bar', to: '/hotsales' },
                             { label: '购车目的分析', icon: 'pi pi-fw pi-chart-bar', to: '/purpose' },
-                            { label: '大数据可视化大屏', icon: 'pi pi-fw pi-chart-bar', to: '/cardetail' }
                         ]
                     },
                     {
