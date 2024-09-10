@@ -108,8 +108,10 @@ async function handleClick() {
             purpose = response.data.data; // 获取后端返回的数据
             // 更新 textarea 的内容
             const textarea = document.querySelector('textarea');
-            if (textarea) {
+            if (response.data.success) {
                 textarea.value = purpose;
+            } else {
+                textarea.value = "网络错误，功能暂时无法使用！";
             }
         }
     } catch (error) {

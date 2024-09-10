@@ -230,8 +230,7 @@ const fetchCarSeriesPurpose = async (series) => {
         const response = await getSeriesPurpose(series)
         let purpose = [];
         if (response.data.success) {
-            purpose = await getSeriesPurpose(series);
-            purpose = purpose.data.data;
+            purpose = response.data.data;
             updataChartData(purpose);
         }
         else {
