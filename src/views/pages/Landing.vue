@@ -35,12 +35,12 @@ function smoothScroll(id) {
                                 <span>网页介绍</span>
                             </a>
                         </li>
-                        <li>
+                        <!-- <li>
                             <a @click="smoothScroll('#highlights')"
                                 class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>网站亮点</span>
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                     <div class="flex border-t lg:border-t-0 border-surface py-4 lg:py-0 mt-4 lg:mt-0 gap-2">
                         <Button label="登录" text as="router-link" to="/auth/login" rounded></Button>
@@ -55,7 +55,7 @@ function smoothScroll(id) {
                     <h1 class="text-6xl font-bold text-gray-900 leading-tight"><span
                             class="font-light block">为您提供</span>权威的汽车大数据分析</h1>
                     <p class="font-normal text-2xl leading-normal md:mt-4 text-gray-700">从数据查询到大数据分析，我们Vehiclism应有尽有</p>
-                    <Button label="进入网站" as="router-link" to="/dashboard" rounded class="!text-xl mt-8 !px-4"></Button>
+                    <Button label="进入网站" as="router-link" to="/auth/login" rounded class="!text-xl mt-8 !px-4"></Button>
                 </div>
                 <div class="flex justify-center md:justify-end">
                     <img rel="preload" src="/demo/images/landing/screen-2.webp" alt="Hero Image"
@@ -161,7 +161,7 @@ function smoothScroll(id) {
                     </div>
                 </div>
             </div>
-
+            <!-- 
             <div id="highlights" class="py-6 px-6 lg:px-20 mx-0 my-12 lg:mx-20">
                 <div class="text-center">
                     <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl"
@@ -213,7 +213,7 @@ function smoothScroll(id) {
                             style="max-width: 650px">还没做</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
