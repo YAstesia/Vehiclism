@@ -34,17 +34,19 @@ onMounted(() => {
             TirmNames.value.push(tirmName);
         }
     });
+    // console.log(TirmNames);
     showAllChartData();
     // console.log(TirmNames.value);
 
 });
 async function showAllChartData() {
     // 创建一个包含所有 fetchCarTirmDetail 调用的 Promise 数组
+    // console.log(TirmNames.value);
     const promises = TirmNames.value.map(tirm => fetchCarTirmDetail(tirm));
 
     // 使用 Promise.all 等待所有请求完成
     await Promise.all(promises);
-    console.log(tirmDetail);
+    // console.log(tirmDetail);
     updatePolarData(tirmDetail);
     updatePolarData1(YearlySales);
     updateLineData(TirmSales);
@@ -57,7 +59,7 @@ function updateBarData() {
         labels: ["综合评分", "空间评分", "驾驶感受", "能耗评分", "外观评分", "内饰评分", "性价比", "配置评分"],
         datasets: []
     }
-    console.log(tirmDetail.length);
+    // console.log(tirmDetail.length);
     for (let i = 0; i < tirmDetail.length; ++i) {
         const color = colors[i];
         if (tirmDetail[i].evls != null) {
@@ -122,34 +124,32 @@ const fetchCarTirmDetail = async (tirm) => {
                     });
                     tirmInfo.yearSale = YearlySale;
                     tirmInfo.tirmSales = sales;
-                    // TirmSales.push(sales);
-                    // console.log(TirmSales);
-                    // YearlySales.push({ sale: YearlySale });
-                    // 获取评价和销售数据
-                    // await fetchCarEvaluation(seriesId);
-                    // await fetchCarSales(seriesId, 2024);
                 } else {
                     console.error('查询失败:', responseSeries.data.msg);
                 }
-                const responseEvl = await getCarEvl(id)
+                const responseEvl = await getCarEvl(seriesId);
                 if (responseEvl.data.success) {
-                    const evalData = responseEvl.data.data
+                    const evalData = responseEvl.data.data;
+                    let detail = [];
+                    // console.log(evalData);
                     // 使用从后端获取的数据替换 detail 数组的数值
-                    let detail = [
-                        evalData.overallRating,
-                        evalData.space,
-                        evalData.driveFeel,
-                        evalData.powerConsum,
-                        evalData.outDecor,
-                        evalData.inDecor,
-                        evalData.qpRatio,
-                        evalData.configure
-                    ]
+                    if (evalData != null) {
+                        detail = [
+                            evalData.overallRating,
+                            evalData.space,
+                            evalData.driveFeel,
+                            evalData.powerConsum,
+                            evalData.outDecor,
+                            evalData.inDecor,
+                            evalData.qpRatio,
+                            evalData.configure
+                        ]
+                    }
                     tirmInfo.evls = detail;
                 } else {
                     console.error('查询失败:', response.data.msg)
                 }
-                console.log(tirmDetail);
+                // console.log(tirmDetail);
                 tirmDetail.push(tirmInfo);
             } else {
                 console.error('查询失败:', response.data.msg);
