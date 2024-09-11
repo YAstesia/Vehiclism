@@ -3,6 +3,7 @@ import { useLayout } from '@/layout/composables/layout';
 // import { CountryService } from '@/service/CountryService';
 import { getCarEvl, getCarSales, getCarSeries, getCarTirm } from '@/api';
 import { onMounted, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
 const { getPrimary, getSurface, isDarkTheme } = useLayout();
 const pieData = ref(null);
@@ -22,8 +23,19 @@ var tirmDetail = new Array();
 let TirmNames = ref([]);
 let YearlySales = [];
 let TirmSales = [];
+const tirm1 = ref('');
+const tirm2 = ref('');
+const tirm3 = ref('');
+const tirm4 = ref('');
+const tirm5 = ref('');
 
 onMounted(() => {
+    tirm1.value = localStorage.getItem('trim1');
+    tirm2.value = localStorage.getItem('trim2');
+    tirm3.value = localStorage.getItem('trim3');
+    tirm4.value = localStorage.getItem('trim4');
+    tirm5.value = localStorage.getItem('trim5');
+
     setColorOptions();
     // fetchAllCarTirms();
     // 从 localStorage 中获取存储的车型名称
@@ -34,7 +46,7 @@ onMounted(() => {
             TirmNames.value.push(tirmName);
         }
     });
-    // console.log(TirmNames);
+
     showAllChartData();
     // console.log(TirmNames.value);
 
@@ -406,11 +418,30 @@ watch(
     },
     { immediate: true }
 );
+
+const router = useRouter();
+const navigateToCarTirmDetail = (tirm) => {
+    router.push(`/typedetail/${tirm}`);
+};
+
 </script>
 
 <template>
     <div class="card">
-        <div class="font-semibold text-xl" style="margin-bottom: 30px;">详情比较</div>
+        <div class="font-semibold text-xl" style="margin-bottom: 30px;">车型比较（点击车型名称可跳转至详情页面）</div>
+        <div class="flex ">
+            <div class="font-semibold text-xl">已加入比较的车型：</div>
+            <div class="  text-xl mr-8" style=" text-decoration: underline;" @click="navigateToCarTirmDetail(tirm1)">{{
+                tirm1 }}</div>
+            <div class="  text-xl mr-8" style=" text-decoration: underline;" @click="navigateToCarTirmDetail(tirm2)">{{
+                tirm2 }}</div>
+            <div class="  text-xl mr-8" style=" text-decoration: underline;" @click="navigateToCarTirmDetail(tirm3)">{{
+                tirm3 }}</div>
+            <div class="  text-xl mr-8" style=" text-decoration: underline;" @click="navigateToCarTirmDetail(tirm4)">{{
+                tirm4 }}</div>
+            <div class="  text-xl mr-8" style=" text-decoration: underline;" @click="navigateToCarTirmDetail(tirm5)">{{
+                tirm5 }}</div>
+        </div>
     </div>
     <div class="grid grid-cols-12 gap-8 mt-8">
         <div class="col-span-12 xl:col-span-6">

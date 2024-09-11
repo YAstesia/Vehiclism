@@ -1,0 +1,92 @@
+Date : 2024-09-11 10:38:51
+Directory : e:\Vue\sakai-vue-master
+Total : 46 files,  13399 codes, 124 comments, 372 blanks, all 13895 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| JSON               |         15 |     10,223 |          0 |         12 |     10,235 |
+| HTML               |          2 |      2,348 |          5 |        295 |      2,648 |
+| XML                |         11 |        389 |          2 |          9 |        400 |
+| vue                |          8 |        254 |        111 |         11 |        376 |
+| JavaScript         |          6 |        122 |          6 |         13 |        141 |
+| Markdown           |          3 |         50 |          0 |         32 |         82 |
+| JSON with Comments |          1 |         13 |          0 |          0 |         13 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                  | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                     |         46 |     13,399 |        124 |        372 |     13,895 |
+| . (Files)                                                             |         14 |      7,127 |         11 |        337 |      7,475 |
+| public                                                                |         22 |      6,003 |          2 |         18 |      6,023 |
+| public\demo                                                           |         22 |      6,003 |          2 |         18 |      6,023 |
+| public\demo\data                                                      |         11 |      5,614 |          0 |          9 |      5,623 |
+| public\demo\images                                                    |         11 |        389 |          2 |          9 |        400 |
+| public\demo\images (Files)                                            |          2 |         48 |          2 |          0 |         50 |
+| public\demo\images\access                                             |          1 |         46 |          0 |          1 |         47 |
+| public\demo\images\error                                              |          1 |         74 |          0 |          1 |         75 |
+| public\demo\images\landing                                            |          7 |        221 |          0 |          7 |        228 |
+| src                                                                   |         10 |        269 |        111 |         17 |        397 |
+| src (Files)                                                           |          2 |         15 |          0 |          6 |         21 |
+| src\layout                                                            |          2 |        147 |          6 |         15 |        168 |
+| src\views                                                             |          6 |        107 |        105 |         -4 |        208 |
+| src\views\pages                                                       |          6 |        107 |        105 |         -4 |        208 |
+| src\views\pages (Files)                                               |          5 |         93 |        105 |         -4 |        194 |
+| src\views\pages\auth                                                  |          1 |         14 |          0 |          0 |         14 |
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                              | language           | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| e:\Vue\sakai-vue-master\.eslintrc.cjs                                 | JavaScript         |         21 |          1 |          2 |         24 |
+| e:\Vue\sakai-vue-master\.prettierrc.json                              | JSON               |         10 |          0 |          1 |         11 |
+| e:\Vue\sakai-vue-master\CHANGELOG.md                                  | Markdown           |         32 |          0 |         26 |         58 |
+| e:\Vue\sakai-vue-master\LICENSE.md                                    | Markdown           |         17 |          0 |          5 |         22 |
+| e:\Vue\sakai-vue-master\README.md                                     | Markdown           |          1 |          0 |          1 |          2 |
+| e:\Vue\sakai-vue-master\index.html                                    | HTML               |         14 |          0 |          3 |         17 |
+| e:\Vue\sakai-vue-master\jsconfig.json                                 | JSON with Comments |         13 |          0 |          0 |         13 |
+| e:\Vue\sakai-vue-master\localhost_2024-09-09_09-49-57.report.html     | HTML               |      2,334 |          5 |        292 |      2,631 |
+| e:\Vue\sakai-vue-master\package-lock.json                             | JSON               |      4,540 |          0 |          1 |      4,541 |
+| e:\Vue\sakai-vue-master\package.json                                  | JSON               |         50 |          0 |          1 |         51 |
+| e:\Vue\sakai-vue-master\postcss.config.js                             | JavaScript         |          6 |          0 |          1 |          7 |
+| e:\Vue\sakai-vue-master\public\demo\data\countries.json               | JSON               |        247 |          0 |          0 |        247 |
+| e:\Vue\sakai-vue-master\public\demo\data\customers-large.json         | JSON               |      3,604 |          0 |          1 |      3,605 |
+| e:\Vue\sakai-vue-master\public\demo\data\customers-medium.json        | JSON               |        804 |          0 |          1 |        805 |
+| e:\Vue\sakai-vue-master\public\demo\data\events.json                  | JSON               |         68 |          0 |          1 |         69 |
+| e:\Vue\sakai-vue-master\public\demo\data\icons.json                   | JSON               |          1 |          0 |          0 |          1 |
+| e:\Vue\sakai-vue-master\public\demo\data\photos.json                  | JSON               |         94 |          0 |          1 |         95 |
+| e:\Vue\sakai-vue-master\public\demo\data\products-orders-small.json   | JSON               |        341 |          0 |          1 |        342 |
+| e:\Vue\sakai-vue-master\public\demo\data\products-small.json          | JSON               |         14 |          0 |          1 |         15 |
+| e:\Vue\sakai-vue-master\public\demo\data\products.json                | JSON               |         34 |          0 |          2 |         36 |
+| e:\Vue\sakai-vue-master\public\demo\data\treenodes.json               | JSON               |         54 |          0 |          1 |         55 |
+| e:\Vue\sakai-vue-master\public\demo\data\treetablenodes.json          | JSON               |        353 |          0 |          0 |        353 |
+| e:\Vue\sakai-vue-master\public\demo\images\access\asset-access.svg    | XML                |         46 |          0 |          1 |         47 |
+| e:\Vue\sakai-vue-master\public\demo\images\error\asset-error.svg      | XML                |         74 |          0 |          1 |         75 |
+| e:\Vue\sakai-vue-master\public\demo\images\landing\enterprise.svg     | XML                |         73 |          0 |          1 |         74 |
+| e:\Vue\sakai-vue-master\public\demo\images\landing\free.svg           | XML                |         33 |          0 |          1 |         34 |
+| e:\Vue\sakai-vue-master\public\demo\images\landing\mockup-desktop.svg | XML                |         24 |          0 |          1 |         25 |
+| e:\Vue\sakai-vue-master\public\demo\images\landing\mockup.svg         | XML                |         30 |          0 |          1 |         31 |
+| e:\Vue\sakai-vue-master\public\demo\images\landing\new-badge.svg      | XML                |          5 |          0 |          1 |          6 |
+| e:\Vue\sakai-vue-master\public\demo\images\landing\peak-logo.svg      | XML                |          4 |          0 |          1 |          5 |
+| e:\Vue\sakai-vue-master\public\demo\images\landing\startup.svg        | XML                |         52 |          0 |          1 |         53 |
+| e:\Vue\sakai-vue-master\public\demo\images\logo-white.svg             | XML                |         24 |          1 |          0 |         25 |
+| e:\Vue\sakai-vue-master\public\demo\images\logo.svg                   | XML                |         24 |          1 |          0 |         25 |
+| e:\Vue\sakai-vue-master\src\api.js                                    | JavaScript         |         12 |          0 |          5 |         17 |
+| e:\Vue\sakai-vue-master\src\layout\AppMenu.vue                        | vue                |         -1 |          0 |          0 |         -1 |
+| e:\Vue\sakai-vue-master\src\layout\AppTopbar.vue                      | vue                |        148 |          6 |         15 |        169 |
+| e:\Vue\sakai-vue-master\src\main.js                                   | JavaScript         |          3 |          0 |          1 |          4 |
+| e:\Vue\sakai-vue-master\src\views\pages\CarCompare.vue                | vue                |        143 |         45 |          1 |        189 |
+| e:\Vue\sakai-vue-master\src\views\pages\CarTrimDetail.vue             | vue                |         42 |          0 |          8 |         50 |
+| e:\Vue\sakai-vue-master\src\views\pages\Landing.vue                   | vue                |        -64 |         60 |         -6 |        -10 |
+| e:\Vue\sakai-vue-master\src\views\pages\Purpose.vue                   | vue                |          2 |          0 |         -2 |          0 |
+| e:\Vue\sakai-vue-master\src\views\pages\SalesTrend.vue                | vue                |        -30 |          0 |         -5 |        -35 |
+| e:\Vue\sakai-vue-master\src\views\pages\auth\Login.vue                | vue                |         14 |          0 |          0 |         14 |
+| e:\Vue\sakai-vue-master\tailwind.config.js                            | JavaScript         |         41 |          1 |          1 |         43 |
+| e:\Vue\sakai-vue-master\vercel.json                                   | JSON               |          9 |          0 |          0 |          9 |
+| e:\Vue\sakai-vue-master\vite.config.mjs                               | JavaScript         |         39 |          4 |          3 |         46 |
+| Total                                                                 |                    |     13,399 |        124 |        372 |     13,895 |
++-----------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
